@@ -664,7 +664,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   transition: box-shadow var(--transicion), transform var(--transicion);
 }
 
-.review:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
+/* Elevación al hover compartida por reseñas y tarjetas de ítems */
+.review:hover, .modulo-items li:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
 
 .review::before {
   content: "★★★★★";
@@ -768,6 +769,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   padding: var(--s-2) var(--s-3);
   font-size: 0.9375rem;
   color: var(--texto-2);
+  transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+/* En desktop, las tarjetas de ítems van a dos columnas (la última
+   ocupa una sola columna si el módulo tiene número impar). */
+@media (min-width: 60em) {
+  .modulo-items { grid-template-columns: 1fr 1fr; }
 }
 
 /* Precio individual del ítem: discreto, alineado a la derecha
@@ -775,7 +783,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .item-precio {
   margin-left: auto;
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   color: var(--texto-2);
 }
@@ -788,16 +796,12 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--acento);
 }
 
-.modulo-nota {
-  margin-top: var(--s-3);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radio-m);
-  background: var(--blanco-calido);
-  font-size: 0.9375rem;
-  font-style: normal;
-  color: var(--acento);
-  max-width: 52ch;
-}
+/* Ritmo bajada→contenido: en las secciones con párrafo introductorio
+   (servicios, planes, equipo) el margen del header baja a --s-4 para
+   un ritmo título→bajada→contenido uniforme en toda la página. */
+.servicios .sec-head,
+.planes .sec-head,
+.equipo .sec-head { margin-bottom: var(--s-4); }
 
 @media (min-width: 56.25em) {
   .modulo { grid-template-columns: 20rem 1fr; gap: var(--s-6); }
