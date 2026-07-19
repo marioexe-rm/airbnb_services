@@ -127,9 +127,29 @@
     }
   }
 
+  // Cards de reseñas de tamaño idéntico: todas toman la altura de la
+  // más alta de las 16, recalculada si cambia el viewport.
+  var rotadorCards = document.querySelector('.resenas-rotador');
+  if (rotadorCards) {
+    var igualarResenas = function () {
+      var cards = Array.prototype.slice.call(rotadorCards.querySelectorAll('.review'));
+      var maxima = 0;
+      cards.forEach(function (card) { card.style.minHeight = ''; });
+      cards.forEach(function (card) { maxima = Math.max(maxima, card.offsetHeight); });
+      cards.forEach(function (card) { card.style.minHeight = maxima + 'px'; });
+    };
+    igualarResenas();
+    window.addEventListener('load', igualarResenas);
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(igualarResenas); }
+    var retrasoMedida;
+    window.addEventListener('resize', function () {
+      clearTimeout(retrasoMedida);
+      retrasoMedida = setTimeout(igualarResenas, 150);
+    });
+  }
+
   // Rotador de reseñas: 4 grupos × 4 frases, misma familia de
-  // transición del hero (15s por grupo, crossfade de 2s). El damero
-  // claro/oscuro se invierte por posición en cada cambio. Se pausa al
+  // transición del hero (15s por grupo, crossfade de 2s). Se pausa al
   // leer (hover/focus) y con la pestaña oculta; con
   // prefers-reduced-motion queda un único grupo estático.
   var rotador = document.querySelector('.resenas-rotador');
@@ -151,7 +171,6 @@
       var bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; })
         .filter(function (i) { return i !== grupoActivo; }));
       var ultimoGrupo = grupoActivo;
-      var pasos = 0;
 
       setInterval(function () {
         if (document.hidden || lecturaPausada) { return; }
@@ -160,8 +179,6 @@
           if (bolsaResenas[0] === ultimoGrupo) { bolsaResenas.push(bolsaResenas.shift()); }
         }
         var proximo = bolsaResenas.shift();
-        pasos++;
-        gruposResenas[proximo].classList.toggle('tonos-invertidos', pasos % 2 === 1);
         gruposResenas[grupoActivo].classList.remove('activa');
         gruposResenas[proximo].classList.add('activa');
         ultimoGrupo = proximo;
