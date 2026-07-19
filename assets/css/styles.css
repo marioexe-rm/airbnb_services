@@ -705,8 +705,10 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
    blancas y el título quedaba pegado al borde verde). */
 .servicios { padding-block: var(--pad-seccion); }
 
+/* Cards de módulos en salvia claro (token de apoyo): resaltan del
+   fondo blanco sin usar verde profundo, reservado a identidad y CTA. */
 .modulo {
-  background: var(--blanco);
+  background: var(--acento-suave);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
   padding: clamp(1.5rem, 4vw, 2.5rem);
@@ -754,9 +756,32 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .modulo-items li {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--s-2);
+  row-gap: 0.25rem;
   padding-left: 1.875rem;
   font-size: 0.9375rem;
   color: var(--texto-2);
+}
+
+/* Precio individual del ítem: discreto, alineado a la derecha
+   (cae bajo el texto si no cabe, manteniéndose a la derecha). */
+.item-precio {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--texto-2);
+}
+
+/* Línea comparativa de ahorro del pack integral */
+.modulo-ahorro {
+  margin-top: var(--s-3);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--acento);
 }
 
 .modulo-items li::before {
@@ -773,7 +798,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   margin-top: var(--s-3);
   padding: 0.75rem 1rem;
   border-radius: var(--radio-m);
-  background: var(--acento-suave);
+  background: var(--blanco-calido);
   font-size: 0.9375rem;
   font-style: normal;
   color: var(--acento);
