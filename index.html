@@ -100,27 +100,169 @@
           <p class="hero-note">Evaluación inicial sin costo · Respuesta el mismo día</p>
         </div>
         <div class="hero-art" aria-hidden="true">
-          <svg viewBox="0 0 420 540" role="presentation" focusable="false">
-            <path class="arch-back" d="M84 526 V246 A142 142 0 0 1 368 246 V526" />
-            <clipPath id="arch-clip"><path d="M60 526 V270 A150 150 0 0 1 360 270 V526 Z" /></clipPath>
-            <g clip-path="url(#arch-clip)">
-              <rect x="60" y="120" width="300" height="410" class="arch-sky" />
-              <circle cx="210" cy="285" r="56" class="arch-sun" />
-              <line x1="60" y1="352" x2="360" y2="352" class="arch-line" />
-              <line x1="60" y1="368" x2="360" y2="368" class="arch-line arch-line-soft" />
-              <g class="arch-rail">
-                <line x1="60"  y1="420" x2="360" y2="420" />
-                <line x1="84"  y1="420" x2="84"  y2="526" />
-                <line x1="120" y1="420" x2="120" y2="526" />
-                <line x1="156" y1="420" x2="156" y2="526" />
-                <line x1="192" y1="420" x2="192" y2="526" />
-                <line x1="228" y1="420" x2="228" y2="526" />
-                <line x1="264" y1="420" x2="264" y2="526" />
-                <line x1="300" y1="420" x2="300" y2="526" />
-                <line x1="336" y1="420" x2="336" y2="526" />
-              </g>
-            </g>
-            <path class="arch-front" d="M60 526 V270 A150 150 0 0 1 360 270 V526" />
+          <!-- Carrusel decorativo: 10 hitos de Chile. Mismo viewBox, mismo
+               horizonte (y=400) y mismo sol (580,170) para que el crossfade
+               se sienta como metamorfosis. Colores solo vía tokens (.esc-*). -->
+          <!-- Escena 1 · Moai de Rapa Nui -->
+          <svg class="escena activa" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M440 400q110-58 360-28v28z"/>
+            <path class="esc-medio" d="M604 388v-58q0-16 14-16t14 16v58z"/>
+            <path class="esc-fina-suave" d="M606 344h18"/>
+            <rect class="esc-medio" x="186" y="370" width="300" height="30"/>
+            <path class="esc-linea" d="M180 370h312"/>
+            <path class="esc-forma" d="M268 370 256 334l10-22-16-8 12-12-18-8 24-76-18-12 32-30 16-40q16-12 38-4l22 12q14 8 16 28l8 178z"/>
+            <path class="esc-fina" d="M270 212q12 6 22 2"/>
+            <path class="esc-fina" d="M140 452q8-16 16 0M560 470q8-16 16 0M660 436q8-16 16 0"/>
+          </svg>
+          <!-- Escena 2 · Torre Entel (arquitectura, sin logos) -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M0 400v-44h56v18h48v-40h64v30h52v36zM604 400v-36h60v14h56v22z"/>
+            <rect class="esc-medio" x="86" y="346" width="58" height="54"/>
+            <rect class="esc-medio" x="648" y="356" width="64" height="44"/>
+            <path class="esc-linea" d="M320 400 330 168M354 400 344 168"/>
+            <path class="esc-fina" d="M323 368l28-16M351 368l-28-16M325 312l24-14M349 312l-24-14M328 258l18-11M346 258l-18-11"/>
+            <rect class="esc-forma" x="294" y="126" width="72" height="46" rx="12"/>
+            <path class="esc-fina" d="M300 149h60M294 140h-16M366 140h16"/>
+            <path class="esc-linea" d="M330 126V80"/>
+            <circle class="esc-fina" cx="330" cy="74" r="5"/>
+            <path class="esc-fina-suave" d="M240 456h320"/>
+          </svg>
+          <!-- Escena 3 · Cordillera de los Andes -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M0 400l84-66 66 40 78-58 74 52 66-34 60 40 58-24 70 34 84-40 60 32v24z"/>
+            <path class="esc-medio" d="M0 400l110-74 86 58 96-70 118 86zM470 400l96-58 110 58z"/>
+            <path class="esc-forma" d="M172 400 318 206l146 194z"/>
+            <path class="esc-forma-clara" d="M280 256l38-50 36 48-14-8-12 12-14-10-14 12z"/>
+            <path class="esc-fina" d="M318 206l8 60-14 48"/>
+          </svg>
+          <!-- Escena 4 · Torres del Paine -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-medio" d="M40 400l96-52 92 30 104-44 96 36 92-28 120 58z"/>
+            <path class="esc-forma" d="M196 372l34-190 22 24 12 166z"/>
+            <path class="esc-forma" d="M282 376l36-244 24 30 14 214z"/>
+            <path class="esc-forma" d="M382 376l30-202 24 38 8 164z"/>
+            <path class="esc-claro" d="M222 200l8-16 14 16-8 24zM310 152l8-18 16 20-10 26zM406 192l6-16 14 20-8 22z"/>
+            <path class="esc-claro" d="M76 428q324-24 648 0v34q-324 28-648 0z"/>
+            <path class="esc-fina-suave" d="M150 448h84M340 466h110M540 446h84"/>
+          </svg>
+          <!-- Escena 5 · Ascensores y cerros de Valparaíso -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-claro" d="M420 400h380v104q-210-30-380-74z"/>
+            <path class="esc-fina-suave" d="M470 436h70M580 458h90M660 428h70"/>
+            <path class="esc-medio" d="M0 400V246q150-58 292 62l102 92z"/>
+            <path class="esc-forma-clara" d="M28 228v-40h56v40z"/>
+            <path class="esc-forma-clara" d="M23 188l33-22 33 22z"/>
+            <path class="esc-forma" d="M104 220v-38h54v38z"/>
+            <path class="esc-forma" d="M99 182l32-20 32 20z"/>
+            <path class="esc-forma-clara" d="M176 236v-40h58v40z"/>
+            <path class="esc-forma-clara" d="M171 196l34-22 34 22z"/>
+            <path class="esc-forma" d="M236 268v-38h54v38z"/>
+            <path class="esc-forma" d="M231 230l32-20 32 20z"/>
+            <path class="esc-forma-clara" d="M64 288v-36h50v36z"/>
+            <path class="esc-forma-clara" d="M59 252l30-20 30 20z"/>
+            <rect class="esc-medio" x="48" y="200" width="12" height="16"/>
+            <rect class="esc-claro" x="124" y="192" width="12" height="16"/>
+            <rect class="esc-medio" x="198" y="206" width="12" height="16"/>
+            <rect class="esc-claro" x="256" y="240" width="12" height="16"/>
+            <path class="esc-linea" d="M300 262 452 398M314 252 466 388"/>
+            <path class="esc-fina" d="M342 296l14-12M380 330l14-12M418 364l14-12"/>
+            <path class="esc-forma-clara" d="M364 298h42v30h-42z"/>
+          </svg>
+          <!-- Escena 6 · Palafitos de Chiloé -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M552 400q130-42 248-10v10z"/>
+            <rect class="esc-claro" y="400" width="800" height="118"/>
+            <path class="esc-forma-clara" d="M96 400v-68h76v68z"/>
+            <path class="esc-forma-clara" d="M90 332l44-30 44 30z"/>
+            <path class="esc-forma" d="M208 400v-68h76v68z"/>
+            <path class="esc-forma" d="M202 332l44-30 44 30z"/>
+            <path class="esc-forma-clara" d="M320 400v-68h76v68z"/>
+            <path class="esc-forma-clara" d="M314 332l44-30 44 30z"/>
+            <path class="esc-forma" d="M432 400v-68h76v68z"/>
+            <path class="esc-forma" d="M426 332l44-30 44 30z"/>
+            <rect class="esc-medio" x="124" y="356" width="20" height="28"/>
+            <rect class="esc-claro" x="236" y="356" width="20" height="28"/>
+            <rect class="esc-medio" x="348" y="356" width="20" height="28"/>
+            <rect class="esc-claro" x="460" y="356" width="20" height="28"/>
+            <path class="esc-fina" d="M104 400v54M132 400v54M160 400v54M216 400v54M244 400v54M272 400v54M328 400v54M356 400v54M384 400v54M440 400v54M468 400v54M496 400v54"/>
+            <path class="esc-fina-suave" d="M112 476v12M140 484v10M252 478v12M364 482v12M476 476v12M560 452h96M628 480h110"/>
+          </svg>
+          <!-- Escena 7 · Valle de la Luna, Atacama -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M0 400l88-46 88 32 116-52 116 44 116-38 122 40 76-26 78 30v16z"/>
+            <path class="esc-medio" d="M96 400q210-108 420 0zM470 400q140-62 280 0z"/>
+            <path class="esc-forma" d="M222 400l26-96 20 38 24-88 26 60 18-40 26 74 14-32 18 84z"/>
+            <path class="esc-fina" d="M118 396q210-104 404 2"/>
+            <path class="esc-fina-suave" d="M150 462q260-26 520 4M210 506q220-22 420 2"/>
+          </svg>
+          <!-- Escena 8 · Volcán Osorno -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M0 400l128-42 118 34 128-46 122 38 116-30 100 30 88-22v38z"/>
+            <path class="esc-forma" d="M186 400 332 216q8-12 16 0l152 184z"/>
+            <path class="esc-forma-clara" d="M298 292l34-76q8-12 16 0l36 78-14-8-12 10-14-8-14 10-14-8z"/>
+            <path class="esc-claro" d="M64 426q336-22 672 0v36q-336 26-672 0z"/>
+            <path class="esc-fina-suave" d="M180 448h96M420 462h120M600 442h80"/>
+          </svg>
+          <!-- Escena 9 · Palacio de La Moneda -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <rect class="esc-forma-clara" x="156" y="310" width="492" height="90"/>
+            <rect class="esc-forma-clara" x="330" y="286" width="144" height="114"/>
+            <path class="esc-fina" d="M330 306h144M348 310v84M375 310v84M402 310v84M429 310v84M456 310v84"/>
+            <rect class="esc-medio" x="176" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="208" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="240" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="272" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="304" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="488" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="520" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="552" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="584" y="336" width="20" height="40"/>
+            <rect class="esc-medio" x="616" y="336" width="20" height="40"/>
+            <path class="esc-fina" d="M402 286V234"/>
+            <rect class="esc-forma" x="402" y="234" width="34" height="20"/>
+            <rect class="esc-claro" x="402" y="234" width="13" height="10"/>
+            <circle class="esc-medio" cx="120" cy="354" r="26"/>
+            <circle class="esc-medio" cx="684" cy="354" r="26"/>
+            <path class="esc-fina" d="M120 380v18M684 380v18"/>
+            <path class="esc-fina-suave" d="M110 452h584"/>
+          </svg>
+          <!-- Escena 10 · Mano del Desierto -->
+          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
+            <rect class="esc-cielo" width="800" height="400"/>
+            <circle class="esc-sol" cx="580" cy="170" r="46"/>
+            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
+            <path class="esc-lejos" d="M0 400l150-30 140 22 170-34 160 26 180-20v36z"/>
+            <path class="esc-forma" d="M296 444V206q0-15 17-15t17 15v94h10V168q0-15 17-15t17 15v132h10V186q0-15 17-15t17 15v118h10v-78q0-14 16-14t16 14v104q26 16 32 46l6 68z"/>
+            <path class="esc-fina" d="M312 384q44 16 92 10"/>
+            <path class="esc-medio" d="M196 444q150-44 330-10 40 8 78 10z"/>
+            <path class="esc-fina-suave" d="M120 500q280-24 560 0"/>
           </svg>
         </div>
       </div>

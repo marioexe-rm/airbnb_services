@@ -62,4 +62,37 @@
   if (anio) {
     anio.textContent = String(new Date().getFullYear());
   }
+
+  // Carrusel del hero: rotación de escenas cada 6s con crossfade de 1s.
+  // Orden barajado sin repetición inmediata; en pausa con la pestaña
+  // oculta; con prefers-reduced-motion queda una escena estática.
+  var arte = document.querySelector('.hero-art');
+  if (arte && !sinMovimiento) {
+    var escenas = Array.prototype.slice.call(arte.querySelectorAll('.escena'));
+    if (escenas.length > 1) {
+      var actual = 0;
+      escenas.forEach(function (escena, i) {
+        if (escena.classList.contains('activa')) { actual = i; }
+      });
+
+      var bolsa = [];
+      var rebarajar = function () {
+        bolsa = escenas.map(function (_, i) { return i; });
+        for (var i = bolsa.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = bolsa[i]; bolsa[i] = bolsa[j]; bolsa[j] = t;
+        }
+        if (bolsa[0] === actual) { bolsa.push(bolsa.shift()); }
+      };
+
+      setInterval(function () {
+        if (document.hidden) { return; }
+        if (!bolsa.length) { rebarajar(); }
+        var siguiente = bolsa.shift();
+        escenas[actual].classList.remove('activa');
+        escenas[siguiente].classList.add('activa');
+        actual = siguiente;
+      }, 6000);
+    }
+  }
 })();

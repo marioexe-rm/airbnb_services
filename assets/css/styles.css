@@ -446,7 +446,36 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--texto-2);
 }
 
-.hero-art { display: none; }
+/* Carrusel del hero — 10 escenas apiladas en un contenedor de
+   proporción fija (cero layout shift). Sol y horizonte coinciden en
+   todas, así el crossfade + escala ≤2% se lee como metamorfosis. */
+
+.hero-art {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  background: var(--acento-suave);
+  border-radius: var(--radio-l);
+  overflow: hidden;
+}
+
+.hero-art .escena {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(1.015);
+  transition: opacity 1000ms ease-in-out, transform 1000ms ease-in-out;
+}
+
+.hero-art .escena.activa { opacity: 1; transform: scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-art .escena { transition: none; }
+}
 
 /* Estadísticas del hero como cards */
 
@@ -491,28 +520,22 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .hero { padding-block: var(--s-7); }
   .hero-grid { grid-template-columns: 7fr 5fr; align-items: center; gap: var(--s-6); }
 
-  .hero-art {
-    display: block;
-    background: var(--acento-suave);
-    border-radius: var(--radio-xl);
-    padding: 2.5rem 2rem 0;
-    overflow: hidden;
-  }
-
-  .hero-art svg { width: min(100%, 24rem); margin-inline: auto; display: block; }
+  .hero-art { max-width: none; border-radius: var(--radio-xl); }
 }
 
-/* Ilustración del arco — línea monocroma en la gama del verde;
-   el sol pasa a trazo para que ningún relleno verde sólido sea decorativo */
+/* Lenguaje compartido de las 10 escenas — colores solo desde tokens:
+   fondo (--acento-suave), medio (--panel-texto-2), hito (trazo --acento) */
 
-.arch-front { fill: none; stroke: var(--acento); stroke-width: 2.5; }
-.arch-back  { fill: none; stroke: #C7D4C1; stroke-width: 2; }
-.arch-sky   { fill: var(--blanco); }
-.arch-sun   { fill: none; stroke: var(--acento); stroke-width: 2.5; }
-.arch-line  { stroke: #CDD9C7; stroke-width: 2; }
-.arch-line-soft { stroke-width: 1; opacity: 0.8; }
-.arch-rail line { stroke: #9FB699; stroke-width: 1.5; }
-.arch-rail line:first-child { stroke-width: 2; stroke: #7E9B76; }
+.esc-cielo { fill: var(--blanco); }
+.esc-sol { fill: none; stroke: var(--acento); stroke-width: 2.5; }
+.esc-lejos { fill: var(--acento-suave); }
+.esc-medio { fill: var(--panel-texto-2); }
+.esc-claro { fill: var(--blanco); }
+.esc-forma { fill: var(--panel-texto-2); stroke: var(--acento); stroke-width: 2.5; stroke-linejoin: round; }
+.esc-forma-clara { fill: var(--blanco); stroke: var(--acento); stroke-width: 2.5; stroke-linejoin: round; }
+.esc-linea { fill: none; stroke: var(--acento); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.esc-fina { fill: none; stroke: var(--acento); stroke-width: 1.5; stroke-linecap: round; }
+.esc-fina-suave { fill: none; stroke: var(--panel-texto-2); stroke-width: 2; stroke-linecap: round; }
 
 /* ---------- 01 · Caso real ---------- */
 
