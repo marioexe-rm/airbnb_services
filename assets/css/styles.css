@@ -716,7 +716,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   gap: var(--s-3);
 }
 
-.modulo + .modulo { margin-top: var(--s-3); }
+.modulo + .modulo { margin-top: var(--s-5); }
 
 .modulo-num {
   font-size: 0.8125rem;
@@ -752,16 +752,20 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--texto);
 }
 
-.modulo-items { margin-top: var(--s-3); display: grid; gap: 0.875rem; }
+.modulo-items { margin-top: var(--s-3); display: grid; gap: var(--s-2); }
 
+/* Cada ítem es una tarjeta clara sobre el salvia del módulo, con el
+   mismo lenguaje que las cards de reseñas (radio, sombra suave). */
 .modulo-items li {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   column-gap: var(--s-2);
   row-gap: 0.25rem;
-  padding-left: 1.875rem;
+  background: var(--blanco-calido);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-1);
+  padding: var(--s-2) var(--s-3);
   font-size: 0.9375rem;
   color: var(--texto-2);
 }
@@ -784,16 +788,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--acento);
 }
 
-.modulo-items li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.125rem;
-  width: 1.125rem;
-  height: 1.125rem;
-  background: var(--icono-check) no-repeat center / contain;
-}
-
 .modulo-nota {
   margin-top: var(--s-3);
   padding: 0.75rem 1rem;
@@ -807,7 +801,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 @media (min-width: 56.25em) {
   .modulo { grid-template-columns: 20rem 1fr; gap: var(--s-6); }
-  .modulo-items { grid-template-columns: 1fr 1fr; column-gap: var(--s-5); }
 }
 
 /* ---------- 03 · Planes ---------- */
