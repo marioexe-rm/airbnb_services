@@ -100,169 +100,147 @@
           <p class="hero-note">Evaluación inicial sin costo · Respuesta el mismo día</p>
         </div>
         <div class="hero-art" aria-hidden="true">
-          <!-- Carrusel decorativo: 10 hitos de Chile. Mismo viewBox, mismo
-               horizonte (y=400) y mismo sol (580,170) para que el crossfade
-               se sienta como metamorfosis. Colores solo vía tokens (.esc-*). -->
-          <!-- Escena 1 · Moai de Rapa Nui -->
-          <svg class="escena activa" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M440 400q110-58 360-28v28z"/>
-            <path class="esc-medio" d="M604 388v-58q0-16 14-16t14 16v58z"/>
-            <path class="esc-fina-suave" d="M606 344h18"/>
-            <rect class="esc-medio" x="186" y="370" width="300" height="30"/>
-            <path class="esc-linea" d="M180 370h312"/>
-            <path class="esc-forma" d="M268 370 256 334l10-22-16-8 12-12-18-8 24-76-18-12 32-30 16-40q16-12 38-4l22 12q14 8 16 28l8 178z"/>
-            <path class="esc-fina" d="M270 212q12 6 22 2"/>
-            <path class="esc-fina" d="M140 452q8-16 16 0M560 470q8-16 16 0M660 436q8-16 16 0"/>
+          <!-- Serie «Estadía»: 10 piezas de hospitalidad (5 día / 5 noche).
+               Astro único compartido: mismo círculo (210,270 r56) en todas;
+               la máscara #astro-mascara lo convierte en media luna y se
+               anima con el crossfade (sol que se transforma en luna). -->
+          <svg class="astro-defs" width="0" height="0" focusable="false" aria-hidden="true">
+            <defs>
+              <mask id="astro-mascara" maskUnits="userSpaceOnUse" x="140" y="200" width="140" height="140">
+                <rect x="140" y="200" width="140" height="140" fill="#fff"/>
+                <rect class="astro-oculto" x="210" y="200" width="72" height="140" fill="#000"/>
+              </mask>
+              <g id="astro"><circle cx="210" cy="270" r="56" mask="url(#astro-mascara)"/></g>
+            </defs>
           </svg>
-          <!-- Escena 2 · Torre Entel (arquitectura, sin logos) -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M0 400v-44h56v18h48v-40h64v30h52v36zM604 400v-36h60v14h56v22z"/>
-            <rect class="esc-medio" x="86" y="346" width="58" height="54"/>
-            <rect class="esc-medio" x="648" y="356" width="64" height="44"/>
-            <path class="esc-linea" d="M320 400 330 168M354 400 344 168"/>
-            <path class="esc-fina" d="M323 368l28-16M351 368l-28-16M325 312l24-14M349 312l-24-14M328 258l18-11M346 258l-18-11"/>
-            <rect class="esc-forma" x="294" y="126" width="72" height="46" rx="12"/>
-            <path class="esc-fina" d="M300 149h60M294 140h-16M366 140h16"/>
-            <path class="esc-linea" d="M330 126V80"/>
-            <circle class="esc-fina" cx="330" cy="74" r="5"/>
-            <path class="esc-fina-suave" d="M240 456h320"/>
+          <!-- 1 · DÍA · Terraza con arco (pieza original restaurada) -->
+          <svg class="escena escena-dia activa" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-dia" width="420" height="540"/>
+            <path class="linea-dia" d="M84 526 V246 A142 142 0 0 1 368 246 V526"/>
+            <clipPath id="arco-clip"><path d="M60 526 V270 A150 150 0 0 1 360 270 V526 Z"/></clipPath>
+            <g clip-path="url(#arco-clip)">
+              <rect class="claro-dia" x="60" y="120" width="300" height="410"/>
+              <use class="astro-uso" href="#astro"/>
+              <line class="linea-dia" x1="60" y1="352" x2="360" y2="352"/>
+              <line class="linea-dia linea-dia-fina" x1="60" y1="368" x2="360" y2="368"/>
+              <path class="trazo-dia-fino" d="M60 420h300"/>
+              <path class="linea-dia" d="M84 420v106M120 420v106M156 420v106M192 420v106M228 420v106M264 420v106M300 420v106M336 420v106"/>
+            </g>
+            <path class="trazo-dia" d="M60 526 V270 A150 150 0 0 1 360 270 V526"/>
           </svg>
-          <!-- Escena 3 · Cordillera de los Andes -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M0 400l84-66 66 40 78-58 74 52 66-34 60 40 58-24 70 34 84-40 60 32v24z"/>
-            <path class="esc-medio" d="M0 400l110-74 86 58 96-70 118 86zM470 400l96-58 110 58z"/>
-            <path class="esc-forma" d="M172 400 318 206l146 194z"/>
-            <path class="esc-forma-clara" d="M280 256l38-50 36 48-14-8-12 12-14-10-14 12z"/>
-            <path class="esc-fina" d="M318 206l8 60-14 48"/>
+          <!-- 2 · NOCHE · Cama tendida con velador y lámpara -->
+          <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-noche" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="forma-noche" x="54" y="296" width="16" height="124" rx="7"/>
+            <rect class="forma-noche" x="70" y="360" width="190" height="60" rx="10"/>
+            <rect class="claro-noche" x="82" y="338" width="52" height="22" rx="9"/>
+            <path class="trazo-noche-fino" d="M70 390h190"/>
+            <rect class="trazo-noche" x="292" y="366" width="54" height="54"/>
+            <path class="trazo-noche-fino" d="M319 366v-24"/>
+            <path class="forma-noche" d="M303 342h32l-7-20h-18z"/>
+            <path class="trazo-noche" d="M30 420h360"/>
           </svg>
-          <!-- Escena 4 · Torres del Paine -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-medio" d="M40 400l96-52 92 30 104-44 96 36 92-28 120 58z"/>
-            <path class="esc-forma" d="M196 372l34-190 22 24 12 166z"/>
-            <path class="esc-forma" d="M282 376l36-244 24 30 14 214z"/>
-            <path class="esc-forma" d="M382 376l30-202 24 38 8 164z"/>
-            <path class="esc-claro" d="M222 200l8-16 14 16-8 24zM310 152l8-18 16 20-10 26zM406 192l6-16 14 20-8 22z"/>
-            <path class="esc-claro" d="M76 428q324-24 648 0v34q-324 28-648 0z"/>
-            <path class="esc-fina-suave" d="M150 448h84M340 466h110M540 446h84"/>
+          <!-- 3 · DÍA · Terraza con quitasol y dos sillas -->
+          <svg class="escena escena-dia" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-dia" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <path class="forma-dia" d="M24 216q62-44 124 0z"/>
+            <path class="trazo-dia" d="M86 420V216"/>
+            <path class="trazo-dia" d="M254 368v38h38v14m-38-14v14"/>
+            <path class="trazo-dia" d="M346 368v38h-38v14m38-14v14"/>
+            <path class="trazo-dia" d="M30 420h360"/>
           </svg>
-          <!-- Escena 5 · Ascensores y cerros de Valparaíso -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-claro" d="M420 400h380v104q-210-30-380-74z"/>
-            <path class="esc-fina-suave" d="M470 436h70M580 458h90M660 428h70"/>
-            <path class="esc-medio" d="M0 400V246q150-58 292 62l102 92z"/>
-            <path class="esc-forma-clara" d="M28 228v-40h56v40z"/>
-            <path class="esc-forma-clara" d="M23 188l33-22 33 22z"/>
-            <path class="esc-forma" d="M104 220v-38h54v38z"/>
-            <path class="esc-forma" d="M99 182l32-20 32 20z"/>
-            <path class="esc-forma-clara" d="M176 236v-40h58v40z"/>
-            <path class="esc-forma-clara" d="M171 196l34-22 34 22z"/>
-            <path class="esc-forma" d="M236 268v-38h54v38z"/>
-            <path class="esc-forma" d="M231 230l32-20 32 20z"/>
-            <path class="esc-forma-clara" d="M64 288v-36h50v36z"/>
-            <path class="esc-forma-clara" d="M59 252l30-20 30 20z"/>
-            <rect class="esc-medio" x="48" y="200" width="12" height="16"/>
-            <rect class="esc-claro" x="124" y="192" width="12" height="16"/>
-            <rect class="esc-medio" x="198" y="206" width="12" height="16"/>
-            <rect class="esc-claro" x="256" y="240" width="12" height="16"/>
-            <path class="esc-linea" d="M300 262 452 398M314 252 466 388"/>
-            <path class="esc-fina" d="M342 296l14-12M380 330l14-12M418 364l14-12"/>
-            <path class="esc-forma-clara" d="M364 298h42v30h-42z"/>
+          <!-- 4 · NOCHE · Skyline residencial -->
+          <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-noche" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="forma-noche" x="44" y="336" width="76" height="84"/>
+            <rect class="forma-noche" x="138" y="356" width="92" height="64"/>
+            <rect class="forma-noche" x="248" y="328" width="70" height="92"/>
+            <rect class="forma-noche" x="336" y="368" width="52" height="52"/>
+            <path class="trazo-noche-fino" d="M283 328v-22"/>
+            <g class="ventana-noche">
+              <rect x="58" y="352" width="12" height="16"/><rect x="86" y="352" width="12" height="16"/>
+              <rect x="152" y="372" width="12" height="16"/><rect x="178" y="372" width="12" height="16"/><rect x="204" y="372" width="12" height="16"/>
+              <rect x="262" y="344" width="12" height="16"/><rect x="288" y="344" width="12" height="16"/><rect x="262" y="376" width="12" height="16"/>
+              <rect x="350" y="382" width="12" height="16"/>
+            </g>
+            <path class="trazo-noche" d="M30 420h360"/>
           </svg>
-          <!-- Escena 6 · Palafitos de Chiloé -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M552 400q130-42 248-10v10z"/>
-            <rect class="esc-claro" y="400" width="800" height="118"/>
-            <path class="esc-forma-clara" d="M96 400v-68h76v68z"/>
-            <path class="esc-forma-clara" d="M90 332l44-30 44 30z"/>
-            <path class="esc-forma" d="M208 400v-68h76v68z"/>
-            <path class="esc-forma" d="M202 332l44-30 44 30z"/>
-            <path class="esc-forma-clara" d="M320 400v-68h76v68z"/>
-            <path class="esc-forma-clara" d="M314 332l44-30 44 30z"/>
-            <path class="esc-forma" d="M432 400v-68h76v68z"/>
-            <path class="esc-forma" d="M426 332l44-30 44 30z"/>
-            <rect class="esc-medio" x="124" y="356" width="20" height="28"/>
-            <rect class="esc-claro" x="236" y="356" width="20" height="28"/>
-            <rect class="esc-medio" x="348" y="356" width="20" height="28"/>
-            <rect class="esc-claro" x="460" y="356" width="20" height="28"/>
-            <path class="esc-fina" d="M104 400v54M132 400v54M160 400v54M216 400v54M244 400v54M272 400v54M328 400v54M356 400v54M384 400v54M440 400v54M468 400v54M496 400v54"/>
-            <path class="esc-fina-suave" d="M112 476v12M140 484v10M252 478v12M364 482v12M476 476v12M560 452h96M628 480h110"/>
+          <!-- 5 · DÍA · Ventana con cortinas abiertas al sol -->
+          <svg class="escena escena-dia" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-dia" width="420" height="540"/>
+            <rect class="claro-dia" x="129" y="169" width="162" height="202"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="trazo-dia" x="120" y="160" width="180" height="220" fill="none"/>
+            <path class="trazo-dia-fino" d="M112 384h196"/>
+            <path class="forma-dia" d="M120 152C104 220 104 320 122 388L84 388 84 152Z"/>
+            <path class="forma-dia" d="M300 152C316 220 316 320 298 388L336 388 336 152Z"/>
+            <path class="trazo-dia" d="M30 420h360"/>
           </svg>
-          <!-- Escena 7 · Valle de la Luna, Atacama -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M0 400l88-46 88 32 116-52 116 44 116-38 122 40 76-26 78 30v16z"/>
-            <path class="esc-medio" d="M96 400q210-108 420 0zM470 400q140-62 280 0z"/>
-            <path class="esc-forma" d="M222 400l26-96 20 38 24-88 26 60 18-40 26 74 14-32 18 84z"/>
-            <path class="esc-fina" d="M118 396q210-104 404 2"/>
-            <path class="esc-fina-suave" d="M150 462q260-26 520 4M210 506q220-22 420 2"/>
+          <!-- 6 · NOCHE · Living con sofá, cuadro y lámpara -->
+          <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-noche" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="forma-noche" x="84" y="332" width="172" height="18" rx="9"/>
+            <rect class="forma-noche" x="76" y="336" width="18" height="84" rx="9"/>
+            <rect class="forma-noche" x="246" y="336" width="18" height="84" rx="9"/>
+            <rect class="forma-noche" x="84" y="364" width="172" height="56" rx="8"/>
+            <path class="trazo-noche-fino" d="M170 368v48"/>
+            <rect class="trazo-noche" x="298" y="240" width="58" height="74"/>
+            <path class="trazo-noche-fino" d="M306 300l16-24 12 14 10-14"/>
+            <path class="trazo-noche-fino" d="M56 420v-92"/>
+            <path class="forma-noche" d="M42 328h28l-6-18h-16z"/>
+            <path class="trazo-noche" d="M30 420h360"/>
           </svg>
-          <!-- Escena 8 · Volcán Osorno -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M0 400l128-42 118 34 128-46 122 38 116-30 100 30 88-22v38z"/>
-            <path class="esc-forma" d="M186 400 332 216q8-12 16 0l152 184z"/>
-            <path class="esc-forma-clara" d="M298 292l34-76q8-12 16 0l36 78-14-8-12 10-14-8-14 10-14-8z"/>
-            <path class="esc-claro" d="M64 426q336-22 672 0v36q-336 26-672 0z"/>
-            <path class="esc-fina-suave" d="M180 448h96M420 462h120M600 442h80"/>
+          <!-- 7 · DÍA · Piscina calma -->
+          <svg class="escena escena-dia" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-dia" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="claro-dia" x="64" y="336" width="292" height="84" rx="16"/>
+            <path class="trazo-dia-fino" d="M120 366q16 8 32 0t32 0M220 390q16 8 32 0t32 0"/>
+            <path class="trazo-dia" d="M318 322v56m22-56v56"/>
+            <path class="trazo-dia-fino" d="M318 338h22M318 356h22"/>
+            <path class="trazo-dia" d="M30 420h360"/>
           </svg>
-          <!-- Escena 9 · Palacio de La Moneda -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <rect class="esc-forma-clara" x="156" y="310" width="492" height="90"/>
-            <rect class="esc-forma-clara" x="330" y="286" width="144" height="114"/>
-            <path class="esc-fina" d="M330 306h144M348 310v84M375 310v84M402 310v84M429 310v84M456 310v84"/>
-            <rect class="esc-medio" x="176" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="208" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="240" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="272" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="304" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="488" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="520" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="552" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="584" y="336" width="20" height="40"/>
-            <rect class="esc-medio" x="616" y="336" width="20" height="40"/>
-            <path class="esc-fina" d="M402 286V234"/>
-            <rect class="esc-forma" x="402" y="234" width="34" height="20"/>
-            <rect class="esc-claro" x="402" y="234" width="13" height="10"/>
-            <circle class="esc-medio" cx="120" cy="354" r="26"/>
-            <circle class="esc-medio" cx="684" cy="354" r="26"/>
-            <path class="esc-fina" d="M120 380v18M684 380v18"/>
-            <path class="esc-fina-suave" d="M110 452h584"/>
+          <!-- 8 · NOCHE · Balcón con plantas -->
+          <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-noche" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <path class="trazo-noche" d="M48 372h324"/>
+            <path class="trazo-noche-fino" d="M60 372v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48m25-48v48"/>
+            <path class="forma-noche" d="M88 420l7-30h38l7 30z"/>
+            <path class="trazo-noche" d="M114 388q-16-24-34-30M114 388q-2-32 4-44M114 388q18-20 32-24"/>
+            <path class="forma-noche" d="M300 420l7-30h38l7 30z"/>
+            <path class="trazo-noche" d="M326 388q-16-24-34-30M326 388q-2-32 4-44M326 388q18-20 32-24"/>
+            <path class="trazo-noche" d="M30 420h360"/>
           </svg>
-          <!-- Escena 10 · Mano del Desierto -->
-          <svg class="escena" viewBox="0 0 800 600" role="presentation" focusable="false">
-            <rect class="esc-cielo" width="800" height="400"/>
-            <circle class="esc-sol" cx="580" cy="170" r="46"/>
-            <path class="esc-fina" d="M450 150c9-11 20-11 29-2c9-9 20-9 29 2"/>
-            <path class="esc-lejos" d="M0 400l150-30 140 22 170-34 160 26 180-20v36z"/>
-            <path class="esc-forma" d="M296 444V206q0-15 17-15t17 15v94h10V168q0-15 17-15t17 15v132h10V186q0-15 17-15t17 15v118h10v-78q0-14 16-14t16 14v104q26 16 32 46l6 68z"/>
-            <path class="esc-fina" d="M312 384q44 16 92 10"/>
-            <path class="esc-medio" d="M196 444q150-44 330-10 40 8 78 10z"/>
-            <path class="esc-fina-suave" d="M120 500q280-24 560 0"/>
+          <!-- 9 · DÍA · Puerta de entrada con llaves -->
+          <svg class="escena escena-dia" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-dia" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="trazo-dia" x="54" y="240" width="96" height="180" fill="none"/>
+            <rect class="trazo-dia-fino" x="68" y="258" width="68" height="136" fill="none"/>
+            <circle class="forma-dia" cx="138" cy="336" r="4"/>
+            <path class="trazo-dia-fino" d="M300 242v6"/>
+            <circle class="trazo-dia" cx="300" cy="258" r="10" fill="none"/>
+            <path class="trazo-dia-fino" d="M300 268v36m0-8h9m-9-10h6"/>
+            <rect class="tenue-dia" x="70" y="428" width="66" height="8" rx="4"/>
+            <path class="trazo-dia" d="M30 420h360"/>
+          </svg>
+          <!-- 10 · NOCHE · Maleta junto a la puerta -->
+          <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
+            <rect class="fondo-noche" width="420" height="540"/>
+            <use class="astro-uso" href="#astro"/>
+            <rect class="trazo-noche" x="272" y="224" width="104" height="196" fill="none"/>
+            <rect class="trazo-noche-fino" x="286" y="244" width="76" height="150" fill="none"/>
+            <circle class="claro-noche" cx="280" cy="330" r="4"/>
+            <path class="trazo-noche" d="M168 352v-8q0-8 8-8h24q8 0 8 8v8"/>
+            <rect class="forma-noche" x="144" y="352" width="88" height="68" rx="10"/>
+            <path class="trazo-noche-fino" d="M172 356v60M204 356v60"/>
+            <rect class="tenue-noche" x="292" y="428" width="72" height="8" rx="4"/>
+            <path class="trazo-noche" d="M30 420h360"/>
           </svg>
         </div>
       </div>

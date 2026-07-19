@@ -63,9 +63,11 @@
     anio.textContent = String(new Date().getFullYear());
   }
 
-  // Carrusel del hero: rotación de escenas cada 6s con crossfade de 1s.
-  // Orden barajado sin repetición inmediata; en pausa con la pestaña
-  // oculta; con prefers-reduced-motion queda una escena estática.
+  // Carrusel del hero: 12s por pieza, crossfade de 2s, alternando
+  // siempre día y noche (barajado por grupo, sin repetir hasta agotar
+  // el ciclo). La clase `noche` del contenedor anima la máscara del
+  // astro (sol → media luna) en sincronía con el fundido. En pausa
+  // con la pestaña oculta; estático con prefers-reduced-motion.
   var arte = document.querySelector('.hero-art');
   if (arte && !sinMovimiento) {
     var escenas = Array.prototype.slice.call(arte.querySelectorAll('.escena'));
@@ -75,24 +77,52 @@
         if (escena.classList.contains('activa')) { actual = i; }
       });
 
-      var bolsa = [];
-      var rebarajar = function () {
-        bolsa = escenas.map(function (_, i) { return i; });
-        for (var i = bolsa.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = bolsa[i]; bolsa[i] = bolsa[j]; bolsa[j] = t;
-        }
-        if (bolsa[0] === actual) { bolsa.push(bolsa.shift()); }
+      var grupoDe = function (i) {
+        return escenas[i].classList.contains('escena-noche') ? 'noche' : 'dia';
       };
+
+      var grupos = { dia: [], noche: [] };
+      escenas.forEach(function (_, i) { grupos[grupoDe(i)].push(i); });
+
+      var bolsas = { dia: [], noche: [] };
+      var ultimo = { dia: -1, noche: -1 };
+      ultimo[grupoDe(actual)] = actual;
+
+      var barajar = function (lista) {
+        for (var i = lista.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = lista[i]; lista[i] = lista[j]; lista[j] = t;
+        }
+        return lista;
+      };
+
+      var sacar = function (grupo) {
+        if (!bolsas[grupo].length) {
+          bolsas[grupo] = barajar(grupos[grupo].slice());
+          if (bolsas[grupo][0] === ultimo[grupo]) {
+            bolsas[grupo].push(bolsas[grupo].shift());
+          }
+        }
+        var indice = bolsas[grupo].shift();
+        ultimo[grupo] = indice;
+        return indice;
+      };
+
+      // La pieza inicial no debe repetirse dentro de su primer ciclo.
+      bolsas.dia = barajar(grupos.dia.filter(function (i) { return i !== actual; }));
+
+      var grupoActual = grupoDe(actual);
 
       setInterval(function () {
         if (document.hidden) { return; }
-        if (!bolsa.length) { rebarajar(); }
-        var siguiente = bolsa.shift();
+        var grupoSiguiente = grupoActual === 'dia' ? 'noche' : 'dia';
+        var siguiente = sacar(grupoSiguiente);
         escenas[actual].classList.remove('activa');
         escenas[siguiente].classList.add('activa');
+        arte.classList.toggle('noche', grupoSiguiente === 'noche');
         actual = siguiente;
-      }, 6000);
+        grupoActual = grupoSiguiente;
+      }, 12000);
     }
   }
 })();

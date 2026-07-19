@@ -446,20 +446,23 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--texto-2);
 }
 
-/* Carrusel del hero — 10 escenas apiladas en un contenedor de
-   proporción fija (cero layout shift). Sol y horizonte coinciden en
-   todas, así el crossfade + escala ≤2% se lee como metamorfosis. */
+/* Carrusel del hero — serie vertical de 10 piezas (5 día / 5 noche)
+   en un contenedor de proporción fija (cero layout shift). El astro
+   comparte círculo y posición en todas: en el crossfade de 2s queda
+   inmóvil y solo se transforma el entorno. */
 
 .hero-art {
   position: relative;
   width: 100%;
-  max-width: 28rem;
+  max-width: 20rem;
   margin-inline: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 420 / 540;
   background: var(--acento-suave);
   border-radius: var(--radio-l);
   overflow: hidden;
 }
+
+.hero-art .astro-defs { position: absolute; }
 
 .hero-art .escena {
   position: absolute;
@@ -468,13 +471,25 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   height: 100%;
   opacity: 0;
   transform: scale(1.015);
-  transition: opacity 1000ms ease-in-out, transform 1000ms ease-in-out;
+  transition: opacity 2000ms ease-in-out, transform 2000ms ease-in-out;
 }
 
 .hero-art .escena.activa { opacity: 1; transform: scale(1); }
 
+/* Astro compartido: disco en día, media luna en noche. El ocultador
+   de la máscara se desliza sincronizado con el crossfade de 2s. */
+.astro-oculto {
+  transform: translateX(72px);
+  transition: transform 2000ms ease-in-out;
+}
+
+.hero-art.noche .astro-oculto { transform: translateX(0); }
+
+.escena-dia .astro-uso { fill: var(--acento); }
+.escena-noche .astro-uso { fill: var(--blanco-calido); }
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-art .escena { transition: none; }
+  .hero-art .escena, .astro-oculto { transition: none; }
 }
 
 /* Estadísticas del hero como cards */
@@ -520,22 +535,29 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .hero { padding-block: var(--s-7); }
   .hero-grid { grid-template-columns: 7fr 5fr; align-items: center; gap: var(--s-6); }
 
-  .hero-art { max-width: none; border-radius: var(--radio-xl); }
+  .hero-art { max-width: 24rem; border-radius: var(--radio-xl); }
 }
 
-/* Lenguaje compartido de las 10 escenas — colores solo desde tokens:
-   fondo (--acento-suave), medio (--panel-texto-2), hito (trazo --acento) */
+/* Lenguaje compartido de la serie — colores solo desde tokens.
+   Día: fondo salvia-arena, elementos en verde profundo y blanco.
+   Noche: fondo verde profundo, elementos en los tonos claros. */
 
-.esc-cielo { fill: var(--blanco); }
-.esc-sol { fill: none; stroke: var(--acento); stroke-width: 2.5; }
-.esc-lejos { fill: var(--acento-suave); }
-.esc-medio { fill: var(--panel-texto-2); }
-.esc-claro { fill: var(--blanco); }
-.esc-forma { fill: var(--panel-texto-2); stroke: var(--acento); stroke-width: 2.5; stroke-linejoin: round; }
-.esc-forma-clara { fill: var(--blanco); stroke: var(--acento); stroke-width: 2.5; stroke-linejoin: round; }
-.esc-linea { fill: none; stroke: var(--acento); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.esc-fina { fill: none; stroke: var(--acento); stroke-width: 1.5; stroke-linecap: round; }
-.esc-fina-suave { fill: none; stroke: var(--panel-texto-2); stroke-width: 2; stroke-linecap: round; }
+.fondo-dia { fill: var(--acento-suave); }
+.claro-dia { fill: var(--blanco); }
+.forma-dia { fill: var(--acento); }
+.tenue-dia { fill: var(--panel-texto-2); }
+.trazo-dia { fill: none; stroke: var(--acento); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.trazo-dia-fino { fill: none; stroke: var(--acento); stroke-width: 1.5; stroke-linecap: round; }
+.linea-dia { fill: none; stroke: var(--panel-texto-2); stroke-width: 2; }
+.linea-dia-fina { stroke-width: 1; opacity: 0.8; }
+
+.fondo-noche { fill: var(--acento); }
+.claro-noche { fill: var(--blanco-calido); }
+.forma-noche { fill: var(--acento-suave); }
+.tenue-noche { fill: var(--panel-texto-2); }
+.ventana-noche rect { fill: var(--blanco-calido); }
+.trazo-noche { fill: none; stroke: var(--acento-suave); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.trazo-noche-fino { fill: none; stroke: var(--panel-texto-2); stroke-width: 1.5; stroke-linecap: round; }
 
 /* ---------- 01 · Caso real ---------- */
 
