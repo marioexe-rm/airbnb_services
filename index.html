@@ -273,23 +273,84 @@
           </div>
           <div class="caso-reviews">
             <h3 class="visually-hidden">Lo que escriben nuestros huéspedes</h3>
-            <!-- Reseñas reales del anuncio, extraídas el 18-07-2026 (la de Nicolás es un fragmento) -->
-            <figure class="review reveal">
-              <blockquote><p>Tuvimos una experiencia inmejorable! Departamento reluciente, toallas, batas y sabanas de primera calidad, cocina completísima, baño reluciente, seguridad en el lugar.</p></blockquote>
-              <figcaption>Nicolás · mayo de 2026</figcaption>
-            </figure>
-            <figure class="review reveal">
-              <blockquote><p>Recomiendo a mil el depa, todo estuvo increíble, desde cómo te reciben hasta lo que hay para la estadía. Sin dudar voy a volver.</p></blockquote>
-              <figcaption>Aldo · julio de 2026</figcaption>
-            </figure>
-            <figure class="review reveal">
-              <blockquote><p>Excelente alojamiento, apartamento limpio, equipado y muy cómodo. Cumplió con todas nuestras expectativas y la ubicación era excelente. Mário es un anfitrión muy servicial. ¡Lo recomiendo!</p></blockquote>
-              <figcaption>Catarina · junio de 2026</figcaption>
-            </figure>
-            <figure class="review reveal">
-              <blockquote><p>Excelente área al aire libre para relajarse y la cama tenía un colchón firme grande y encantador; ambos dormimos muy bien. Muy recomendable para este departamento.</p></blockquote>
-              <figcaption>Tony · mayo de 2026</figcaption>
-            </figure>
+            <!-- 16 frases de reseñas reales del anuncio (ruta /reviews del
+                 listado), extraídas el 19-07-2026 con normalización
+                 tipográfica ligera (mayúsculas, tildes). Rotan en 4 grupos
+                 de 4 con damero claro/oscuro que se invierte por posición. -->
+            <div class="resenas-rotador reveal" aria-live="off">
+              <div class="resenas-grupo activa">
+                <figure class="review">
+                  <blockquote><p>Tuvimos una experiencia inmejorable! Departamento reluciente, toallas, batas y sabanas de primera calidad, cocina completísima, baño reluciente, seguridad en el lugar.</p></blockquote>
+                  <figcaption>Nicolás · mayo de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Recomiendo a mil el depa, todo estuvo increíble, desde cómo te reciben hasta lo que hay para la estadía. Sin dudar voy a volver.</p></blockquote>
+                  <figcaption>Aldo · julio de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Muy céntrico. Perfecto para una estadía de trabajo en la U. Católica.</p></blockquote>
+                  <figcaption>Jerome · julio de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Muy acogedor, muy bien implementado, fácil acceso, todo muy limpio. Superó mis expectativas.</p></blockquote>
+                  <figcaption>Daisy Angelica · junio de 2026</figcaption>
+                </figure>
+              </div>
+              <div class="resenas-grupo">
+                <figure class="review">
+                  <blockquote><p>Fue absolutamente increíble: el mejor lugar en el que nos hemos hospedado en este viaje. Nos encantaron los dulces que dejaron en la mesa.</p></blockquote>
+                  <figcaption>Suy · mayo de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Fácil acceso, buen entorno, cercano al metro. Depto hermoso, los detalles son un lujo; definitivamente volveré.</p></blockquote>
+                  <figcaption>Valentina · abril de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Un lugar muy agradable y el departamento impecable.</p></blockquote>
+                  <figcaption>Sergio · abril de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Excelente alojamiento, apartamento limpio, equipado y muy cómodo. Cumplió con todas nuestras expectativas y la ubicación era excelente. Mário es un anfitrión muy servicial. ¡Lo recomiendo!</p></blockquote>
+                  <figcaption>Catarina · junio de 2026</figcaption>
+                </figure>
+              </div>
+              <div class="resenas-grupo">
+                <figure class="review">
+                  <blockquote><p>Acogedor departamento a pasos del metro Santa Lucía; indicaciones claras, buena comunicación y hasta snacks de cortesía que no esperábamos.</p></blockquote>
+                  <figcaption>Osvaldo · abril de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Mario fue súper preocupado y muy comprensivo con nuestra llegada tarde; nos recibió muy bien.</p></blockquote>
+                  <figcaption>Pamela Alejandra · abril de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Excelente ubicación céntrica, cerca de todos los servicios: ¡definitivamente me hospedaré aquí de nuevo!</p></blockquote>
+                  <figcaption>Arturo · mayo de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Excelente área al aire libre para relajarse y la cama tenía un colchón firme grande y encantador; ambos dormimos muy bien. Muy recomendable para este departamento.</p></blockquote>
+                  <figcaption>Tony · mayo de 2026</figcaption>
+                </figure>
+              </div>
+              <div class="resenas-grupo">
+                <figure class="review">
+                  <blockquote><p>Cómodo y bien pensado el espacio: permite cocinar con comodidad y es tranquilo. Cuando necesité algo, lo resolvieron inmediatamente.</p></blockquote>
+                  <figcaption>Andrea Belen · mayo de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Súper buena estadía: el departamento muy limpio y acogedor, céntrico para recorrer caminando.</p></blockquote>
+                  <figcaption>Emilia · junio de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Más lindo de lo que se ve en las fotos: tiene de todo y más, y queda cerca de todo.</p></blockquote>
+                  <figcaption>Nicole · abril de 2026</figcaption>
+                </figure>
+                <figure class="review">
+                  <blockquote><p>Alojamiento cómodo, limpio, ordenado y muy bien ubicado. Cuando esté en Santiago, este será mi lugar de referencia.</p></blockquote>
+                  <figcaption>Glauber · abril de 2026</figcaption>
+                </figure>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -42,6 +42,15 @@
   var revelables = document.querySelectorAll('.reveal');
   var sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Barajado Fisher-Yates, compartido por los rotadores (hero y reseñas)
+  var barajar = function (lista) {
+    for (var b = lista.length - 1; b > 0; b--) {
+      var c = Math.floor(Math.random() * (b + 1));
+      var t = lista[b]; lista[b] = lista[c]; lista[c] = t;
+    }
+    return lista;
+  };
+
   if ('IntersectionObserver' in window && !sinMovimiento) {
     var observer = new IntersectionObserver(function (entradas) {
       entradas.forEach(function (entrada) {
@@ -88,14 +97,6 @@
       var ultimo = { dia: -1, noche: -1 };
       ultimo[grupoDe(actual)] = actual;
 
-      var barajar = function (lista) {
-        for (var i = lista.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = lista[i]; lista[i] = lista[j]; lista[j] = t;
-        }
-        return lista;
-      };
-
       var sacar = function (grupo) {
         if (!bolsas[grupo].length) {
           bolsas[grupo] = barajar(grupos[grupo].slice());
@@ -123,6 +124,49 @@
         actual = siguiente;
         grupoActual = grupoSiguiente;
       }, 12000);
+    }
+  }
+
+  // Rotador de reseñas: 4 grupos × 4 frases, misma familia de
+  // transición del hero (15s por grupo, crossfade de 2s). El damero
+  // claro/oscuro se invierte por posición en cada cambio. Se pausa al
+  // leer (hover/focus) y con la pestaña oculta; con
+  // prefers-reduced-motion queda un único grupo estático.
+  var rotador = document.querySelector('.resenas-rotador');
+  if (rotador && !sinMovimiento) {
+    var gruposResenas = Array.prototype.slice.call(rotador.querySelectorAll('.resenas-grupo'));
+    if (gruposResenas.length > 1) {
+      var grupoActivo = 0;
+      gruposResenas.forEach(function (grupo, i) {
+        if (grupo.classList.contains('activa')) { grupoActivo = i; }
+      });
+
+      var lecturaPausada = false;
+      rotador.addEventListener('mouseenter', function () { lecturaPausada = true; });
+      rotador.addEventListener('mouseleave', function () { lecturaPausada = false; });
+      rotador.addEventListener('focusin', function () { lecturaPausada = true; });
+      rotador.addEventListener('focusout', function () { lecturaPausada = false; });
+
+      // El grupo inicial no se repite dentro de su primer ciclo.
+      var bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; })
+        .filter(function (i) { return i !== grupoActivo; }));
+      var ultimoGrupo = grupoActivo;
+      var pasos = 0;
+
+      setInterval(function () {
+        if (document.hidden || lecturaPausada) { return; }
+        if (!bolsaResenas.length) {
+          bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; }));
+          if (bolsaResenas[0] === ultimoGrupo) { bolsaResenas.push(bolsaResenas.shift()); }
+        }
+        var proximo = bolsaResenas.shift();
+        pasos++;
+        gruposResenas[proximo].classList.toggle('tonos-invertidos', pasos % 2 === 1);
+        gruposResenas[grupoActivo].classList.remove('activa');
+        gruposResenas[proximo].classList.add('activa');
+        ultimoGrupo = proximo;
+        grupoActivo = proximo;
+      }, 15000);
     }
   }
 })();

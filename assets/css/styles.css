@@ -596,10 +596,88 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .ficha dd { margin: 0; font-weight: 500; font-size: 0.9375rem; }
 
-.caso-reviews { display: grid; gap: var(--s-3); align-content: start; }
+/* Rotador de reseñas — 4 grupos × 4 frases con la misma familia de
+   transición del hero (crossfade 2s + respiración ≤2%). Los grupos se
+   apilan en la misma celda de grid: el contenedor reserva la altura
+   del grupo más alto (cero layout shift). */
+
+.resenas-rotador { display: grid; }
+
+.resenas-grupo {
+  grid-area: 1 / 1;
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.01);
+  transition: opacity 2000ms ease-in-out, transform 2000ms ease-in-out,
+              visibility 0s linear 2000ms;
+}
+
+.resenas-grupo.activa {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 2000ms ease-in-out, transform 2000ms ease-in-out,
+              visibility 0s;
+}
+
+/* Damero claro/oscuro con los tokens del hero: en móvil (1 columna)
+   alterna; en 2 columnas forma damero 2×2. La clase tonos-invertidos
+   —que el rotador asigna al grupo entrante en cada cambio— invierte
+   el tono de cada posición, evocando el ciclo día/noche. */
+
+.resenas-grupo .review:nth-child(odd) {
+  --r-fondo: var(--acento-suave);
+  --r-texto: var(--texto);
+  --r-firma: var(--texto-2);
+  --r-estrellas: var(--acento);
+}
+
+.resenas-grupo .review:nth-child(even),
+.resenas-grupo.tonos-invertidos .review:nth-child(odd) {
+  --r-fondo: var(--acento);
+  --r-texto: var(--blanco-calido);
+  --r-firma: var(--panel-texto-2);
+  --r-estrellas: var(--panel-texto-2);
+}
+
+.resenas-grupo.tonos-invertidos .review:nth-child(even) {
+  --r-fondo: var(--acento-suave);
+  --r-texto: var(--texto);
+  --r-firma: var(--texto-2);
+  --r-estrellas: var(--acento);
+}
+
+@media (min-width: 45em) {
+  .resenas-grupo { grid-template-columns: 1fr 1fr; }
+
+  .resenas-grupo .review:nth-child(3) {
+    --r-fondo: var(--acento);
+    --r-texto: var(--blanco-calido);
+    --r-firma: var(--panel-texto-2);
+    --r-estrellas: var(--panel-texto-2);
+  }
+
+  .resenas-grupo .review:nth-child(4),
+  .resenas-grupo.tonos-invertidos .review:nth-child(3) {
+    --r-fondo: var(--acento-suave);
+    --r-texto: var(--texto);
+    --r-firma: var(--texto-2);
+    --r-estrellas: var(--acento);
+  }
+
+  .resenas-grupo.tonos-invertidos .review:nth-child(4) {
+    --r-fondo: var(--acento);
+    --r-texto: var(--blanco-calido);
+    --r-firma: var(--panel-texto-2);
+    --r-estrellas: var(--panel-texto-2);
+  }
+}
 
 .review {
-  background: var(--blanco);
+  background: var(--r-fondo, var(--blanco));
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
   padding: var(--s-3);
@@ -613,7 +691,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   display: block;
   font-size: 0.8125rem;
   letter-spacing: 0.3em;
-  color: var(--acento);
+  color: var(--r-estrellas, var(--acento));
   margin-bottom: 0.75rem;
 }
 
@@ -621,18 +699,18 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-size: 1rem;
   line-height: 1.6;
   font-weight: 400;
-  color: var(--texto);
+  color: var(--r-texto, var(--texto));
 }
 
 .review figcaption {
   margin-top: var(--s-2);
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--texto-2);
+  color: var(--r-firma, var(--texto-2));
 }
 
-@media (min-width: 45em) {
-  .caso-reviews { grid-template-columns: 1fr 1fr; }
+@media (prefers-reduced-motion: reduce) {
+  .resenas-grupo { transition: none; }
 }
 
 @media (min-width: 60em) {
