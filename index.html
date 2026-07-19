@@ -101,32 +101,34 @@
         </div>
         <div class="hero-art" aria-hidden="true">
           <!-- Serie «Estadía»: 10 piezas de hospitalidad (5 día / 5 noche).
-               Astro único compartido: mismo círculo (210,270 r56) en todas;
+               Astro único compartido: mismo círculo (210,100 r56) en todas,
+               alto en el cielo y con zona despejada de radio 84 (1.5×r);
                la máscara #astro-mascara lo convierte en media luna y se
                anima con el crossfade (sol que se transforma en luna). -->
           <svg class="astro-defs" width="0" height="0" focusable="false" aria-hidden="true">
             <defs>
-              <mask id="astro-mascara" maskUnits="userSpaceOnUse" x="140" y="200" width="140" height="140">
-                <rect x="140" y="200" width="140" height="140" fill="#fff"/>
-                <rect class="astro-oculto" x="210" y="200" width="72" height="140" fill="#000"/>
+              <mask id="astro-mascara" maskUnits="userSpaceOnUse" x="140" y="30" width="140" height="140">
+                <rect x="140" y="30" width="140" height="140" fill="#fff"/>
+                <rect class="astro-oculto" x="210" y="30" width="72" height="140" fill="#000"/>
               </mask>
-              <g id="astro"><circle cx="210" cy="270" r="56" mask="url(#astro-mascara)"/></g>
+              <g id="astro"><circle cx="210" cy="100" r="56" mask="url(#astro-mascara)"/></g>
             </defs>
           </svg>
-          <!-- 1 · DÍA · Terraza con arco (pieza original restaurada) -->
+          <!-- 1 · DÍA · Terraza con arco (original, arco elevado: el sol
+               queda dentro de la ventana sin que el trazo entre en su zona) -->
           <svg class="escena escena-dia activa" viewBox="0 0 420 540" role="presentation" focusable="false">
             <rect class="fondo-dia" width="420" height="540"/>
-            <path class="linea-dia" d="M84 526 V246 A142 142 0 0 1 368 246 V526"/>
-            <clipPath id="arco-clip"><path d="M60 526 V270 A150 150 0 0 1 360 270 V526 Z"/></clipPath>
+            <path class="linea-dia" d="M52 526 V172 A158 158 0 0 1 368 172 V526"/>
+            <clipPath id="arco-clip"><path d="M60 526 V158 A150 150 0 0 1 360 158 V526 Z"/></clipPath>
             <g clip-path="url(#arco-clip)">
-              <rect class="claro-dia" x="60" y="120" width="300" height="410"/>
+              <rect class="claro-dia" x="60" width="300" height="530"/>
               <use class="astro-uso" href="#astro"/>
               <line class="linea-dia" x1="60" y1="352" x2="360" y2="352"/>
               <line class="linea-dia linea-dia-fina" x1="60" y1="368" x2="360" y2="368"/>
               <path class="trazo-dia-fino" d="M60 420h300"/>
               <path class="linea-dia" d="M84 420v106M120 420v106M156 420v106M192 420v106M228 420v106M264 420v106M300 420v106M336 420v106"/>
             </g>
-            <path class="trazo-dia" d="M60 526 V270 A150 150 0 0 1 360 270 V526"/>
+            <path class="trazo-dia" d="M60 526 V158 A150 150 0 0 1 360 158 V526"/>
           </svg>
           <!-- 2 · NOCHE · Cama tendida con velador y lámpara -->
           <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
@@ -151,32 +153,30 @@
             <path class="trazo-dia" d="M346 368v38h-38v14m38-14v14"/>
             <path class="trazo-dia" d="M30 420h360"/>
           </svg>
-          <!-- 4 · NOCHE · Skyline residencial -->
+          <!-- 4 · NOCHE · Hamaca bajo la luna -->
           <svg class="escena escena-noche" viewBox="0 0 420 540" role="presentation" focusable="false">
             <rect class="fondo-noche" width="420" height="540"/>
             <use class="astro-uso" href="#astro"/>
-            <rect class="forma-noche" x="44" y="336" width="76" height="84"/>
-            <rect class="forma-noche" x="138" y="356" width="92" height="64"/>
-            <rect class="forma-noche" x="248" y="328" width="70" height="92"/>
-            <rect class="forma-noche" x="336" y="368" width="52" height="52"/>
-            <path class="trazo-noche-fino" d="M283 328v-22"/>
-            <g class="ventana-noche">
-              <rect x="58" y="352" width="12" height="16"/><rect x="86" y="352" width="12" height="16"/>
-              <rect x="152" y="372" width="12" height="16"/><rect x="178" y="372" width="12" height="16"/><rect x="204" y="372" width="12" height="16"/>
-              <rect x="262" y="344" width="12" height="16"/><rect x="288" y="344" width="12" height="16"/><rect x="262" y="376" width="12" height="16"/>
-              <rect x="350" y="382" width="12" height="16"/>
-            </g>
+            <path class="trazo-noche" d="M84 420V300M336 420V300"/>
+            <path class="trazo-noche-fino" d="M84 304l18 10M336 304l-18 10"/>
+            <path class="forma-noche" d="M102 314Q210 398 318 314Q210 356 102 314Z"/>
+            <path class="forma-noche" d="M28 420l6-26h30l6 26z"/>
+            <path class="trazo-noche" d="M48 392q-14-20-30-26M48 392q0-28 4-38M48 392q14-18 26-22"/>
             <path class="trazo-noche" d="M30 420h360"/>
           </svg>
-          <!-- 5 · DÍA · Ventana con cortinas abiertas al sol -->
+          <!-- 5 · DÍA · Mesa de desayuno con dos tazas y bandeja -->
           <svg class="escena escena-dia" viewBox="0 0 420 540" role="presentation" focusable="false">
             <rect class="fondo-dia" width="420" height="540"/>
-            <rect class="claro-dia" x="129" y="169" width="162" height="202"/>
             <use class="astro-uso" href="#astro"/>
-            <rect class="trazo-dia" x="120" y="160" width="180" height="220" fill="none"/>
-            <path class="trazo-dia-fino" d="M112 384h196"/>
-            <path class="forma-dia" d="M120 152C104 220 104 320 122 388L84 388 84 152Z"/>
-            <path class="forma-dia" d="M300 152C316 220 316 320 298 388L336 388 336 152Z"/>
+            <rect class="forma-dia" x="120" y="336" width="180" height="8" rx="4"/>
+            <path class="trazo-dia" d="M134 344V420M286 344V420"/>
+            <rect class="tenue-dia" x="158" y="326" width="104" height="8" rx="4"/>
+            <rect class="claro-dia" x="170" y="306" width="24" height="20" rx="5"/>
+            <path class="trazo-dia-fino" d="M194 310q10 3 0 11"/>
+            <rect class="claro-dia" x="216" y="306" width="24" height="20" rx="5"/>
+            <path class="trazo-dia-fino" d="M240 310q10 3 0 11"/>
+            <path class="trazo-dia-fino" d="M182 294q4-6 0-12M228 294q4-6 0-12"/>
+            <path class="trazo-dia" d="M324 312v56h44v52m-44-52v52"/>
             <path class="trazo-dia" d="M30 420h360"/>
           </svg>
           <!-- 6 · NOCHE · Living con sofá, cuadro y lámpara -->
