@@ -7,24 +7,25 @@
    ============================================================ */
 
 :root {
-  /* Color */
+  /* Color — base cálida (60) + una sola familia de acento verde (30/10) */
   --blanco: #FFFFFF;         /* fondo único de la página */
+  --blanco-calido: #F7F9F4;  /* blanco cálido: texto sobre verdes */
   --texto: #222222;          /* texto principal */
-  --texto-2: #5B6161;        /* texto secundario (6.3:1 sobre blanco) */
-  --acento: #01454F;         /* azul petróleo — acento de marca */
-  --acento-osc: #023840;     /* acento en hover */
-  --acento-suave: #EAF2F2;   /* tinte del acento para chips y paneles */
-  --panel-texto-2: #CBDFE1;  /* secundario sobre panel petróleo (7.7:1) */
-  --panel-label: #B7D3D6;    /* etiquetas sobre panel petróleo (6.8:1) */
-  --gris-bg: #F7F7F7;        /* fondos de apoyo (footer, hovers) */
+  --texto-2: #5D5D55;        /* gris cálido secundario (6.6:1 sobre blanco) */
+  --acento: #33593F;         /* IDENTIDAD: verde bosque cálido (H 139°) */
+  --acento-cta: #1C3D27;     /* CONVERSIÓN: mismo matiz, más oscuro y saturado */
+  --acento-cta-osc: #142D1C; /* hover/focus del CTA: oscurece, no cambia matiz */
+  --acento-suave: #E5EBE1;   /* APOYO: salvia muy clara para badges y checks */
+  --panel-texto-2: #CBD8C6;  /* secundario sobre superficies verdes (5.4:1) */
+  --gris-bg: #F7F7F7;        /* fondos de apoyo neutros (panel contacto, hovers) */
   --linea: #EBEBEB;          /* hairlines y bordes de tarjeta */
   --linea-suave: #F0F0F0;    /* divisores internos */
-  --borde-btn: #ABB0B0;      /* borde fino de botones secundarios */
+  --borde-btn: #ACACA4;      /* borde fino gris cálido de botones secundarios */
 
-  /* Elevación — sombras suaves y difusas, nunca duras */
-  --sombra-1: 0 1px 2px rgba(16, 24, 32, 0.06), 0 6px 16px rgba(16, 24, 32, 0.06);
-  --sombra-2: 0 2px 4px rgba(16, 24, 32, 0.06), 0 12px 28px rgba(16, 24, 32, 0.12);
-  --sombra-header: 0 2px 12px rgba(16, 24, 32, 0.08);
+  /* Elevación — sombras suaves y difusas con tinte cálido, nunca duras */
+  --sombra-1: 0 1px 2px rgba(28, 26, 18, 0.06), 0 6px 16px rgba(28, 26, 18, 0.06);
+  --sombra-2: 0 2px 4px rgba(28, 26, 18, 0.06), 0 12px 28px rgba(28, 26, 18, 0.12);
+  --sombra-header: 0 2px 12px rgba(28, 26, 18, 0.08);
 
   /* Radios */
   --radio-m: 12px;           /* elementos menores */
@@ -51,8 +52,9 @@
   --t-lead: 1.125rem;
 
   /* Iconografía lineal fina (Lucide), embebida y monocroma */
-  --icono-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2301454F' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
-  --icono-menos: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ABB0B0' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+  --icono-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2333593F' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  --icono-check-claro: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23CBD8C6' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  --icono-menos: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ACACA4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
   --icono-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
   --transicion: 160ms ease;
@@ -133,7 +135,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   left: 1rem;
   z-index: 100;
   padding: var(--s-1) var(--s-2);
-  background: var(--acento);
+  background: var(--acento-cta);
   color: var(--blanco);
   text-decoration: none;
   font-weight: 600;
@@ -199,15 +201,17 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 .btn-primary {
-  background: var(--acento);
-  color: var(--blanco);
+  background: var(--acento-cta);
+  color: var(--blanco-calido);
 }
 
 .btn-primary:hover {
-  background: var(--acento-osc);
+  background: var(--acento-cta-osc);
   transform: translateY(-1px);
   box-shadow: var(--sombra-1);
 }
+
+.btn-primary:focus-visible { background: var(--acento-cta-osc); outline-color: var(--acento-cta-osc); }
 
 .btn-primary:active { transform: translateY(0); }
 
@@ -498,16 +502,17 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .hero-art svg { width: min(100%, 24rem); margin-inline: auto; display: block; }
 }
 
-/* Ilustración del arco — monocroma en la gama del acento */
+/* Ilustración del arco — línea monocroma en la gama del verde;
+   el sol pasa a trazo para que ningún relleno verde sólido sea decorativo */
 
 .arch-front { fill: none; stroke: var(--acento); stroke-width: 2.5; }
-.arch-back  { fill: none; stroke: #BFD4D6; stroke-width: 2; }
+.arch-back  { fill: none; stroke: #C7D4C1; stroke-width: 2; }
 .arch-sky   { fill: var(--blanco); }
-.arch-sun   { fill: var(--acento); }
-.arch-line  { stroke: #C3D6D8; stroke-width: 2; }
+.arch-sun   { fill: none; stroke: var(--acento); stroke-width: 2.5; }
+.arch-line  { stroke: #CDD9C7; stroke-width: 2; }
 .arch-line-soft { stroke-width: 1; opacity: 0.8; }
-.arch-rail line { stroke: #9DBABD; stroke-width: 1.5; }
-.arch-rail line:first-child { stroke-width: 2; stroke: #7FA5A9; }
+.arch-rail line { stroke: #9FB699; stroke-width: 1.5; }
+.arch-rail line:first-child { stroke-width: 2; stroke: #7E9B76; }
 
 /* ---------- 01 · Caso real ---------- */
 
@@ -704,8 +709,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-weight: 600;
   letter-spacing: 0.01em;
   text-transform: none;
-  color: var(--blanco);
-  background: var(--acento);
+  color: var(--acento);
+  background: var(--acento-suave);
   padding: 0.375rem 0.875rem;
   border-radius: var(--radio-pill);
   margin-bottom: var(--s-2);
@@ -763,12 +768,26 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .plan .btn { margin-top: auto; width: 100%; }
 
+/* Única sección de identidad con fondo verde y texto claro */
 .plan-destacado {
+  background: var(--acento);
   border: 2px solid var(--acento);
+  color: var(--blanco-calido);
   box-shadow: var(--sombra-2);
 }
 
 .plan-destacado:hover { box-shadow: var(--sombra-2); }
+
+.plan-destacado .plan-para { color: var(--panel-texto-2); }
+.plan-destacado .plan-precio { color: var(--blanco-calido); }
+.plan-destacado .plan-precio span { color: var(--panel-texto-2); }
+.plan-destacado .plan-modulos li { border-color: rgba(247, 249, 244, 0.22); }
+.plan-destacado .plan-modulos .incluido::before { background-image: var(--icono-check-claro); }
+
+/* CTA invertido sobre la superficie verde: blanco cálido, hover en salvia */
+.plan-destacado .btn-primary { background: var(--blanco-calido); color: var(--acento-cta); }
+.plan-destacado .btn-primary:hover { background: var(--acento-suave); }
+.plan-destacado :focus-visible { outline-color: var(--blanco-calido); }
 
 .planes-nota {
   margin-top: var(--s-4);
@@ -913,7 +932,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   max-width: 62ch;
 }
 
-/* ---------- 07 · Contacto — panel card sobre fondo blanco ---------- */
+/* ---------- 07 · Contacto — panel neutro claro: el CTA verde
+   queda como el elemento de mayor contraste, rodeado de aire ---------- */
 
 .contacto {
   background: var(--blanco);
@@ -922,25 +942,21 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 .contacto-grid {
-  background: var(--acento);
-  color: var(--blanco);
+  background: var(--gris-bg);
+  color: var(--texto);
   border-radius: var(--radio-xl);
   padding: clamp(2rem, 6vw, 4.5rem);
   display: grid;
   gap: var(--s-5);
 }
 
-.contacto .eyebrow { background: rgba(255, 255, 255, 0.16); color: var(--blanco); }
-.contacto h2 { margin-top: var(--s-2); max-width: 18ch; color: var(--blanco); }
-.contacto .sec-lead { color: var(--panel-texto-2); margin-top: var(--s-2); }
+.contacto h2 { margin-top: var(--s-2); max-width: 18ch; }
+.contacto .sec-lead { color: var(--texto-2); margin-top: var(--s-2); }
 
-.contacto .btn-primary { margin-top: var(--s-4); background: var(--blanco); color: var(--acento); }
-.contacto .btn-primary:hover { background: var(--acento-suave); }
+.contacto .btn-primary { margin-top: var(--s-4); }
 
-.contacto :focus-visible { outline-color: var(--blanco); }
-
-.contacto-list li { border-top: 1px solid rgba(255, 255, 255, 0.22); }
-.contacto-list li:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
+.contacto-list li { border-top: 1px solid var(--linea); }
+.contacto-list li:last-child { border-bottom: 1px solid var(--linea); }
 
 .contacto-list a {
   display: flex;
@@ -956,14 +972,14 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   height: 1.375rem;
   flex-shrink: 0;
   fill: none;
-  stroke: var(--panel-label);
+  stroke: var(--acento);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
   transition: stroke var(--transicion);
 }
 
-.contacto-list svg .dot { fill: var(--panel-label); stroke: none; }
+.contacto-list svg .dot { fill: var(--acento); stroke: none; }
 
 .contacto-list strong {
   display: block;
@@ -971,11 +987,11 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-weight: 600;
   letter-spacing: 0.01em;
   text-transform: none;
-  color: var(--panel-label);
+  color: var(--texto-2);
 }
 
-.contacto-list a:hover { color: var(--panel-texto-2); }
-.contacto-list a:hover svg { stroke: var(--blanco); }
+.contacto-list a:hover { color: var(--acento); }
+.contacto-list a:hover svg { stroke: var(--acento-cta); }
 
 @media (min-width: 60em) {
   .contacto-grid { grid-template-columns: 1.1fr 1fr; gap: var(--s-7); align-items: center; }
@@ -983,24 +999,26 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 /* ---------- Footer ---------- */
 
+/* Footer en verde de identidad — rol estructural de cierre */
+
 .site-footer {
-  background: var(--gris-bg);
-  color: var(--texto);
-  border-top: 1px solid var(--linea);
+  background: var(--acento);
+  color: var(--blanco-calido);
   padding-top: var(--s-6);
 }
 
 .footer-grid { display: grid; gap: var(--s-5); }
 
-.footer-brand .brand { color: var(--texto); }
-.footer-brand p { margin-top: var(--s-2); font-size: 0.9375rem; color: var(--texto-2); max-width: 30ch; }
+.footer-brand .brand { color: var(--blanco-calido); }
+.site-footer .brand-mark { fill: var(--acento-suave); }
+.footer-brand p { margin-top: var(--s-2); font-size: 0.9375rem; color: var(--panel-texto-2); max-width: 30ch; }
 
 .footer-title {
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--texto);
+  color: var(--blanco-calido);
   margin-bottom: var(--s-2);
 }
 
@@ -1008,24 +1026,26 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .footer-nav a, .footer-contacto a {
   font-size: 0.9375rem;
-  color: var(--texto-2);
+  color: var(--panel-texto-2);
   text-decoration: none;
   transition: color var(--transicion);
 }
 
 .footer-nav a:hover, .footer-contacto a:hover {
-  color: var(--texto);
+  color: var(--blanco-calido);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
+.site-footer :focus-visible { outline-color: var(--blanco-calido); }
+
 .footer-legal {
   margin-top: var(--s-5);
   padding-block: var(--s-3) var(--s-5);
-  border-top: 1px solid var(--linea);
+  border-top: 1px solid rgba(247, 249, 244, 0.18);
 }
 
-.footer-legal p { font-size: 0.8125rem; color: var(--texto-2); }
+.footer-legal p { font-size: 0.8125rem; color: var(--panel-texto-2); }
 
 @media (min-width: 45em) {
   .footer-grid { grid-template-columns: 1.4fr 1fr 1.2fr; gap: var(--s-4); }
