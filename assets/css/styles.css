@@ -579,57 +579,31 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .caso-ficha > p { color: var(--texto-2); max-width: 52ch; }
 
-/* Carrusel de fotos reales del anuncio: pieza visual principal de la
-   columna lateral, con proporción fija (cero layout shift). Avanza en
-   el mismo tick del rotador de reseñas, con su mismo crossfade de 2s. */
-.fotos-airbnb {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radio-l);
-  overflow: hidden;
-  background: var(--blanco-calido);
-  box-shadow: var(--sombra-1);
+@media (min-width: 60em) {
+  .caso-grid { grid-template-columns: 5fr 7fr; gap: var(--s-6); align-items: start; }
 }
-
-.foto-airbnb {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(1.015);
-  transition: opacity 2000ms ease-in-out, transform 2000ms ease-in-out;
-}
-
-.foto-airbnb.activa { opacity: 1; transform: none; }
 
 /* Métricas del caso real: cards compactas bajo el carrusel */
-/* Bloque de medios: carrusel principal + métricas. Apilado en móvil,
-   métricas en fila en tablet y en columna lateral compacta desde
-   1024px, centradas junto al carrusel. */
-.caso-medios { margin-top: var(--s-3); display: grid; gap: var(--s-2); }
+.metricas { display: grid; }
 
-@media (min-width: 45em) {
-  .caso-medios .metricas { grid-template-columns: repeat(3, 1fr); }
+/* Tarjeta grande de métricas (eco de la ficha original): card blanca
+   con las tres métricas como filas separadas por divisores. */
+.tarjeta-metricas {
+  margin-top: var(--s-3);
+  background: var(--blanco);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-1);
+  padding: var(--s-1) var(--s-3);
 }
-
-@media (min-width: 64em) {
-  .caso-medios { grid-template-columns: 1.7fr 1fr; gap: var(--s-3); align-items: center; }
-  .caso-medios .metricas { grid-template-columns: 1fr; }
-}
-
-.metricas { display: grid; gap: var(--s-2); }
 
 .metricas li {
   display: flex;
   align-items: center;
   gap: var(--s-2);
-  background: var(--blanco-calido);
-  border-radius: var(--radio-l);
-  box-shadow: var(--sombra-1);
-  padding: var(--s-2) var(--s-3);  transition: box-shadow var(--transicion), transform var(--transicion);
+  padding: var(--s-3) 0;
 }
+
+.metricas li + li { border-top: 1px solid var(--linea-suave); }
 
 .metrica-icono {
   width: 1.5rem;
@@ -670,10 +644,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   line-height: 1.45;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .foto-airbnb { transition: none; }
-}
-
 /* Rotador de reseñas — 4 grupos × 4 frases con la misma familia de
    transición del hero (crossfade 2s + respiración ≤2%). Los grupos se
    apilan en la misma celda de grid: el contenedor reserva la altura
@@ -705,6 +675,18 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .resenas-grupo { grid-template-columns: 1fr 1fr; }
 }
 
+/* Card de foto del grid: dimensiones idénticas a una card de reseña,
+   la imagen llena la card con object-fit cover. */
+.review-foto { position: relative; padding: 0; overflow: hidden; }
+.review-foto::before { content: none; }
+.review-foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Cards uniformes: blanco cálido sobre la sección arena, todas del
    mismo tamaño (el JS fija la altura de la más alta de las 16). */
 
@@ -719,7 +701,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 /* Elevación al hover compartida por reseñas y tarjetas de ítems */
-.review:hover, .modulo-items li:hover, .metricas li:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
+.review:hover, .modulo-items li:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
 
 /* Estrellas doradas: regla propia, separada del token de los precios
    de ítems (que permanecen en --acento). */

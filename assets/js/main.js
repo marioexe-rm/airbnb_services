@@ -169,18 +169,27 @@
       rotador.addEventListener('focusin', pausar);
       rotador.addEventListener('focusout', reanudar);
 
-      // Carrusel de fotos del anuncio: comparte este mismo timer y su
-      // pausa (mirar las fotos también detiene el ciclo).
-      var fotos = Array.prototype.slice.call(document.querySelectorAll('.fotos-airbnb .foto-airbnb'));
-      var fotoActiva = 0;
-      fotos.forEach(function (foto, i) {
-        if (foto.classList.contains('activa')) { fotoActiva = i; }
+      // Card de foto del grid: en cada cambio avanza la imagen (barajado
+      // de las 4 sin repetir hasta agotar) y su celda en el grid
+      // (barajado de posiciones), asignadas al grupo entrante antes de
+      // aparecer, dentro de este mismo timer.
+      var pozaFotos = [];
+      gruposResenas.forEach(function (grupo) {
+        var img = grupo.querySelector('.review-foto img');
+        if (img && pozaFotos.indexOf(img.getAttribute('src')) === -1) {
+          pozaFotos.push(img.getAttribute('src'));
+        }
       });
-      var contenedorFotos = document.querySelector('.fotos-airbnb');
-      if (contenedorFotos) {
-        contenedorFotos.addEventListener('mouseenter', pausar);
-        contenedorFotos.addEventListener('mouseleave', reanudar);
-      }
+      var bolsaFotos = [], ultimaFoto = 0;
+      var bolsaCeldas = [], ultimaCelda = 3;
+      var sacarIndice = function (bolsa, total, ultimo) {
+        if (!bolsa.length) {
+          for (var n = 0; n < total; n++) { bolsa.push(n); }
+          barajar(bolsa);
+          if (bolsa[0] === ultimo) { bolsa.push(bolsa.shift()); }
+        }
+        return bolsa.shift();
+      };
 
       // El grupo inicial no se repite dentro de su primer ciclo.
       var bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; })
@@ -194,15 +203,22 @@
           if (bolsaResenas[0] === ultimoGrupo) { bolsaResenas.push(bolsaResenas.shift()); }
         }
         var proximo = bolsaResenas.shift();
+        var entrante = gruposResenas[proximo];
+        var cardFoto = entrante.querySelector('.review-foto');
+        if (cardFoto && pozaFotos.length > 1) {
+          ultimaFoto = sacarIndice(bolsaFotos, pozaFotos.length, ultimaFoto);
+          cardFoto.querySelector('img').src = pozaFotos[ultimaFoto];
+          ultimaCelda = sacarIndice(bolsaCeldas, 4, ultimaCelda);
+          cardFoto.style.order = ultimaCelda;
+          var celdasLibres = [0, 1, 2, 3].filter(function (celda) { return celda !== ultimaCelda; });
+          Array.prototype.slice.call(entrante.querySelectorAll('.review')).forEach(function (card) {
+            if (card !== cardFoto) { card.style.order = celdasLibres.shift(); }
+          });
+        }
         gruposResenas[grupoActivo].classList.remove('activa');
-        gruposResenas[proximo].classList.add('activa');
+        entrante.classList.add('activa');
         ultimoGrupo = proximo;
         grupoActivo = proximo;
-        if (fotos.length > 1) {
-          fotos[fotoActiva].classList.remove('activa');
-          fotoActiva = (fotoActiva + 1) % fotos.length;
-          fotos[fotoActiva].classList.add('activa');
-        }
       }, 15000);
     }
   }
