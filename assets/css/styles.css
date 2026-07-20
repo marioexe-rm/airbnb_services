@@ -22,9 +22,14 @@
   --linea-suave: #F0F0F0;    /* divisores internos */
   --borde-btn: #ACACA4;      /* borde fino gris cálido de botones secundarios */
 
-  /* Metales — capa de acentos premium, uso restringido:
-     oro = badge Recomendado, estrellas, viñetas del plan destacado,
-     hover de CTA verde y sol del hero; plata = luna y hairline footer */
+  /* Metales — capa de acentos premium, uso restringido.
+     Oro permanente: badge Recomendado, estrellas, viñetas del plan
+       destacado, «hotel boutique» del h1, destacados de la ficha del caso
+       real (★5,0 · medalla+Superanfitrión · reloj+24/7), precios de módulo
+       e íconos de servicio de los ítems.
+     Oro de interacción: hover/focus de CTA verdes.
+     Oro de ciclo: sol del hero.
+     Plata: luna del hero y hairline del footer. */
   --gold: #83702E;           /* oro viejo oliva (AA 4.6:1 con blanco cálido) */
   --silver: var(--gris-bg);  /* plateado: alias del gris del hover del navbar */
 
@@ -263,8 +268,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   transition: transform var(--transicion);
 }
 
-/* Oro de interacción: el subrayado hover de los enlaces flecha */
-.link-arrow:hover { text-decoration-color: var(--gold); }
+/* El subrayado hover retoma el verde de identidad (ya no es oro de interacción) */
+.link-arrow:hover { text-decoration-color: var(--acento); }
 .link-arrow:hover::after { transform: translateX(4px); }
 
 /* Aparición sutil al hacer scroll (solo con JS activo) */
@@ -434,6 +439,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   display: grid;
   gap: var(--s-5);
 }
+
+/* Se retiró el eyebrow que iba sobre el título; se reserva su alto para
+   que el h1 y el resto del bloque conserven su posición vertical (sin
+   salto). El chip medía una línea (~32.8px) en tablet/desktop y dos
+   (~53.6px) en móvil angosto: se compensa ese alto por tramo. */
+.hero-copy { padding-top: 2.05rem; }
+@media (max-width: 30em) { .hero-copy { padding-top: 3.35rem; } }
 
 .hero h1 {
   font-size: var(--t-hero);
@@ -612,6 +624,22 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .ficha dd { margin: 0; font-weight: 500; font-size: 0.9375rem; }
 
+/* Destacados dorados de la ficha: el valor clave en oro y negrita; el
+   resto de la línea conserva su tinta oscura. El ícono hereda el oro
+   por currentColor. */
+.dato-oro { color: var(--gold); font-weight: 700; }
+.ficha-ico {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  margin-right: 0.35em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* Rotador de reseñas — 4 grupos × 4 frases con la misma familia de
    transición del hero (crossfade 2s + respiración ≤2%). Los grupos se
    apilan en la misma celda de grid: el contenedor reserva la altura
@@ -733,11 +761,14 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .modulo-head h3 { font-size: var(--t-h3); margin-top: 0.5rem; }
 
+/* Precio global del módulo en oro (mismo tamaño/peso); la descripción
+   del span sigue en secundario. Los precios de los ítems permanecen en
+   verde (--acento), token distinto. */
 .modulo-precio {
   font-size: 1.375rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--texto);
+  color: var(--gold);
   margin-top: var(--s-2);
   line-height: 1.25;
 }
@@ -772,6 +803,25 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-size: 0.9375rem;
   color: var(--texto-2);
   transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+/* Cuerpo de texto del ítem: contiene el float del ícono (flow-root), así
+   el texto lo rodea y sigue a ancho completo sin reservar una columna. */
+.item-cuerpo { display: flow-root; }
+
+/* Ícono de servicio en la esquina superior derecha, en oro. Con float el
+   texto fluye a su izquierda; el margen inferior lo despega del texto y
+   del precio anclado abajo, sin colisión ni en tarjetas de poco texto. */
+.item-ico {
+  float: right;
+  width: 20px;
+  height: 20px;
+  margin: 0.1rem 0 0.35rem 0.65rem;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* En desktop, las tarjetas de ítems van a dos columnas (la última
@@ -836,6 +886,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 .plan:hover { box-shadow: var(--sombra-2); transform: translateY(-3px); }
+
+/* Las cards de plan son .reveal, y su regla .reveal.in { transform: none }
+   (0,3,0) pisaba el transform del :hover, anulando la elevación de TODAS
+   las cards (incluida la destacada). El id de sección recupera la
+   especificidad para que el alzado on hover funcione, sin tocar el reveal
+   ni las posiciones de reposo. */
+#planes .plan:hover { transform: translateY(-3px); }
 
 .plan h3 { font-size: 1.375rem; }
 
@@ -915,7 +972,9 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   box-shadow: var(--sombra-2);
 }
 
-.plan-destacado:hover { box-shadow: var(--sombra-2); }
+/* La card destacada reutiliza el mismo hover que el resto de los planes
+   (elevación de 3px + sombra-2); su sombra de reposo ya es la profunda,
+   así que la elevación es su señal de hover, igual que las demás. */
 
 .plan-destacado .plan-para { color: var(--panel-texto-2); }
 .plan-destacado .plan-precio { color: var(--blanco-calido); }
@@ -938,8 +997,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 @media (min-width: 56.25em) {
   .planes-grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-3); }
-  .plan-destacado { transform: translateY(-0.75rem); }
-  .plan-destacado:hover { transform: translateY(-0.875rem); }
 }
 
 /* ---------- 04 · Cómo funciona ---------- */
