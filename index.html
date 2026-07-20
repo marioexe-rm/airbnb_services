@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260720d">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260720e">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -53,10 +53,12 @@
   }
   </script>
 </head>
-<body>
+<!-- id="top" va en el body (no en el header sticky: un ancla sobre un
+     elemento pegado al viewport nunca provoca desplazamiento) -->
+<body id="top">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-  <header class="site-header" id="top">
+  <header class="site-header">
     <div class="container nav-wrap">
       <!-- TODO: reemplazar nombre de marca -->
       <a class="brand" href="#top" aria-label="Estadía — inicio">
@@ -261,8 +263,8 @@
             <dl class="ficha">
               <div><dt>Anuncio</dt><dd>«Terraza privada, cama king y Metro Sta. Lucía» — Santiago</dd></div>
               <div><dt>Calificación</dt><dd><strong class="dato-oro">★ 5,0</strong> — con 20 reseñas</dd></div>
-              <div><dt>Reconocimiento</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="5.5"/><circle cx="12" cy="8.5" r="2.2"/><path d="M8.6 13 6.9 21.4 12 18.4 17.1 21.4 15.4 13"/></svg>Superanfitrión</strong> de Airbnb en menos de 3 meses</dd></div>
-              <div><dt>Atención</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></svg>24/7</strong> todos los días del año</dd></div>
+              <div><dt>Reconocimiento</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13 6.9 21.4 12 18.4 17.1 21.4 15.4 13Z"/><circle cx="12" cy="8.5" r="5.5"/></svg>Superanfitrión</strong> de Airbnb en menos de 3 meses</dd></div>
+              <div><dt>Atención</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path class="manecillas" d="M12 7.5V12l3.2 2"/></svg>24/7</strong> todos los días del año</dd></div>
               <div><dt>Categorías</dt><dd>Destacados en limpieza, exactitud, hospitalidad, comunicación, comodidad y precios</dd></div>
             </dl>
           </div>

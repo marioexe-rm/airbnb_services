@@ -12,9 +12,10 @@
   --blanco-calido: #F7F9F4;  /* blanco cálido: texto sobre verdes */
   --texto: #222222;          /* texto principal */
   --texto-2: #5D5D55;        /* gris cálido secundario (6.6:1 sobre blanco) */
-  --acento: #33593F;         /* IDENTIDAD: verde bosque cálido (H 139°) */
-  --acento-cta: #1C3D27;     /* CONVERSIÓN: mismo matiz, más oscuro y saturado */
-  --acento-cta-osc: #142D1C; /* hover/focus del CTA: oscurece, no cambia matiz */
+  --acento: #33593F;         /* IDENTIDAD: verde bosque cálido (H 139°);
+                                también hover/focus de los CTA dorados */
+  --acento-cta: #1C3D27;     /* verde noche: skip link y texto del CTA
+                                invertido del plan destacado */
   --acento-suave: #E5EBE1;   /* APOYO: salvia muy clara para badges y checks */
   --panel-texto-2: #CBD8C6;  /* secundario sobre superficies verdes (5.4:1) */
   --gris-bg: #F7F7F7;        /* fondos de apoyo neutros (panel contacto, hovers) */
@@ -23,15 +24,17 @@
   --borde-btn: #ACACA4;      /* borde fino gris cálido de botones secundarios */
 
   /* Metales — capa de acentos premium, uso restringido.
-     Oro permanente: badge Recomendado, estrellas, viñetas del plan
+     Oro permanente: fondo de los CTA de contacto (hover/focus en verde
+       de identidad), badge Recomendado, estrellas, viñetas del plan
        destacado, «hotel boutique» del h1, destacados de la ficha del caso
-       real (★5,0 · medalla+Superanfitrión · reloj+24/7), precios de módulo
-       e íconos de servicio de los ítems.
-     Oro de interacción: hover/focus de CTA verdes.
+       real (★5,0 · medalla y reloj rellenos), precios de módulo e íconos
+       de servicio de los ítems.
      Oro de ciclo: sol del hero.
-     Plata: luna del hero y hairline del footer. */
-  --gold: #83702E;           /* oro viejo oliva (AA 4.6:1 con blanco cálido) */
+     Plata: hairline del footer.
+     Plata oscura: luna del hero — único uso permitido del token. */
+  --gold: #83702E;           /* oro viejo oliva (AA 4.9:1 con blanco) */
   --silver: var(--gris-bg);  /* plateado: alias del gris del hover del navbar */
+  --silver-dark: #8A8478;    /* gris cálido medio-oscuro, exclusivo de la luna */
 
   /* Elevación — sombras suaves y difusas con tinte cálido, nunca duras */
   --sombra-1: 0 1px 2px rgba(28, 26, 18, 0.06), 0 6px 16px rgba(28, 26, 18, 0.06);
@@ -114,6 +117,14 @@ a { color: inherit; }
 
 section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
+/* Anclas del navbar: el encuadre descuenta el padding superior de cada
+   sección para que su eyebrow quede a un paso de 8px (--s-1) bajo el
+   navbar. #contacto no entra: sin padding superior, ya encuadra con la
+   regla base. */
+#caso, #servicios, #planes, #equipo {
+  scroll-margin-top: calc(var(--alto-header) + var(--s-1) - var(--pad-seccion));
+}
+
 .container {
   width: 100%;
   max-width: 72.5rem;
@@ -137,20 +148,35 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   border: 0;
 }
 
+/* Skip link estándar: oculto accesiblemente (clip, no coordenadas fuera
+   de pantalla, así nunca asoma al hacer scroll) y visible únicamente al
+   recibir foco con el teclado, como botón del sistema sobre el navbar. */
 .skip-link {
-  position: absolute;
-  top: -100%;
-  left: 1rem;
+  position: fixed;
+  top: 0.75rem;
+  left: 1.25rem;
   z-index: 100;
-  padding: var(--s-1) var(--s-2);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  padding: 0.625rem 1.25rem;
   background: var(--acento-cta);
   color: var(--blanco);
   text-decoration: none;
+  font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 0 0 var(--radio-m) var(--radio-m);
+  border-radius: var(--radio-pill);
+  box-shadow: var(--sombra-2);
 }
 
-.skip-link:focus-visible { top: 0; }
+.skip-link:focus-visible {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+}
 
 /* Chip de sección: reemplaza al eyebrow editorial */
 .eyebrow {
@@ -208,20 +234,21 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
               transform var(--transicion);
 }
 
+/* CTA de contacto — esquema invertido: el oro es el color principal y
+   el hover/focus responde en el verde de identidad. Texto en blanco
+   puro (4.9:1 sobre oro, 8:1 sobre verde). */
 .btn-primary {
-  background: var(--acento-cta);
-  color: var(--blanco-calido);
+  background: var(--gold);
+  color: var(--blanco);
 }
 
-/* El dorado premia la interacción: hover/focus de los CTA verdes
-   (reemplaza aquí la regla anterior de «oscurecer sin cambiar matiz») */
 .btn-primary:hover {
-  background: var(--gold);
+  background: var(--acento);
   transform: translateY(-1px);
   box-shadow: var(--sombra-1);
 }
 
-.btn-primary:focus-visible { background: var(--gold); outline-color: var(--gold); }
+.btn-primary:focus-visible { background: var(--acento); }
 
 .btn-primary:active { transform: translateY(0); }
 
@@ -519,11 +546,11 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .hero-art.noche .astro-oculto { transform: translateX(0); }
 
-/* Astro metálico: sol en oro viejo, luna en plata. El cambio de color
-   viaja dentro del crossfade de 2s (los dos astros comparten geometría
-   y se funden mientras la máscara se desliza). */
+/* Astro metálico: sol en oro viejo, luna en plata oscura. El cambio de
+   color viaja dentro del crossfade de 2s (los dos astros comparten
+   geometría y se funden mientras la máscara se desliza). */
 .escena-dia .astro-uso { fill: var(--gold); }
-.escena-noche .astro-uso { fill: var(--silver); }
+.escena-noche .astro-uso { fill: var(--silver-dark); }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-art .escena, .astro-oculto { transition: none; }
@@ -561,7 +588,10 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .caso { background: var(--acento-suave); padding-block: var(--pad-seccion); }
 
-.caso .eyebrow { background: var(--blanco-calido); }
+/* Chip común de las secciones sobre banda salvia (Caso real y Planes):
+   en blanco cálido para que no se funda con el fondo del mismo tono. */
+.caso .eyebrow,
+.planes .eyebrow { background: var(--blanco-calido); }
 
 /* Título y bajada como un mismo bloque: un paso corto de la escala
    en vez del margen genérico de sección (48/64px → 24px). */
@@ -625,16 +655,22 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .ficha dd { margin: 0; font-weight: 500; font-size: 0.9375rem; }
 
 /* Destacados dorados de la ficha: el valor clave en oro y negrita; el
-   resto de la línea conserva su tinta oscura. El ícono hereda el oro
-   por currentColor. */
+   resto de la línea conserva su tinta oscura. Los símbolos van RELLENOS
+   en el mismo oro (fill sólido vía currentColor, sin trazo), pegados a
+   su texto; solo el reloj lleva detalle interior: manecillas en blanco
+   cálido sobre el disco dorado. */
 .dato-oro { color: var(--gold); font-weight: 700; }
 .ficha-ico {
   width: 1.15em;
   height: 1.15em;
   vertical-align: -0.2em;
-  margin-right: 0.35em;
+  fill: currentColor;
+  stroke: none;
+}
+
+.ficha-ico .manecillas {
   fill: none;
-  stroke: currentColor;
+  stroke: var(--blanco-calido);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -964,17 +1000,15 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .plan .btn { margin-top: auto; width: 100%; }
 
-/* Única sección de identidad con fondo verde y texto claro */
+/* Única sección de identidad con fondo verde y texto claro. Descansa
+   con la sombra-1 heredada de .plan: su jerarquía la dan el fondo, el
+   borde y el badge, y así el hover común (.plan:hover → sombra-2 +
+   alzado) también se percibe aquí. */
 .plan-destacado {
   background: var(--acento);
   border: 2px solid var(--acento);
   color: var(--blanco-calido);
-  box-shadow: var(--sombra-2);
 }
-
-/* La card destacada reutiliza el mismo hover que el resto de los planes
-   (elevación de 3px + sombra-2); su sombra de reposo ya es la profunda,
-   así que la elevación es su señal de hover, igual que las demás. */
 
 .plan-destacado .plan-para { color: var(--panel-texto-2); }
 .plan-destacado .plan-precio { color: var(--blanco-calido); }
@@ -1006,7 +1040,15 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .pasos { display: grid; gap: var(--s-5); }
 
-.paso { padding-top: 0; }
+/* Número y subtítulo comparten fila (círculo a la izquierda, centrados
+   verticalmente entre sí, igual en los tres pasos); la descripción
+   ocupa el ancho completo bajo la fila. */
+.paso {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--s-2);
+  align-items: center;
+}
 
 .paso-num {
   display: inline-flex;
@@ -1022,9 +1064,14 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-style: normal;
 }
 
-.paso h3 { font-size: 1.25rem; margin-top: var(--s-2); }
+.paso h3 { font-size: 1.25rem; }
 
-.paso p { margin-top: 0.625rem; font-size: 0.9375rem; color: var(--texto-2); }
+.paso p {
+  grid-column: 1 / -1;
+  margin-top: 0.625rem;
+  font-size: 0.9375rem;
+  color: var(--texto-2);
+}
 
 .como-cta { margin-top: var(--s-5); text-align: center; }
 
