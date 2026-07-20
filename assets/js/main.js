@@ -162,10 +162,25 @@
       });
 
       var lecturaPausada = false;
-      rotador.addEventListener('mouseenter', function () { lecturaPausada = true; });
-      rotador.addEventListener('mouseleave', function () { lecturaPausada = false; });
-      rotador.addEventListener('focusin', function () { lecturaPausada = true; });
-      rotador.addEventListener('focusout', function () { lecturaPausada = false; });
+      var pausar = function () { lecturaPausada = true; };
+      var reanudar = function () { lecturaPausada = false; };
+      rotador.addEventListener('mouseenter', pausar);
+      rotador.addEventListener('mouseleave', reanudar);
+      rotador.addEventListener('focusin', pausar);
+      rotador.addEventListener('focusout', reanudar);
+
+      // Carrusel de fotos del anuncio: comparte este mismo timer y su
+      // pausa (mirar las fotos también detiene el ciclo).
+      var fotos = Array.prototype.slice.call(document.querySelectorAll('.fotos-airbnb .foto-airbnb'));
+      var fotoActiva = 0;
+      fotos.forEach(function (foto, i) {
+        if (foto.classList.contains('activa')) { fotoActiva = i; }
+      });
+      var contenedorFotos = document.querySelector('.fotos-airbnb');
+      if (contenedorFotos) {
+        contenedorFotos.addEventListener('mouseenter', pausar);
+        contenedorFotos.addEventListener('mouseleave', reanudar);
+      }
 
       // El grupo inicial no se repite dentro de su primer ciclo.
       var bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; })
@@ -183,6 +198,11 @@
         gruposResenas[proximo].classList.add('activa');
         ultimoGrupo = proximo;
         grupoActivo = proximo;
+        if (fotos.length > 1) {
+          fotos[fotoActiva].classList.remove('activa');
+          fotoActiva = (fotoActiva + 1) % fotos.length;
+          fotos[fotoActiva].classList.add('activa');
+        }
       }, 15000);
     }
   }

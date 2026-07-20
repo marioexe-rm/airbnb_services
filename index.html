@@ -76,7 +76,7 @@
           <li><a href="#contacto">Contacto</a></li>
           <li class="nav-cta">
             <!-- TODO: reemplazar número de WhatsApp -->
-            <a class="btn btn-primary btn-sm" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20en%20Santiago%20y%20me%20gustar%C3%ADa%20conversar%20sobre%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Escríbenos</a>
+            <a class="btn btn-primary btn-sm" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20en%20Santiago%20y%20me%20gustar%C3%ADa%20conversar%20sobre%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener"><svg class="btn-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.4 12.7L3.5 20.5l4.4-1.1A8.5 8.5 0 1 0 12 3.5Z"/><path d="M9.5 8.8v1a5.2 5.2 0 0 0 4.7 4.7h1"/></svg>Escríbenos</a>
           </li>
         </ul>
       </nav>
@@ -90,7 +90,7 @@
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Gestión y optimización de Airbnb · Santiago de Chile</p>
-          <h1>Tu departamento, gestionado con <em>oficio de hotel boutique</em>.</h1>
+          <h1>Tu alojamiento, gestionado como un <em>hotel boutique</em>.</h1>
           <p class="lead">Somos anfitriones antes que administradores: nuestro propio Airbnb, a pasos del metro Santa Lucía, llegó a Superanfitrión con 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —tarifas dinámicas, respuesta 24/7 y mejora continua— lo ponemos a trabajar en tu propiedad.</p>
           <div class="hero-actions">
             <!-- TODO: reemplazar número de WhatsApp -->
@@ -244,13 +244,6 @@
           </svg>
         </div>
       </div>
-      <div class="container">
-        <ul class="hero-stats" aria-label="Resultados de nuestro propio anuncio">
-          <li><span class="stat-num">★ 5,0</span><span class="stat-label">calificación de nuestro anuncio, con 20 reseñas</span></li>
-          <li><span class="stat-num">3 meses</span><span class="stat-label">de la publicación a la categoría Superanfitrión</span></li>
-          <li><span class="stat-num">24/7</span><span class="stat-label">mensajería con huéspedes, todos los días del año</span></li>
-        </ul>
-      </div>
     </section>
 
     <!-- ============ 01 · CASO REAL ============ -->
@@ -264,12 +257,28 @@
         <div class="caso-grid">
           <div class="caso-ficha reveal">
             <p>Publicamos nuestro propio departamento y lo operamos exactamente con el sistema que hoy ofrecemos: anuncio afinado para el algoritmo de búsqueda, precios que cambian todos los días y cada mensaje respondido en minutos. El resultado no es una promesa: está publicado en Airbnb.</p>
-            <dl class="ficha">
-              <div><dt>Anuncio</dt><dd>«Terraza privada, cama king y Metro Sta. Lucía» — Santiago Centro</dd></div>
-              <div><dt>Calificación</dt><dd>★ 5,0 — 20 reseñas de 5 estrellas</dd></div>
-              <div><dt>Categorías</dt><dd>5,0 en limpieza, exactitud, check-in, comunicación, ubicación y precio</dd></div>
-              <div><dt>Reconocimiento</dt><dd>Superanfitrión de Airbnb en 3 meses</dd></div>
-            </dl>
+            <!-- Fotos reales del anuncio, descargadas de su galería el 20-07-2026.
+                 Avanzan en el mismo tick del rotador de reseñas. -->
+            <div class="fotos-airbnb">
+              <img class="foto-airbnb activa" src="assets/img/airbnb-1.jpg" alt="Terraza privada del departamento con dos sillas y mesa de centro" width="1200" height="900" loading="lazy">
+              <img class="foto-airbnb" src="assets/img/airbnb-2.jpg" alt="Dormitorio con cama king y aire acondicionado" width="1200" height="900" loading="lazy">
+              <img class="foto-airbnb" src="assets/img/airbnb-3.jpg" alt="Terraza de noche con luces cálidas y plantas" width="1200" height="900" loading="lazy">
+              <img class="foto-airbnb" src="assets/img/airbnb-4.jpg" alt="Sofá exterior de la terraza junto al dormitorio" width="1200" height="1600" loading="lazy">
+            </div>
+            <ul class="metricas" aria-label="Resultados de nuestro propio anuncio">
+              <li>
+                <span class="metrica-icono-glifo" aria-hidden="true">★</span>
+                <div><span class="stat-num">5,0</span><span class="stat-label">calificación de nuestro anuncio, con 20 reseñas</span></div>
+              </li>
+              <li>
+                <svg class="metrica-icono metrica-oro" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M9.5 13.5 8 21l4-2.5 4 2.5-1.5-7.5"/></svg>
+                <div><span class="stat-num">Superanfitrión</span><span class="stat-label">en menos de 3 meses desde la publicación</span></div>
+              </li>
+              <li>
+                <svg class="metrica-icono metrica-verde" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                <div><span class="stat-num">24/7</span><span class="stat-label">mensajería con huéspedes, todos los días del año</span></div>
+              </li>
+            </ul>
           </div>
           <div class="caso-reviews">
             <h3 class="visually-hidden">Lo que escriben nuestros huéspedes</h3>
