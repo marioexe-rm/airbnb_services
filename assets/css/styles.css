@@ -585,7 +585,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .fotos-airbnb {
   position: relative;
   aspect-ratio: 4 / 3;
-  margin-top: var(--s-3);
   border-radius: var(--radio-l);
   overflow: hidden;
   background: var(--blanco-calido);
@@ -606,7 +605,21 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .foto-airbnb.activa { opacity: 1; transform: none; }
 
 /* Métricas del caso real: cards compactas bajo el carrusel */
-.metricas { display: grid; gap: var(--s-2); margin-top: var(--s-2); }
+/* Bloque de medios: carrusel principal + métricas. Apilado en móvil,
+   métricas en fila en tablet y en columna lateral compacta desde
+   1024px, centradas junto al carrusel. */
+.caso-medios { margin-top: var(--s-3); display: grid; gap: var(--s-2); }
+
+@media (min-width: 45em) {
+  .caso-medios .metricas { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 64em) {
+  .caso-medios { grid-template-columns: 1.7fr 1fr; gap: var(--s-3); align-items: center; }
+  .caso-medios .metricas { grid-template-columns: 1fr; }
+}
+
+.metricas { display: grid; gap: var(--s-2); }
 
 .metricas li {
   display: flex;
@@ -615,7 +628,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   background: var(--blanco-calido);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
-  padding: var(--s-2) var(--s-3);
+  padding: var(--s-2) var(--s-3);  transition: box-shadow var(--transicion), transform var(--transicion);
 }
 
 .metrica-icono {
@@ -706,7 +719,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 /* Elevación al hover compartida por reseñas y tarjetas de ítems */
-.review:hover, .modulo-items li:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
+.review:hover, .modulo-items li:hover, .metricas li:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
 
 /* Estrellas doradas: regla propia, separada del token de los precios
    de ítems (que permanecen en --acento). */
@@ -738,9 +751,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .resenas-grupo { transition: none; }
 }
 
-@media (min-width: 60em) {
-  .caso-grid { grid-template-columns: 5fr 7fr; gap: var(--s-6); }
-}
+
 
 /* ---------- 02 · Servicios ---------- */
 
