@@ -173,13 +173,12 @@
       // de las 4 sin repetir hasta agotar) y su celda en el grid
       // (barajado de posiciones), asignadas al grupo entrante antes de
       // aparecer, dentro de este mismo timer.
-      var pozaFotos = [];
-      gruposResenas.forEach(function (grupo) {
-        var img = grupo.querySelector('.review-foto img');
-        if (img && pozaFotos.indexOf(img.getAttribute('src')) === -1) {
-          pozaFotos.push(img.getAttribute('src'));
-        }
-      });
+      var pozaFotos = [
+        'assets/img/airbnb-1.jpg', 'assets/img/airbnb-2.jpg',
+        'assets/img/airbnb-3.jpg', 'assets/img/airbnb-4.jpg',
+        'assets/img/airbnb-5.jpg', 'assets/img/airbnb-6.jpg',
+        'assets/img/airbnb-7.jpg', 'assets/img/airbnb-8.jpg'
+      ];
       var bolsaFotos = [], ultimaFoto = 0;
       var bolsaCeldas = [], ultimaCelda = 3;
       var sacarIndice = function (bolsa, total, ultimo) {

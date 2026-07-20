@@ -236,12 +236,12 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 /* Icono dentro de botones (WhatsApp del navbar): hereda el color del
    texto vía currentColor, proporcional al label. */
 .btn-icono {
-  width: 1em;
-  height: 1em;
+  width: 1.25rem;
+  height: 1.25rem;
   flex-shrink: 0;
   fill: none;
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -263,7 +263,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   transition: transform var(--transicion);
 }
 
-.link-arrow:hover { text-decoration-color: var(--acento); }
+/* Oro de interacción: el subrayado hover de los enlaces flecha */
+.link-arrow:hover { text-decoration-color: var(--gold); }
 .link-arrow:hover::after { transform: translateX(4px); }
 
 /* Aparición sutil al hacer scroll (solo con JS activo) */
@@ -584,65 +585,32 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 /* Métricas del caso real: cards compactas bajo el carrusel */
-.metricas { display: grid; }
-
-/* Tarjeta grande de métricas (eco de la ficha original): card blanca
-   con las tres métricas como filas separadas por divisores. */
-.tarjeta-metricas {
-  margin-top: var(--s-3);
+/* Ficha del caso real (restaurada del historial) */
+.ficha {
+  margin-block: var(--s-4);
   background: var(--blanco);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
-  padding: var(--s-1) var(--s-3);
+  padding: 0.5rem var(--s-3);
 }
 
-.metricas li {
-  display: flex;
-  align-items: center;
+.ficha > div {
+  display: grid;
+  grid-template-columns: 8.75rem 1fr;
   gap: var(--s-2);
-  padding: var(--s-3) 0;
+  padding: 0.875rem 0;
 }
 
-.metricas li + li { border-top: 1px solid var(--linea-suave); }
+.ficha > div + div { border-top: 1px solid var(--linea-suave); }
 
-.metrica-icono {
-  width: 1.5rem;
-  height: 1.5rem;
-  flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.metrica-oro { color: var(--gold); }
-.metrica-verde { color: var(--acento); }
-
-.metrica-icono-glifo {
-  width: 1.5rem;
-  flex-shrink: 0;
-  text-align: center;
-  font-size: 1.25rem;
-  line-height: 1;
-  color: var(--gold);
-}
-
-.metricas .stat-num {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--acento);
-  line-height: 1.25;
-}
-
-.metricas .stat-label {
-  display: block;
+.ficha dt {
   font-size: 0.875rem;
+  font-weight: 600;
   color: var(--texto-2);
-  line-height: 1.45;
+  padding-top: 0.1rem;
 }
+
+.ficha dd { margin: 0; font-weight: 500; font-size: 0.9375rem; }
 
 /* Rotador de reseñas — 4 grupos × 4 frases con la misma familia de
    transición del hero (crossfade 2s + respiración ≤2%). Los grupos se
@@ -848,7 +816,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 /* ---------- 03 · Planes ---------- */
 
-.planes { padding-block: 0 var(--pad-seccion); }
+.planes { background: var(--acento-suave); padding-block: var(--pad-seccion); }
 
 .planes-grid {
   display: grid;
@@ -857,7 +825,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 .plan {
-  background: var(--blanco);
+  background: var(--blanco-calido);
   border: 1px solid var(--linea);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
@@ -976,7 +944,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 /* ---------- 04 · Cómo funciona ---------- */
 
-.como { padding-block: 0 var(--pad-seccion); }
+/* Tras la banda salvia de Planes, Cómo funciona respira arriba */
+.como { padding-block: var(--pad-seccion); }
 
 .pasos { display: grid; gap: var(--s-5); }
 
@@ -1008,7 +977,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 /* ---------- 05 · Equipo ---------- */
 
-.equipo { padding-block: 0 var(--pad-seccion); }
+.equipo { background: var(--acento-suave); padding-block: var(--pad-seccion); }
 
 .equipo-grid {
   display: grid;
@@ -1060,7 +1029,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 /* ---------- 06 · FAQ ---------- */
 
-.faq { padding-block: 0 var(--pad-seccion); }
+/* Tras la banda salvia de Equipo, el FAQ respira arriba */
+.faq { padding-block: var(--pad-seccion); }
 
 .faq-wrap { max-width: 52rem; }
 
