@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260720e">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260720f">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -104,13 +104,15 @@
           <!-- Serie «Estadía»: 10 piezas de hospitalidad (5 día / 5 noche).
                Astro único compartido: mismo círculo (210,100 r56) en todas,
                alto en el cielo y con zona despejada de radio 84 (1.5×r);
-               la máscara #astro-mascara lo convierte en media luna y se
-               anima con el crossfade (sol que se transforma en luna). -->
+               la máscara #astro-mascara lo convierte en media luna ladeada
+               (el ocultador se desliza y su marco .astro-giro rota −45°
+               alrededor del centro del astro) y se anima con el crossfade
+               (sol que se transforma en luna). -->
           <svg class="astro-defs" width="0" height="0" focusable="false" aria-hidden="true">
             <defs>
               <mask id="astro-mascara" maskUnits="userSpaceOnUse" x="140" y="30" width="140" height="140">
                 <rect x="140" y="30" width="140" height="140" fill="#fff"/>
-                <rect class="astro-oculto" x="210" y="30" width="72" height="140" fill="#000"/>
+                <g class="astro-giro"><rect class="astro-oculto" x="0" y="-70" width="72" height="140" fill="#000"/></g>
               </mask>
               <g id="astro"><circle cx="210" cy="100" r="56" mask="url(#astro-mascara)"/></g>
             </defs>
@@ -367,12 +369,12 @@
           <div class="modulo-body">
             <p class="modulo-lead">Todo lo que tu anuncio necesita para competir de verdad en Airbnb, hecho una sola vez y bien hecho.</p>
             <ul class="modulo-items">
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.2L15 6a2.1 2.1 0 0 1 3 3L8.2 18.8 4 20Z"/><path d="M13.5 7.5l3 3"/></svg>Copywriting de título y descripción optimizados para el algoritmo de búsqueda de Airbnb, con traducción al inglés.</div><span class="item-precio">$70.000 CLP</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/></svg>Configuración interna completa: reglas de la casa, políticas de cancelación, mensajes automatizados y flujo de check-in.</div><span class="item-precio">$55.000 CLP</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V8M18 20v-9"/><path d="M4 20h16"/></svg>Estudio de mercado de tu comuna y configuración inicial de tarifas y descuentos.</div><span class="item-precio">$75.000 CLP</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M20.5 15l-4.5-4.5L5 19.5"/></svg>Edición básica de fotos, orden estratégico de la galería y pies de foto que venden.</div><span class="item-precio">$60.000 CLP</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><rect x="3" y="11" width="18" height="6.5" rx="2"/><path d="M6.5 17.5V20M17.5 17.5V20"/></svg>Asesoría de home staging con enlaces de compra directos en IKEA Chile, Sodimac y Casaideas.</div><span class="item-precio">$50.000 CLP</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4.5" width="14" height="16" rx="2"/><path d="M9 4.5V3.2A1.2 1.2 0 0 1 10.2 2h3.6A1.2 1.2 0 0 1 15 3.2V4.5"/><path d="M9 12.5l2 2 4-4"/></svg>Auditoría de inventario con checklist según tu huésped objetivo: corporativo o turista.</div><span class="item-precio">$45.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.2L15 6a2.1 2.1 0 0 1 3 3L8.2 18.8 4 20Z"/><path d="M13.5 7.5l3 3"/></svg><strong>Copywriting</strong> de título y descripción optimizados para el algoritmo de búsqueda de Airbnb, con traducción al inglés.</div><span class="item-precio">$70.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/></svg><strong>Configuración interna completa</strong>: reglas de la casa, políticas de cancelación, mensajes automatizados y flujo de check-in.</div><span class="item-precio">$55.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V8M18 20v-9"/><path d="M4 20h16"/></svg><strong>Estudio de mercado</strong> de tu comuna y configuración inicial de tarifas y descuentos.</div><span class="item-precio">$75.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M20.5 15l-4.5-4.5L5 19.5"/></svg><strong>Edición básica de fotos</strong>, orden estratégico de la galería y pies de foto que venden.</div><span class="item-precio">$60.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><rect x="3" y="11" width="18" height="6.5" rx="2"/><path d="M6.5 17.5V20M17.5 17.5V20"/></svg><strong>Asesoría de home staging</strong> con enlaces de compra directos en IKEA Chile, Sodimac y Casaideas.</div><span class="item-precio">$50.000 CLP</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4.5" width="14" height="16" rx="2"/><path d="M9 4.5V3.2A1.2 1.2 0 0 1 10.2 2h3.6A1.2 1.2 0 0 1 15 3.2V4.5"/><path d="M9 12.5l2 2 4-4"/></svg><strong>Auditoría de inventario</strong> con checklist según tu huésped objetivo: corporativo o turista.</div><span class="item-precio">$45.000 CLP</span></li>
             </ul>
             <!-- TODO: validar precio (suma $355.000 vs pack integral máximo $280.000) -->
             <p class="modulo-ahorro">Por separado, estos seis ítems suman $355.000 CLP: contratando el pack integral ahorras desde $75.000.</p>
@@ -388,10 +390,10 @@
           <div class="modulo-body">
             <p class="modulo-lead">Nos convertimos en el anfitrión detrás de tu anuncio, todos los días del año.</p>
             <ul class="modulo-items">
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 16.5l6-6 4 4 7-7"/><path d="M15.5 7.5h5v5"/></svg>Tarificación dinámica diaria: el precio se ajusta según demanda, eventos y temporada, no queda fijo por meses.</div><span class="item-precio">$35.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4.5H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16.5h3v3.5l4.5-3.5H20a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 20 4.5Z"/></svg>Mensajería 24/7 con huéspedes: consultas, reservas e incidencias, respondidas a tiempo y con criterio.</div><span class="item-precio">$40.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/></svg>Sincronización de calendarios vía Channel Manager: cero riesgo de dobles reservas.</div><span class="item-precio">$15.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.3"/><path d="M3.5 20v-1.2A4.3 4.3 0 0 1 7.8 14.5h3.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.1a3.3 3.3 0 0 1 0 6.1M18 14.7a4.3 4.3 0 0 1 2.5 3.9V20"/></svg>Coordinación remota de tu personal de limpieza y mantenimiento, agenda al ritmo de las reservas.</div><span class="item-precio">$25.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 16.5l6-6 4 4 7-7"/><path d="M15.5 7.5h5v5"/></svg><strong>Tarificación dinámica diaria</strong>: el precio se ajusta según demanda, eventos y temporada, no queda fijo por meses.</div><span class="item-precio">$35.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4.5H4a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 4 16.5h3v3.5l4.5-3.5H20a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 20 4.5Z"/></svg><strong>Mensajería 24/7</strong> con huéspedes: consultas, reservas e incidencias, respondidas a tiempo y con criterio.</div><span class="item-precio">$40.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/></svg><strong>Sincronización de calendarios</strong> vía Channel Manager: cero riesgo de dobles reservas.</div><span class="item-precio">$15.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="8" r="3.3"/><path d="M3.5 20v-1.2A4.3 4.3 0 0 1 7.8 14.5h3.4a4.3 4.3 0 0 1 4.3 4.3V20"/><path d="M16.5 5.1a3.3 3.3 0 0 1 0 6.1M18 14.7a4.3 4.3 0 0 1 2.5 3.9V20"/></svg><strong>Coordinación remota</strong> de tu personal de limpieza y mantenimiento, agenda al ritmo de las reservas.</div><span class="item-precio">$25.000 CLP/mes</span></li>
             </ul>
             <p class="modulo-ahorro">No incluye mejoras visuales ni auditorías: ese trabajo vive en los módulos 1 y 3.</p>
           </div>
@@ -406,11 +408,11 @@
           <div class="modulo-body">
             <p class="modulo-lead">Un anuncio no se optimiza una vez: se optimiza todos los meses.</p>
             <ul class="modulo-items">
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 5.9"/><path d="M4 20v-4.5h4.5"/><path d="M3.5 12a8.5 8.5 0 0 1 14.6-5.9"/><path d="M20 4v4.5h-4.5"/></svg>Textos actualizados por estacionalidad: lo que busca un huésped en enero no es lo que busca en julio.</div><span class="item-precio">$9.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg>Ajustes del anuncio ante cada cambio del algoritmo de Airbnb.</div><span class="item-precio">$8.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.2"/><rect x="13" y="4" width="7" height="7" rx="1.2"/><rect x="4" y="13" width="7" height="7" rx="1.2"/><rect x="13" y="13" width="7" height="7" rx="1.2"/></svg>Reordenamiento de la galería según las métricas de clics de tu anuncio.</div><span class="item-precio">$8.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9.5 9.8 3.8A1 1 0 0 1 10.75 3h2.5a1 1 0 0 1 .95.8L16 9.5Z"/><path d="M12 9.5V17"/><path d="M9 21h6l-1.2-3a1 1 0 0 0-.95-.7h-1.7a1 1 0 0 0-.95.7Z"/></svg>Sugerencias mensuales de decoración basadas en lo que dicen tus reseñas.</div><span class="item-precio">$8.000 CLP/mes</span></li>
-              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg>Auditoría mensual de inventario a partir del feedback escrito de tus huéspedes.</div><span class="item-precio">$9.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 5.9"/><path d="M4 20v-4.5h4.5"/><path d="M3.5 12a8.5 8.5 0 0 1 14.6-5.9"/><path d="M20 4v4.5h-4.5"/></svg><strong>Textos actualizados por estacionalidad</strong>: lo que busca un huésped en enero no es lo que busca en julio.</div><span class="item-precio">$9.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2.2"/><circle cx="9" cy="16" r="2.2"/></svg><strong>Ajustes del anuncio</strong> ante cada cambio del algoritmo de Airbnb.</div><span class="item-precio">$8.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.2"/><rect x="13" y="4" width="7" height="7" rx="1.2"/><rect x="4" y="13" width="7" height="7" rx="1.2"/><rect x="13" y="13" width="7" height="7" rx="1.2"/></svg><strong>Reordenamiento de la galería</strong> según las métricas de clics de tu anuncio.</div><span class="item-precio">$8.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9.5 9.8 3.8A1 1 0 0 1 10.75 3h2.5a1 1 0 0 1 .95.8L16 9.5Z"/><path d="M12 9.5V17"/><path d="M9 21h6l-1.2-3a1 1 0 0 0-.95-.7h-1.7a1 1 0 0 0-.95.7Z"/></svg><strong>Sugerencias mensuales de decoración</strong> basadas en lo que dicen tus reseñas.</div><span class="item-precio">$8.000 CLP/mes</span></li>
+              <!-- TODO: validar precio --><li><div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/></svg><strong>Auditoría mensual de inventario</strong> a partir del feedback escrito de tus huéspedes.</div><span class="item-precio">$9.000 CLP/mes</span></li>
             </ul>
           </div>
         </article>
@@ -432,9 +434,9 @@
             <p class="plan-para">Para dueños con un anuncio ya afinado que solo quieren delegar el día a día.</p>
             <p class="plan-precio">10% – 12%<span>mensual, sobre ingresos netos de comisiones</span></p>
             <ul class="plan-modulos">
-              <li class="excluido"><span>Módulo 1 · Puesta a punto</span></li>
-              <li class="incluido"><span>Módulo 2 · Operación diaria</span></li>
-              <li class="excluido"><span>Módulo 3 · Mejora continua</span></li>
+              <li class="excluido"><a href="#modulo-1"><span>Módulo 1 · Puesta a punto</span></a></li>
+              <li class="incluido"><a href="#modulo-2"><span>Módulo 2 · Operación diaria</span></a></li>
+              <li class="excluido"><a href="#modulo-3"><span>Módulo 3 · Mejora continua</span></a></li>
             </ul>
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-outline" href="https://wa.me/56955551234?text=Hola%2C%20me%20interesa%20el%20plan%20Operaci%C3%B3n%20Pura%20para%20mi%20propiedad%20en%20Santiago." target="_blank" rel="noopener">Consultar por este plan</a>
@@ -446,9 +448,9 @@
             <p class="plan-para">Nos hacemos cargo de todo: partida, operación diaria y crecimiento mes a mes.</p>
             <p class="plan-precio">13% – 17%<span>mensual tras la puesta a punto (pago único)</span></p>
             <ul class="plan-modulos">
-              <li class="incluido"><span>Módulo 1 · Puesta a punto</span></li>
-              <li class="incluido"><span>Módulo 2 · Operación diaria</span></li>
-              <li class="incluido"><span>Módulo 3 · Mejora continua</span></li>
+              <li class="incluido"><a href="#modulo-1"><span>Módulo 1 · Puesta a punto</span></a></li>
+              <li class="incluido"><a href="#modulo-2"><span>Módulo 2 · Operación diaria</span></a></li>
+              <li class="incluido"><a href="#modulo-3"><span>Módulo 3 · Mejora continua</span></a></li>
             </ul>
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20me%20interesa%20el%20plan%20Full%20Estrat%C3%A9gico%20para%20mi%20propiedad%20en%20Santiago." target="_blank" rel="noopener">Quiero el plan completo</a>
@@ -459,9 +461,9 @@
             <p class="plan-para">Para dueños que disfrutan ser anfitriones y quieren estrategia profesional detrás.</p>
             <p class="plan-precio">$40.000 – $60.000<span>CLP mensuales + puesta a punto inicial · tú operas el día a día</span></p>
             <ul class="plan-modulos">
-              <li class="incluido"><span>Módulo 1 · Puesta a punto</span></li>
-              <li class="excluido"><span>Módulo 2 · Operación diaria</span></li>
-              <li class="incluido"><span>Módulo 3 · Mejora continua</span></li>
+              <li class="incluido"><a href="#modulo-1"><span>Módulo 1 · Puesta a punto</span></a></li>
+              <li class="excluido"><a href="#modulo-2"><span>Módulo 2 · Operación diaria</span></a></li>
+              <li class="incluido"><a href="#modulo-3"><span>Módulo 3 · Mejora continua</span></a></li>
             </ul>
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-outline" href="https://wa.me/56955551234?text=Hola%2C%20me%20interesa%20el%20plan%20Consultor%C3%ADa%20Exclusiva%20para%20mi%20propiedad%20en%20Santiago." target="_blank" rel="noopener">Consultar por este plan</a>
@@ -479,17 +481,17 @@
           <h2>De la primera conversación a las primeras reseñas</h2>
         </header>
         <ol class="pasos">
-          <li class="paso reveal">
+          <li class="paso panel-suave reveal">
             <span class="paso-num" aria-hidden="true">1</span>
             <h3>Cuéntanos de tu propiedad</h3>
             <p>Escríbenos por WhatsApp con la comuna y el estado del anuncio —o si aún no existe—. Te respondemos el mismo día con una evaluación honesta y sin costo.</p>
           </li>
-          <li class="paso reveal">
+          <li class="paso panel-suave reveal">
             <span class="paso-num" aria-hidden="true">2</span>
             <h3>Puesta a punto</h3>
             <p>Dejamos el anuncio competitivo: textos, fotos, precios, configuración interna y staging. Tú apruebas cada cambio antes de que se publique.</p>
           </li>
-          <li class="paso reveal">
+          <li class="paso panel-suave reveal">
             <span class="paso-num" aria-hidden="true">3</span>
             <h3>Operar y mejorar</h3>
             <p>Delegas la operación completa o la llevas tú con nuestra estrategia. Cada mes el anuncio se ajusta con datos: clics, reseñas y estacionalidad.</p>
@@ -559,7 +561,7 @@
 
     <!-- ============ 07 · CONTACTO ============ -->
     <section class="contacto" id="contacto">
-      <div class="container contacto-grid">
+      <div class="container contacto-grid panel-suave">
         <div class="contacto-copy reveal">
           <p class="eyebrow">Contacto</p>
           <h2>Conversemos sobre tu propiedad</h2>

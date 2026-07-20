@@ -27,14 +27,15 @@
      Oro permanente: fondo de los CTA de contacto (hover/focus en verde
        de identidad), badge Recomendado, estrellas, viñetas del plan
        destacado, «hotel boutique» del h1, destacados de la ficha del caso
-       real (★5,0 · medalla y reloj rellenos), precios de módulo e íconos
-       de servicio de los ítems.
+       real (★5,0 · medalla y reloj rellenos), precios de módulo, íconos
+       de servicio de los ítems y cargos del equipo.
      Oro de ciclo: sol del hero.
      Plata: hairline del footer.
-     Plata oscura: luna del hero — único uso permitido del token. */
+     Plata lunar: luna del hero — único uso permitido del token. */
   --gold: #83702E;           /* oro viejo oliva (AA 4.9:1 con blanco) */
   --silver: var(--gris-bg);  /* plateado: alias del gris del hover del navbar */
-  --silver-dark: #8A8478;    /* gris cálido medio-oscuro, exclusivo de la luna */
+  --silver-moon: #D9D7D2;    /* plata lunar: brilla sobre el verde nocturno
+                                sin leerse blanca (gris perceptible) */
 
   /* Elevación — sombras suaves y difusas con tinte cálido, nunca duras */
   --sombra-1: 0 1px 2px rgba(28, 26, 18, 0.06), 0 6px 16px rgba(28, 26, 18, 0.06);
@@ -123,6 +124,27 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
    regla base. */
 #caso, #servicios, #planes, #equipo {
   scroll-margin-top: calc(var(--alto-header) + var(--s-1) - var(--pad-seccion));
+}
+
+/* Los módulos de la carta también encuadran bajo el navbar: los
+   enlazan los nombres de módulo de las cards de Planes. El margen
+   inferior simétrico equilibra el área de snap para que el imán de
+   escritorio los centre de verdad (sin sesgo de 40px). */
+#modulo-1, #modulo-2, #modulo-3 {
+  scroll-margin-top: calc(var(--alto-header) + var(--s-1));
+  scroll-margin-bottom: calc(var(--alto-header) + var(--s-1));
+}
+
+/* Scroll asistido (solo escritorio): imán suave hacia el inicio de la
+   sección más cercana y, dentro de Servicios, hacia el módulo centrado
+   en el viewport. proximity, nunca mandatory: lejos de un punto el
+   scroll queda libre y ninguna zona resulta inalcanzable. El imán se
+   construye con los scroll-margin ya calibrados, así coincide con el
+   encuadre de las anclas del navbar en vez de pelear con él. */
+@media (min-width: 64em) {
+  html { scroll-snap-type: y proximity; }
+  section { scroll-snap-align: start; }
+  .modulo { scroll-snap-align: center; }
 }
 
 .container {
@@ -467,12 +489,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   gap: var(--s-5);
 }
 
-/* Se retiró el eyebrow que iba sobre el título; se reserva su alto para
-   que el h1 y el resto del bloque conserven su posición vertical (sin
-   salto). El chip medía una línea (~32.8px) en tablet/desktop y dos
-   (~53.6px) en móvil angosto: se compensa ese alto por tramo. */
+/* Se retiró el eyebrow que iba sobre el título; en tablet/desktop se
+   reserva su alto (~32.8px) para que el bloque conserve su posición.
+   En móvil la reserva ya no existe: el h1 sube a 2.5rem (40px) y su
+   crecimiento (+56px) ocupa el espacio que dejó la frase (~53.6px).
+   Calibrado contra 375px: «hotel boutique» sin quiebre mide 274px de
+   335 disponibles; desde 48px el min-content del grid desborda. */
 .hero-copy { padding-top: 2.05rem; }
-@media (max-width: 30em) { .hero-copy { padding-top: 3.35rem; } }
 
 .hero h1 {
   font-size: var(--t-hero);
@@ -480,6 +503,15 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   letter-spacing: -0.02em;
   margin-top: var(--s-3);
   max-width: 16ch;
+}
+
+/* (después de la base de .hero h1 para ganar el empate de cascada)
+   El ancho acotado fuerza el corte digno «optimizada» / «como un»
+   (ventana medida a 40px: cabe 289px, no caben 327px); min(…, 12vw)
+   protege incluso viewports de 320px sin quebrar «hotel boutique». */
+@media (max-width: 30em) {
+  .hero-copy { padding-top: 0; }
+  .hero h1 { font-size: min(2.5rem, 12vw); max-width: 19.25rem; }
 }
 
 /* «hotel boutique» en el dorado del sol, siempre en una sola línea
@@ -537,8 +569,11 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .hero-art .escena.activa { opacity: 1; transform: scale(1); }
 
-/* Astro compartido: disco en día, media luna en noche. El ocultador
-   de la máscara se desliza sincronizado con el crossfade de 2s. */
+/* Astro compartido: disco en día, media luna ladeada en noche. El
+   ocultador se desliza y su marco (.astro-giro, centrado en el astro
+   vía translate) rota −45° en el estado noche: el borde recto queda a
+   ~135° y ambos movimientos viajan dentro del mismo crossfade de 2s.
+   El círculo del sol nunca rota. */
 .astro-oculto {
   transform: translateX(72px);
   transition: transform 2000ms ease-in-out;
@@ -546,14 +581,21 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .hero-art.noche .astro-oculto { transform: translateX(0); }
 
-/* Astro metálico: sol en oro viejo, luna en plata oscura. El cambio de
-   color viaja dentro del crossfade de 2s (los dos astros comparten
-   geometría y se funden mientras la máscara se desliza). */
+.astro-giro {
+  transform: translate(210px, 100px) rotate(0deg);
+  transition: transform 2000ms ease-in-out;
+}
+
+.hero-art.noche .astro-giro { transform: translate(210px, 100px) rotate(-45deg); }
+
+/* Astro metálico: sol en oro viejo, luna en plata lunar clara. El
+   cambio de color viaja dentro del crossfade de 2s (los dos astros
+   comparten geometría y se funden mientras la máscara se desliza). */
 .escena-dia .astro-uso { fill: var(--gold); }
-.escena-noche .astro-uso { fill: var(--silver-dark); }
+.escena-noche .astro-uso { fill: var(--silver-moon); }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-art .escena, .astro-oculto { transition: none; }
+  .hero-art .escena, .astro-oculto, .astro-giro { transition: none; }
 }
 
 @media (min-width: 60em) {
@@ -588,10 +630,12 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .caso { background: var(--acento-suave); padding-block: var(--pad-seccion); }
 
-/* Chip común de las secciones sobre banda salvia (Caso real y Planes):
-   en blanco cálido para que no se funda con el fondo del mismo tono. */
+/* Chip común de las secciones sobre banda salvia (Caso real, Planes y
+   Equipo): en blanco cálido para que no se funda con el fondo del
+   mismo tono. */
 .caso .eyebrow,
-.planes .eyebrow { background: var(--blanco-calido); }
+.planes .eyebrow,
+.equipo .eyebrow { background: var(--blanco-calido); }
 
 /* Título y bajada como un mismo bloque: un paso corto de la escala
    en vez del margen genérico de sección (48/64px → 24px). */
@@ -846,12 +890,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .item-cuerpo { display: flow-root; }
 
 /* Ícono de servicio en la esquina superior derecha, en oro. Con float el
-   texto fluye a su izquierda; el margen inferior lo despega del texto y
-   del precio anclado abajo, sin colisión ni en tarjetas de poco texto. */
+   texto fluye a su izquierda sin columna vacía, y flow-root garantiza
+   que el cuerpo contenga al ícono: el precio anclado abajo nunca
+   colisiona, ni en tarjetas de poco texto. */
 .item-ico {
   float: right;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   margin: 0.1rem 0 0.35rem 0.65rem;
   fill: none;
   stroke: var(--gold);
@@ -859,6 +904,10 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Arranque en negrita: el concepto de cada tarjeta (≤4 palabras) ancla
+   la lectura; el resto del texto sigue en peso normal. */
+.item-cuerpo strong { font-weight: 600; }
 
 /* En desktop, las tarjetas de ítems van a dos columnas (la última
    ocupa una sola columna si el módulo tiene número impar). */
@@ -996,7 +1045,28 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 }
 
 .plan-modulos .excluido::before { background: var(--borde-btn); }
-.plan-modulos .excluido span { color: var(--texto-2); font-weight: 400; }
+
+/* Módulos no incluidos: apagados y tachados (la línea vive en el span
+   y conserva su gris aunque el enlace se subraye al hover). */
+.plan-modulos .excluido span {
+  color: var(--texto-2);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+/* Cada nombre de módulo enlaza a su módulo de la carta de Servicios:
+   sin subrayado en reposo, subrayado al hover en el verde de identidad
+   (en la card verde destacada, currentColor para que no se funda). */
+.plan-modulos a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transicion);
+}
+
+.plan-modulos a:hover { text-decoration-color: var(--acento); }
+.plan-destacado .plan-modulos a:hover { text-decoration-color: currentColor; }
 
 .plan .btn { margin-top: auto; width: 100%; }
 
@@ -1038,16 +1108,18 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 /* Tras la banda salvia de Planes, Cómo funciona respira arriba */
 .como { padding-block: var(--pad-seccion); }
 
-.pasos { display: grid; gap: var(--s-5); }
+.pasos { display: grid; gap: var(--s-3); }
 
-/* Número y subtítulo comparten fila (círculo a la izquierda, centrados
-   verticalmente entre sí, igual en los tres pasos); la descripción
-   ocupa el ancho completo bajo la fila. */
+/* Cada paso es una tarjeta con la piel del panel de Contacto
+   (.panel-suave); dentro, número y subtítulo comparten fila (círculo a
+   la izquierda, centrados entre sí) y la descripción ocupa el ancho
+   completo bajo la fila. */
 .paso {
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: var(--s-2);
   align-items: center;
+  align-content: start;
 }
 
 .paso-num {
@@ -1076,17 +1148,31 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .como-cta { margin-top: var(--s-5); text-align: center; }
 
 @media (min-width: 45em) {
-  .pasos { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+  .pasos { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ---------- 05 · Equipo ---------- */
 
 .equipo { background: var(--acento-suave); padding-block: var(--pad-seccion); }
 
+/* Los dos socios viven en UNA tarjeta blanca cálida, hermana de la
+   ficha del caso real (mismo radio y sombra, sin borde); dos columnas
+   en escritorio, apilado en pantallas menores. */
 .equipo-grid {
   display: grid;
   gap: var(--s-6);
-  max-width: 60rem;
+  background: var(--blanco-calido);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-1);
+  padding: var(--s-4);
+}
+
+@media (min-width: 60em) {
+  .equipo-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-5);
+    padding: var(--s-5);
+  }
 }
 
 .persona {
@@ -1106,13 +1192,14 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .persona h3 { font-size: 1.25rem; }
 
+/* Cargo en oro: el metal permanente también firma a las personas */
 .persona-rol {
   margin-top: 0.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--acento);
+  color: var(--gold);
 }
 
 .persona-bio { margin-top: 0.75rem; font-size: 0.9375rem; color: var(--texto-2); }
@@ -1171,6 +1258,29 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .faq-list details[open] summary::after { transform: rotate(180deg); }
 
+/* Despliegue animado en ambos sentidos: interpolate-size permite
+   transicionar height 0 ↔ auto sobre ::details-content (altura +
+   opacidad); content-visibility viaja en discreto para que el cierre
+   también anime. Navegadores sin soporte abren/cierran al instante. */
+.faq-list { interpolate-size: allow-keywords; }
+
+.faq-list details::details-content {
+  height: 0;
+  opacity: 0;
+  overflow: clip;
+  transition: height 280ms ease-in-out, opacity 280ms ease-in-out,
+              content-visibility 280ms allow-discrete;
+}
+
+.faq-list details[open]::details-content {
+  height: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-list details::details-content { transition: none; }
+}
+
 .faq-list details p {
   padding: 0 0 var(--s-3);
   font-size: 0.9375rem;
@@ -1187,11 +1297,17 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   padding-inline: clamp(1rem, 3vw, 2rem);
 }
 
-.contacto-grid {
+/* Panel suave del sistema: superficie gris neutra de esquinas grandes.
+   La comparten la tarjeta de Contacto y las tarjetas de paso de Cómo
+   funciona (mismos fondo, radio y padding; sin borde ni sombra). */
+.panel-suave {
   background: var(--gris-bg);
-  color: var(--texto);
   border-radius: var(--radio-xl);
   padding: clamp(2rem, 6vw, 4.5rem);
+}
+
+.contacto-grid {
+  color: var(--texto);
   display: grid;
   gap: var(--s-5);
 }
