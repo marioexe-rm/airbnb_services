@@ -221,4 +221,101 @@
       }, 15000);
     }
   }
+
+  // Scroll asistido de escritorio (≥64em). Reemplaza al scroll-snap CSS
+  // (velocidad no configurable, se percibía brusco) conservando su
+  // lógica: al TERMINAR el scroll (scrollend, o debounce de 150ms como
+  // fallback), si el inicio de la sección más cercana —o el centro del
+  // módulo más cercano de Servicios— queda a menos del umbral, desliza
+  // hacia él en ~500ms con easeOutCubic. Nunca durante el gesto, nunca
+  // en cascada (en el objetivo no hace nada), nunca con el footer a la
+  // vista (el fondo de la página siempre se puede mirar), y sin snap
+  // con prefers-reduced-motion. Los scroll-margin del CSS siguen siendo
+  // la fuente de verdad del encuadre, igual que para las anclas.
+  var snapDesktop = window.matchMedia('(min-width: 64em)');
+  if (!sinMovimiento) {
+    var UMBRAL_SNAP = 160;   // px de cercanía que activan el imán
+    var DURACION_SNAP = 500; // ms del deslizamiento
+    var animacionSnap = null;
+
+    var cancelarSnap = function () {
+      if (animacionSnap !== null) {
+        cancelAnimationFrame(animacionSnap);
+        animacionSnap = null;
+      }
+    };
+
+    // Cualquier gesto del usuario interrumpe el deslizamiento al instante
+    ['wheel', 'touchstart', 'mousedown', 'keydown'].forEach(function (evento) {
+      window.addEventListener(evento, cancelarSnap, { passive: true });
+    });
+
+    // Posición de layout en el documento (cadena de offsetTop): a
+    // diferencia de getBoundingClientRect, ignora los transforms del
+    // reveal, así el objetivo apunta a la posición final del elemento
+    // aunque aún esté a mitad de su aparición.
+    var topDocumento = function (el) {
+      var top = 0;
+      while (el) { top += el.offsetTop; el = el.offsetParent; }
+      return top;
+    };
+
+    var objetivoSnap = function () {
+      var y = window.scrollY;
+      var maxY = document.documentElement.scrollHeight - window.innerHeight;
+      var mejor = null;
+      var considerar = function (candidato) {
+        candidato = Math.max(0, Math.min(Math.round(candidato), maxY));
+        if (mejor === null || Math.abs(candidato - y) < Math.abs(mejor - y)) {
+          mejor = candidato;
+        }
+      };
+      document.querySelectorAll('section').forEach(function (seccion) {
+        var margen = parseFloat(getComputedStyle(seccion).scrollMarginTop) || 0;
+        considerar(topDocumento(seccion) - margen);
+      });
+      document.querySelectorAll('.modulo').forEach(function (modulo) {
+        considerar(topDocumento(modulo) + modulo.offsetHeight / 2 - window.innerHeight / 2);
+      });
+      return mejor;
+    };
+
+    var deslizarHasta = function (destino) {
+      var origen = window.scrollY;
+      var delta = destino - origen;
+      var t0 = null;
+      var paso = function (t) {
+        if (t0 === null) { t0 = t; }
+        var avance = Math.min((t - t0) / DURACION_SNAP, 1);
+        var suave = 1 - Math.pow(1 - avance, 3); // easeOutCubic
+        // behavior instant: cada fotograma fija la posición exacta (con
+        // el scroll-behavior smooth del html, cada paso lanzaría una
+        // animación del navegador persiguiendo al objetivo con retraso).
+        window.scrollTo({ top: origen + delta * suave, behavior: 'instant' });
+        animacionSnap = avance < 1 ? requestAnimationFrame(paso) : null;
+      };
+      animacionSnap = requestAnimationFrame(paso);
+    };
+
+    var alSoltarScroll = function () {
+      if (!snapDesktop.matches || animacionSnap !== null) { return; }
+      var footer = document.querySelector('.site-footer');
+      if (footer && footer.getBoundingClientRect().top < window.innerHeight) { return; }
+      var destino = objetivoSnap();
+      if (destino === null) { return; }
+      var distancia = Math.abs(destino - window.scrollY);
+      if (distancia < 2 || distancia > UMBRAL_SNAP) { return; }
+      deslizarHasta(destino);
+    };
+
+    if ('onscrollend' in window) {
+      window.addEventListener('scrollend', alSoltarScroll);
+    } else {
+      var esperaSnap;
+      window.addEventListener('scroll', function () {
+        clearTimeout(esperaSnap);
+        esperaSnap = setTimeout(alSoltarScroll, 150);
+      }, { passive: true });
+    }
+  }
 })();
