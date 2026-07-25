@@ -964,6 +964,126 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 @media (min-width: 56.25em) {
   .modulo { grid-template-columns: 20rem 1fr; gap: var(--s-6); }
+  /* El módulo de terceros ignora el cabezal lateral: apila cabezal sobre
+     cuerpo a todo el ancho para que sus 2 tarjetas de partner queden más
+     anchas que las tarjetas de ítems normales. */
+  .modulo.modulo-terceros { grid-template-columns: 1fr; gap: var(--s-4); }
+}
+
+/* ---------- 02 · Servicios · módulo de terceros (aliados externos) ----------
+   Cuarto módulo con la anatomía de .modulo pero tratamiento invertido: 2
+   tarjetas doradas que NO son servicios nuestros, sino anuncios de partners
+   externos (badge «Anuncio» + rel="sponsored"). El wrapper sigue en salvia
+   como 01-03: el oro se limita a las dos cards para no inflar su saliencia. */
+
+.modulo-terceros-lead { max-width: 60ch; }
+
+.partners { display: grid; gap: var(--s-3); }
+
+@media (min-width: 40em) {
+  .partners { grid-template-columns: 1fr 1fr; }
+}
+
+/* Tarjeta de partner: mismo lenguaje de card (radio, sombra, elevación al
+   hover) que ítems y reseñas, con fondo dorado sólido y textos claros. Toda
+   la card es el enlace al sitio del partner. */
+.partner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--gold);
+  color: var(--blanco-calido);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-1);
+  padding: 1.75rem var(--s-3) var(--s-3);
+  text-decoration: none;
+  transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.partner:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
+
+/* La regla global :focus-visible cuadra el radio a 4px; en una card grande
+   se nota, así que se conserva el radio y se separa un poco el trazo. */
+.partner:focus-visible { border-radius: var(--radio-l); outline-offset: 3px; }
+
+/* Badge «Anuncio»: pestaña discreta a caballo del borde superior. Chip
+   blanco cálido con el verde de identidad en versalitas (7,5:1 medido);
+   deja claro que ese servicio no lo prestamos nosotros. */
+.partner-badge {
+  position: absolute;
+  top: 0;
+  left: var(--s-3);
+  transform: translateY(-50%);
+  background: var(--blanco-calido);
+  color: var(--acento);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radio-pill);
+  box-shadow: var(--sombra-1);
+}
+
+/* Cuerpo con el ícono flotado a la derecha (mismo recurso que .item-cuerpo:
+   flow-root para que el texto lo rodee sin reservar columna). */
+.partner-cuerpo {
+  display: flow-root;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.partner-cuerpo strong { font-weight: 700; }
+
+/* Ícono representativo en la esquina superior derecha, en claro (el oro sería
+   invisible sobre el oro). Caja 30×30, mismo trazo fino del sistema. */
+.partner-ico {
+  float: right;
+  width: 30px;
+  height: 30px;
+  margin: 0.1rem 0 0.35rem 0.75rem;
+  fill: none;
+  stroke: var(--blanco-calido);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Nombre del partner + dominio (el enlace es toda la card; el dominio va
+   subrayado como pista del destino). */
+.partner-nombre { font-size: 0.9375rem; font-weight: 700; }
+
+.partner-dominio {
+  margin-left: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* «Consulta inicial» en la posición del precio (abajo-derecha). El verde de
+   identidad no alcanza AA sobre el oro (1,64:1): se usa la variante verde
+   clara ya validada (--panel-texto-2) en negrita y a tamaño grande (1,25rem
+   ≥ 14pt), por lo que aplica el umbral AA de texto grande (3:1); medido
+   3,28:1. Nunca se usa «gratuita». */
+.partner-consulta {
+  margin-top: auto;
+  align-self: flex-end;
+  padding-top: 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--panel-texto-2);
+}
+
+/* Línea aclaratoria bajo las dos tarjetas, sobre la salvia del módulo
+   (--texto-2 sobre --acento-suave: 5,47:1 medido). */
+.terceros-nota {
+  margin-top: var(--s-3);
+  font-size: 0.8125rem;
+  color: var(--texto-2);
+  max-width: 70ch;
 }
 
 /* ---------- 03 · Planes ---------- */
