@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260724a">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260725a">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -418,35 +418,34 @@
         </article>
 
         <!-- Módulo 04 · servicios de terceros: 2 anuncios de partners
-             externos (Renata y NVC). Misma anatomía que 01-03 (num, título,
-             bajada y contenedor de tarjetas) con tratamiento invertido
-             —tarjetas doradas, badge «Anuncio» y rel="sponsored"— porque NO
-             son servicios que prestemos nosotros. Cada card es el enlace al
-             sitio del partner y abre en pestaña nueva. -->
-        <article class="modulo modulo-terceros reveal" id="modulo-4">
+             externos (Renata y NVC & Cía.) con la anatomía exacta de las
+             tarjetas de ítems 01-03 (mismas clases modulo-items/item-cuerpo/
+             item-precio) y el esquema cromático de la card Full Estratégico
+             de Planes. La tarjeta completa es un enlace al sitio del partner
+             (capa .partner-enlace con aria-label, pestaña nueva,
+             rel="sponsored") con flecha ↗ permanente junto al nombre. -->
+        <article class="modulo reveal" id="modulo-4">
           <div class="modulo-head">
             <p class="modulo-num">Módulo 04 · servicios de terceros</p>
-            <h3>Aliados para lo que nosotros no hacemos</h3>
-            <p class="modulo-lead modulo-terceros-lead">Dos empresas independientes que resuelven la contabilidad y la parte legal de tu arriendo. No son parte de Estadía ni de nuestros planes: son anuncios que mostramos porque a varios anfitriones les sirven.</p>
+            <h3>Aliados para el resto de tu operación</h3>
+            <p class="modulo-lead">Especialistas externos para los impuestos y lo legal de tu arriendo.</p>
           </div>
           <div class="modulo-body">
-            <div class="partners">
-              <a class="partner" href="https://usarenata.com/" target="_blank" rel="sponsored noopener noreferrer">
+            <ul class="modulo-items partners">
+              <li class="partner">
                 <span class="partner-badge">Anuncio</span>
-                <p class="partner-cuerpo"><svg class="partner-ico" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><rect x="8.5" y="5.5" width="7" height="3.5" rx="1"/><path d="M14.3 12l-4.6 4.6"/><circle cx="9.9" cy="12.2" r="1"/><circle cx="14.1" cy="16.4" r="1"/></svg><strong>Contabilidad e impuestos</strong> al día sin contratar un contador aparte: una asistente tributaria con IA, respaldada por un contador de verdad, declara tu IVA mensual y la Operación Renta del arriendo ante el SII.</p>
-                <p class="partner-nombre">Renata<span class="partner-dominio">usarenata.com</span></p>
-                <span class="partner-consulta">Consulta inicial</span>
-                <span class="visually-hidden"> (sitio externo; se abre en una pestaña nueva)</span>
-              </a>
-              <a class="partner" href="https://nvcservicioslegales.cl/" target="_blank" rel="sponsored noopener noreferrer">
+                <div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><rect x="8.5" y="5.5" width="7" height="3.5" rx="1"/><path d="M14.3 12l-4.6 4.6"/><circle cx="9.9" cy="12.2" r="1"/><circle cx="14.1" cy="16.4" r="1"/></svg><strong>Contabilidad e impuestos</strong>: la IA de <strong class="partner-nombre"><span class="partner-nombre-texto">Renata</span>&nbsp;<svg class="partner-flecha" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 10.5 10.5 3.5"/><path d="M5 3.5h5.5V9"/></svg></strong> declara tu IVA mensual y la Operación Renta ante el SII.</div>
+                <span class="item-precio">Consulta inicial</span>
+                <a class="partner-enlace" href="https://usarenata.com/" target="_blank" rel="sponsored noopener noreferrer" aria-label="Visitar el sitio de Renata, servicio de terceros (se abre en pestaña nueva)"></a>
+              </li>
+              <li class="partner">
                 <span class="partner-badge">Anuncio</span>
-                <p class="partner-cuerpo"><svg class="partner-ico" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4" r="1.1"/><path d="M12 5v13.5"/><path d="M8 18.5h8"/><path d="M5 8h14"/><path d="M5 8l-2.6 4.2M5 8l2.6 4.2"/><path d="M2.2 12.2a2.8 2.8 0 0 0 5.6 0"/><path d="M19 8l-2.6 4.2M19 8l2.6 4.2"/><path d="M16.2 12.2a2.8 2.8 0 0 0 5.6 0"/></svg><strong>Asesoría legal</strong> cuando el arriendo se complica: un estudio de abogadas ve contratos, término de contrato y precario, con atención online en todo Chile y respuesta en menos de 24 horas hábiles.</p>
-                <p class="partner-nombre">NVC &amp; Cía. Servicios Legales<span class="partner-dominio">nvcservicioslegales.cl</span></p>
-                <span class="partner-consulta">Consulta inicial</span>
-                <span class="visually-hidden"> (sitio externo; se abre en una pestaña nueva)</span>
-              </a>
-            </div>
-            <p class="terceros-nota">Servicios prestados por empresas independientes. No formamos parte de estas empresas ni participamos en la prestación de sus servicios.</p>
+                <div class="item-cuerpo"><svg class="item-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4" r="1.1"/><path d="M12 5v13.5"/><path d="M8 18.5h8"/><path d="M5 8h14"/><path d="M5 8l-2.6 4.2M5 8l2.6 4.2"/><path d="M2.2 12.2a2.8 2.8 0 0 0 5.6 0"/><path d="M19 8l-2.6 4.2M19 8l2.6 4.2"/><path d="M16.2 12.2a2.8 2.8 0 0 0 5.6 0"/></svg><strong>Asesoría legal</strong>: las abogadas de <strong class="partner-nombre"><span class="partner-nombre-texto">NVC &amp; Cía.</span>&nbsp;<svg class="partner-flecha" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 10.5 10.5 3.5"/><path d="M5 3.5h5.5V9"/></svg></strong> ven contratos de arriendo, término de contrato y precario.</div>
+                <span class="item-precio">Consulta inicial</span>
+                <a class="partner-enlace" href="https://nvcservicioslegales.cl/" target="_blank" rel="sponsored noopener noreferrer" aria-label="Visitar el sitio de NVC y Compañía Servicios Legales, servicio de terceros (se abre en pestaña nueva)"></a>
+              </li>
+            </ul>
+            <p class="terceros-nota">Servicios prestados por empresas independientes; Estadía no participa en su prestación.</p>
           </div>
         </article>
       </div>

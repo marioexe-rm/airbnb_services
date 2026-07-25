@@ -876,9 +876,11 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   max-width: 30ch;
 }
 
+/* Bajada de módulo en peso regular: ninguna bajada de la página va en
+   negrita; la jerarquía la dan el tamaño y el color. */
 .modulo-lead {
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--texto);
 }
 
@@ -964,59 +966,49 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 @media (min-width: 56.25em) {
   .modulo { grid-template-columns: 20rem 1fr; gap: var(--s-6); }
-  /* El módulo de terceros ignora el cabezal lateral: apila cabezal sobre
-     cuerpo a todo el ancho para que sus 2 tarjetas de partner queden más
-     anchas que las tarjetas de ítems normales. */
-  .modulo.modulo-terceros { grid-template-columns: 1fr; gap: var(--s-4); }
 }
 
-/* ---------- 02 · Servicios · módulo de terceros (aliados externos) ----------
-   Cuarto módulo con la anatomía de .modulo pero tratamiento invertido: 2
-   tarjetas doradas que NO son servicios nuestros, sino anuncios de partners
-   externos (badge «Anuncio» + rel="sponsored"). El wrapper sigue en salvia
-   como 01-03: el oro se limita a las dos cards para no inflar su saliencia. */
+/* ---------- 02 · Servicios · módulo 04 de terceros ----------
+   Dos anuncios de partners externos con la anatomía EXACTA de las tarjetas
+   de ítems (li de .modulo-items: mismo padding, grid, tipografía, ícono
+   30×30 y hover de elevación). Las únicas diferencias: el esquema cromático
+   de la card Full Estratégico de Planes (superficie --acento, cuerpo en
+   --panel-texto-2 y acentos en blanco cálido) y el badge «Anuncio». El borde
+   de 2px de esa card se omite a propósito: es del mismo color que su fondo
+   (invisible) y agregarlo sumaría 4px de alto, rompiendo la paridad exacta
+   con las tarjetas de ítems, que manda. */
 
-.modulo-terceros-lead { max-width: 60ch; }
+/* Las tarjetas arrancan al tope del cuerpo, alineadas con el encabezado
+   (en 01-03 ese espacio lo abre la bajada, que aquí vive en el head). */
+.partners { margin-top: 0; }
 
-.partners { display: grid; gap: var(--s-3); }
+/* La bajada del módulo de terceros va en el head, bajo el título, con el
+   mismo ritmo vertical que el precio de los módulos 01-03. */
+.modulo-head .modulo-lead { margin-top: var(--s-2); }
 
-@media (min-width: 40em) {
-  .partners { grid-template-columns: 1fr 1fr; }
-}
-
-/* Tarjeta de partner: mismo lenguaje de card (radio, sombra, elevación al
-   hover) que ítems y reseñas, con fondo dorado sólido y textos claros. Toda
-   la card es el enlace al sitio del partner. */
-.partner {
+/* li.partner: la clase sola (0,1,0) perdería contra .modulo-items li
+   (0,1,1); con el tipo delante empata en origen y gana en especificidad. */
+li.partner {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--gold);
-  color: var(--blanco-calido);
-  border-radius: var(--radio-l);
-  box-shadow: var(--sombra-1);
-  padding: 1.75rem var(--s-3) var(--s-3);
-  text-decoration: none;
-  transition: box-shadow var(--transicion), transform var(--transicion);
+  background: var(--acento);
+  color: var(--panel-texto-2);
 }
 
-.partner:hover { box-shadow: var(--sombra-2); transform: translateY(-2px); }
+/* Ícono y «Consulta inicial» en el rol de acento de la superficie verde
+   (blanco cálido, como el precio de Full Estratégico): el oro y el verde
+   de los ítems serían invisibles aquí. */
+.partner .item-ico { stroke: var(--blanco-calido); }
+.partner .item-precio { color: var(--blanco-calido); }
 
-/* La regla global :focus-visible cuadra el radio a 4px; en una card grande
-   se nota, así que se conserva el radio y se separa un poco el trazo. */
-.partner:focus-visible { border-radius: var(--radio-l); outline-offset: 3px; }
-
-/* Badge «Anuncio»: pestaña discreta a caballo del borde superior. Chip
-   blanco cálido con el verde de identidad en versalitas (7,5:1 medido);
-   deja claro que ese servicio no lo prestamos nosotros. */
+/* Badge «Anuncio»: pestaña a caballo del borde superior, en el lenguaje
+   del badge Recomendado de Planes (oro + texto claro, 4,6:1). */
 .partner-badge {
   position: absolute;
   top: 0;
   left: var(--s-3);
   transform: translateY(-50%);
-  background: var(--blanco-calido);
-  color: var(--acento);
+  background: var(--gold);
+  color: var(--blanco-calido);
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -1026,55 +1018,53 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   box-shadow: var(--sombra-1);
 }
 
-/* Cuerpo con el ícono flotado a la derecha (mismo recurso que .item-cuerpo:
-   flow-root para que el texto lo rodee sin reservar columna). */
-.partner-cuerpo {
-  display: flow-root;
-  font-size: 0.9375rem;
-  line-height: 1.55;
+/* El nombre del partner y su flecha ↗ nunca se separan de línea */
+.partner-nombre { white-space: nowrap; }
+
+/* Subrayado del sistema para enlaces: transparente en reposo, currentColor
+   al hover/focus (solo bajo el texto del nombre, no bajo la flecha). */
+.partner-nombre-texto {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transicion);
 }
 
-.partner-cuerpo strong { font-weight: 700; }
-
-/* Ícono representativo en la esquina superior derecha, en claro (el oro sería
-   invisible sobre el oro). Caja 30×30, mismo trazo fino del sistema. */
-.partner-ico {
-  float: right;
-  width: 30px;
-  height: 30px;
-  margin: 0.1rem 0 0.35rem 0.75rem;
+/* Flecha diagonal externa permanente: afordancia de enlace también en
+   táctil. Caja de 14px con el glifo inset (≈ altura de mayúscula del
+   nombre) y trazo 1.5 del sistema en viewBox nativo (no escala). */
+.partner-flecha {
+  width: 14px;
+  height: 14px;
   fill: none;
-  stroke: var(--blanco-calido);
+  stroke: currentColor;
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform var(--transicion);
 }
 
-/* Nombre del partner + dominio (el enlace es toda la card; el dominio va
-   subrayado como pista del destino). */
-.partner-nombre { font-size: 0.9375rem; font-weight: 700; }
+/* Hover y focus-visible por separado (un :has sin soporte no debe anular
+   la rama de hover de su misma regla). */
+.partner:hover .partner-nombre-texto { text-decoration-color: currentColor; }
+.partner:has(.partner-enlace:focus-visible) .partner-nombre-texto { text-decoration-color: currentColor; }
 
-.partner-dominio {
-  margin-left: 0.45rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.partner:hover .partner-flecha { transform: translate(2px, -2px); }
+.partner:has(.partner-enlace:focus-visible) .partner-flecha { transform: translate(2px, -2px); }
+
+/* Capa que hace enlace a la tarjeta completa (el destino lo declara su
+   aria-label); el anillo de foco global rodea la tarjeta redondeada. */
+.partner-enlace {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radio-l);
+  cursor: pointer;
 }
 
-/* «Consulta inicial» en la posición del precio (abajo-derecha). El verde de
-   identidad no alcanza AA sobre el oro (1,64:1): se usa la variante verde
-   clara ya validada (--panel-texto-2) en negrita y a tamaño grande (1,25rem
-   ≥ 14pt), por lo que aplica el umbral AA de texto grande (3:1); medido
-   3,28:1. Nunca se usa «gratuita». */
-.partner-consulta {
-  margin-top: auto;
-  align-self: flex-end;
-  padding-top: 0.35rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--panel-texto-2);
+@media (prefers-reduced-motion: reduce) {
+  .partner-flecha { transition: none; }
+  .partner:hover .partner-flecha { transform: none; }
+  .partner:has(.partner-enlace:focus-visible) .partner-flecha { transform: none; }
 }
 
 /* Línea aclaratoria bajo las dos tarjetas, sobre la salvia del módulo
