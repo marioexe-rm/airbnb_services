@@ -115,7 +115,8 @@
       var grupoActual = grupoDe(actual);
 
       setInterval(function () {
-        if (document.hidden) { return; }
+        // En pausa con la pestaña oculta o con un modal de servicio abierto
+        if (document.hidden || document.body.classList.contains('modal-abierta')) { return; }
         var grupoSiguiente = grupoActual === 'dia' ? 'noche' : 'dia';
         var siguiente = sacar(grupoSiguiente);
         escenas[actual].classList.remove('activa');
@@ -196,7 +197,8 @@
       var ultimoGrupo = grupoActivo;
 
       setInterval(function () {
-        if (document.hidden || lecturaPausada) { return; }
+        // También en pausa mientras un modal de servicio está abierto
+        if (document.hidden || lecturaPausada || document.body.classList.contains('modal-abierta')) { return; }
         if (!bolsaResenas.length) {
           bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; }));
           if (bolsaResenas[0] === ultimoGrupo) { bolsaResenas.push(bolsaResenas.shift()); }
@@ -220,6 +222,74 @@
         grupoActivo = proximo;
       }, 15000);
     }
+  }
+
+  // Modal de detalle de servicios: contenedor único; cada tarjeta aporta
+  // su contenido vía <template>. Foco trasladado al panel al abrir y
+  // devuelto a la tarjeta al cerrar, Tab atrapado dentro, cierre con
+  // Escape / clic en el fondo / botón, scroll del fondo bloqueado y
+  // rotadores en pausa (body.modal-abierta) mientras esté abierto.
+  var modal = document.querySelector('.modal');
+  if (modal) {
+    var modalPanel = modal.querySelector('.modal-panel');
+    var modalFondo = modal.querySelector('.modal-fondo');
+    var modalCerrar = modal.querySelector('.modal-cerrar');
+    var modalEtiqueta = modal.querySelector('.modal-etiqueta');
+    var modalTitulo = modal.querySelector('.modal-titulo');
+    var modalCuerpo = modal.querySelector('.modal-cuerpo');
+    var origenModal = null;
+    var cierreProgramado = null;
+
+    var abrirModal = function (plantilla, origen) {
+      origenModal = origen || null;
+      clearTimeout(cierreProgramado);
+      modalEtiqueta.textContent = plantilla.getAttribute('data-etiqueta') || '';
+      modalTitulo.textContent = plantilla.getAttribute('data-titulo') || '';
+      modalCuerpo.innerHTML = '';
+      modalCuerpo.appendChild(plantilla.content.cloneNode(true));
+      modal.hidden = false;
+      document.body.classList.add('modal-abierta');
+      modalPanel.scrollTop = 0;
+      // Doble rAF: el estado inicial (opacity 0) debe alcanzar a pintarse
+      // antes de encender .visible, o la transición de entrada no corre.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { modal.classList.add('visible'); });
+      });
+      modalPanel.focus();
+    };
+
+    var cerrarModal = function () {
+      modal.classList.remove('visible');
+      document.body.classList.remove('modal-abierta');
+      var terminar = function () { modal.hidden = true; };
+      if (sinMovimiento) { terminar(); } else { cierreProgramado = setTimeout(terminar, 300); }
+      if (origenModal) { origenModal.focus(); origenModal = null; }
+    };
+
+    Array.prototype.slice.call(document.querySelectorAll('.servicio-enlace')).forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var plantilla = boton.closest('li').querySelector('template');
+        if (plantilla) { abrirModal(plantilla, boton); }
+      });
+    });
+
+    modalFondo.addEventListener('click', cerrarModal);
+    modalCerrar.addEventListener('click', cerrarModal);
+
+    modal.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); cerrarModal(); return; }
+      if (e.key !== 'Tab') { return; }
+      // Trampa de foco: Tab circula solo entre los focalizables del panel
+      var focalizables = modalPanel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (!focalizables.length) { return; }
+      var primero = focalizables[0];
+      var ultimo = focalizables[focalizables.length - 1];
+      if (e.shiftKey && (document.activeElement === primero || document.activeElement === modalPanel)) {
+        e.preventDefault(); ultimo.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault(); primero.focus();
+      }
+    });
   }
 
   // Scroll asistido de escritorio (≥64em). Reemplaza al scroll-snap CSS
