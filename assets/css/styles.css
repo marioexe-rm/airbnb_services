@@ -826,18 +826,23 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   margin-inline: auto;
 }
 
-/* Texto del gráfico en la voz del sistema: misma familia (declarada:
-   el SVG no siempre la hereda), peso 500 como los secundarios de las
-   tarjetas vecinas y 12.5 unidades de lienzo ≈ 14px efectivos en la
-   card de escritorio. Los valores, en 600 como los precios. */
+/* Texto del gráfico: misma familia del sitio (declarada: el SVG no
+   siempre la hereda), cifras tabulares alineadas entre meses y grosor
+   solo tipográfico (sin stroke). Jerarquía liviana: valores en medium
+   (500) ≈ 12,4px efectivos; meses un paso más chicos y en regular. */
 .grafico text {
   font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 10px;
+  font-weight: 400;
   fill: var(--texto-2);
+  font-variant-numeric: tabular-nums;
+  stroke: none;
 }
 
-.grafico text.anim-fade { font-weight: 600; }
+.grafico text.anim-fade {
+  font-size: 11px;
+  font-weight: 500;
+}
 
 .grafico .eje { stroke: var(--linea); stroke-width: 1; }
 
@@ -1433,14 +1438,28 @@ body.modal-abierta { overflow: hidden; }
    viewport lo que el panel reserva alrededor (padding 4rem, cabecera
    ~4.5rem, pie de foto ~4rem y margen del modal 2rem ≈ 15rem): la
    imagen completa y su pie caben sin scroll interno. */
-.modal-foto img {
+/* Escenario fijo (caja 4:3 capada por el viewport, idéntica para las 8
+   fotos) con la imagen dimensionada a su proporción real dentro: los
+   bordes del elemento coinciden con los visibles y el radio se ve
+   incluso con letterboxing. */
+.modal-escenario {
+  position: relative;
   width: 100%;
-  /* Escenario de dimensiones fijas: las 8 fotos son 4:3, así que la caja
-     4:3 (capada por el alto disponible del viewport) mide lo mismo para
-     todas; contain ajusta la foto dentro sin redimensionar el panel. */
   aspect-ratio: 4 / 3;
   max-height: calc(100svh - 21rem);
-  object-fit: contain;
+}
+
+/* Absoluta y centrada: los máximos porcentuales resuelven siempre
+   contra el escenario (con altura derivada de aspect-ratio, un hijo en
+   flujo puede ignorarlos) — también para fotos en formato retrato. */
+.modal-escenario img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   border-radius: var(--radio-m);
 }
 
@@ -1500,13 +1519,13 @@ body.modal-abierta { overflow: hidden; }
    saliente se superponen 450ms (ease-in-out del sistema) con un
    deslizamiento de 8px en el sentido de la navegación. */
 .modal-caja {
-  transition: opacity 450ms ease-in-out, transform 450ms ease-in-out;
+  transition: opacity 550ms ease-in-out, transform 550ms ease-in-out;
 }
 
 .modal-caja-saliente {
   position: absolute;
   pointer-events: none;
-  transition: opacity 450ms ease-in-out, transform 450ms ease-in-out;
+  transition: opacity 550ms ease-in-out, transform 550ms ease-in-out;
 }
 
 .modal-panel.animando-alto {
@@ -1527,7 +1546,8 @@ body.modal-abierta { overflow: hidden; }
   padding: 0;
   cursor: pointer;
   z-index: 2;
-  opacity: 0;
+  /* Siempre visibles, atenuados; a plena opacidad al usarlos */
+  opacity: 0.45;
   transition: opacity var(--transicion);
 }
 
@@ -1557,7 +1577,7 @@ body.modal-abierta { overflow: hidden; }
   width: 24px;
   height: 24px;
   fill: none;
-  stroke: var(--texto);
+  stroke: var(--texto-2);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1565,13 +1585,20 @@ body.modal-abierta { overflow: hidden; }
           drop-shadow(0 0 4px rgba(247, 249, 244, 0.8));
 }
 
-.modal-panel:hover .modal-nav,
-.modal-nav:focus-visible { opacity: 1; }
+.modal-nav:hover,
+.modal-nav:focus-visible,
+.modal-nav:active { opacity: 1; }
 
-@media (pointer: coarse) {
-  .modal-nav { opacity: 0.5; }
-  .modal-nav:active,
-  .modal-nav:focus { opacity: 1; }
+/* Contador de posición (01/10): discreto, centrado al pie del panel,
+   común a reseñas, fotos y servicios; no existe en conjuntos de 1. */
+.modal-contador {
+  margin-top: var(--s-2);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--texto-2);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Encabezado del modal de servicios: módulo actual como eyebrow del
@@ -1579,29 +1606,42 @@ body.modal-abierta { overflow: hidden; }
    propósito distintos de los chevrons laterales sin fondo. */
 .modal-modulos[hidden] { display: none; } /* el display propio no debe pisar el atributo hidden */
 
+/* Grilla con celdas propias: la etiqueta puede bajar a dos líneas sin
+   empujar los botones, y el padding derecho reserva siempre un paso de
+   separación respecto del botón de cierre (2.25rem + 8px). */
 .modal-modulos {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--s-1);
   margin-bottom: var(--s-2);
+  padding-right: calc(2.25rem + var(--s-1));
+}
+
+.modal-modulo { justify-self: start; }
+
+@media (max-width: 44.9375em) {
+  .modal-modulo { font-size: 0.75rem; }
 }
 
 .modal-mod-btn {
   position: relative;
   width: 28px;
   height: 28px;
-  flex: 0 0 auto;
   display: grid;
   place-items: center;
-  background: var(--blanco);
-  border: 1px solid var(--borde-btn);
+  background: var(--acento-suave);
+  border: 0;
   border-radius: var(--radio-pill);
   padding: 0;
   cursor: pointer;
-  transition: background-color var(--transicion), border-color var(--transicion);
+  transition: background-color var(--transicion);
 }
 
-.modal-mod-btn:hover { background: var(--gris-bg); border-color: var(--texto); }
+.modal-mod-btn:hover,
+.modal-mod-btn:focus-visible {
+  background: color-mix(in srgb, var(--acento-suave) 82%, var(--acento));
+}
 
 /* Área de toque de 44px sin crecer el círculo visible */
 .modal-mod-btn::after { content: ""; position: absolute; inset: -8px; }
@@ -1610,7 +1650,7 @@ body.modal-abierta { overflow: hidden; }
   width: 14px;
   height: 14px;
   fill: none;
-  stroke: var(--texto);
+  stroke: var(--acento);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;

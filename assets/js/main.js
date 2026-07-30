@@ -528,11 +528,49 @@
     var modalModuloChip = modal.querySelector('.modal-modulo');
     var modalModPrev = modal.querySelector('.modal-mod-prev');
     var modalModNext = modal.querySelector('.modal-mod-next');
+    var modalContador = modal.querySelector('.modal-contador');
     var origenModal = null;
     var cierreProgramado = null;
     // Colección navegable del modal abierto: {items, indice, render(i),
-    // navAria: [prev, next], amplio, y para servicios iModulo}.
+    // navAria: [prev, next], amplio, modo ('texto'|'visual'), y para
+    // servicios iModulo}.
     var coleccionModal = null;
+
+    var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    var actualizarContador = function () {
+      if (!coleccionModal || coleccionModal.items.length < 2) {
+        modalContador.hidden = true;
+        modalContador.textContent = '';
+        return;
+      }
+      modalContador.textContent = pad2(coleccionModal.indice + 1) + '/' + pad2(coleccionModal.items.length);
+      modalContador.hidden = false;
+    };
+
+    // REGLA GENERAL de conjunto unitario: cuando el modal no tiene una
+    // colección de 2+ elementos, los chevrons se RETIRAN del DOM (no
+    // solo se ocultan), la navegación por flechas queda inerte (los
+    // guards de navegarModal) y no hay contador. Un único punto decide
+    // para todos los modales, sin casos especiales.
+    var configurarNavegacion = function () {
+      var activa = !!(coleccionModal && coleccionModal.items.length > 1);
+      if (activa) {
+        if (!modalNavPrev.parentNode) {
+          modalPanel.appendChild(modalNavPrev);
+          modalPanel.appendChild(modalNavNext);
+        }
+        modalNavPrev.hidden = false;
+        modalNavNext.hidden = false;
+        modalNavPrev.setAttribute('aria-label', coleccionModal.navAria[0]);
+        modalNavNext.setAttribute('aria-label', coleccionModal.navAria[1]);
+      } else if (modalNavPrev.parentNode) {
+        modalNavPrev.parentNode.removeChild(modalNavPrev);
+        modalNavNext.parentNode.removeChild(modalNavNext);
+      }
+      modalPanel.classList.toggle('con-nav', activa);
+      actualizarContador();
+    };
 
     var pintarModal = function (datos) {
       modalEtiqueta.textContent = datos.etiqueta || '';
@@ -569,9 +607,7 @@
     // Modal simple sin navegación (ficha del caso)
     var abrirModalCon = function (etiqueta, titulo, contenido, origen, amplio) {
       coleccionModal = null;
-      modalNavPrev.hidden = true;
-      modalNavNext.hidden = true;
-      modalPanel.classList.remove('con-nav');
+      configurarNavegacion();
       pintarModal({ etiqueta: etiqueta, titulo: titulo, contenido: contenido });
       presentarModal(origen, amplio);
     };
@@ -579,25 +615,58 @@
     // Modal con colección: chevrons laterales y flechas del teclado
     var abrirColeccion = function (col, origen) {
       coleccionModal = col;
-      var sinNav = col.items.length < 2;
-      modalNavPrev.hidden = sinNav;
-      modalNavNext.hidden = sinNav;
-      modalPanel.classList.toggle('con-nav', !sinNav);
-      modalNavPrev.setAttribute('aria-label', col.navAria[0]);
-      modalNavNext.setAttribute('aria-label', col.navAria[1]);
+      configurarNavegacion();
       pintarModal(col.render(col.indice));
       presentarModal(origen, col.amplio);
     };
 
-    // Cambia SOLO el contenido con un fundido cruzado real: una capa
-    // clonada de la caja saliente se superpone y desvanece (450ms,
-    // ease-in-out) mientras la entrante aparece con un deslizamiento de
-    // 8px en el sentido navegado; el alto del panel transiciona entre
-    // medidas. Nada se reconstruye ni se reabre, y el foco permanece en
-    // el control usado.
+    // Transición por tipo de contenido. TEXTO (reseñas y servicios):
+    // fundido secuencial —el saliente se apaga por completo (250ms), se
+    // reemplaza y el entrante aparece (450ms) con un ascenso de 4px—,
+    // sin superponer bloques largos ni desplazamiento horizontal.
+    // VISUAL (fotos y gráficos): fundido cruzado de 550ms con capa
+    // clonada e inerte y deslizamiento de 8px en el sentido navegado.
+    // En ambos casos el alto del panel transiciona y nada se reabre.
+    var animarAltoPanel = function (h0) {
+      modalPanel.style.height = 'auto';
+      var h1 = modalPanel.offsetHeight;
+      if (h1 !== h0) {
+        modalPanel.style.height = h0 + 'px';
+        void modalPanel.offsetWidth;
+        modalPanel.classList.add('animando-alto');
+        modalPanel.style.height = h1 + 'px';
+      } else {
+        modalPanel.style.height = '';
+      }
+    };
+
+    var limpiarAltoPanel = function () {
+      modalPanel.classList.remove('animando-alto');
+      modalPanel.style.height = '';
+    };
+
     var transicionarModal = function (datos, direccion) {
       if (sinMovimiento) { pintarModal(datos); return; }
       var h0 = modalPanel.offsetHeight;
+      if (coleccionModal && coleccionModal.modo === 'texto') {
+        modalCaja.style.transition = 'opacity 250ms ease-in-out';
+        modalCaja.style.opacity = '0';
+        setTimeout(function () {
+          pintarModal(datos);
+          animarAltoPanel(h0);
+          modalCaja.style.transition = 'none';
+          modalCaja.style.transform = 'translateY(4px)';
+          void modalCaja.offsetWidth;
+          modalCaja.style.transition = 'opacity 450ms ease-in-out, transform 450ms ease-in-out';
+          modalCaja.style.opacity = '';
+          modalCaja.style.transform = '';
+          setTimeout(function () {
+            modalCaja.style.transition = '';
+            limpiarAltoPanel();
+          }, 470);
+        }, 260);
+        return;
+      }
       var desliza = direccion > 0 ? 8 : direccion < 0 ? -8 : 0;
       var fantasma = modalCaja.cloneNode(true);
       fantasma.classList.add('modal-caja-saliente');
@@ -611,16 +680,7 @@
       modalCaja.style.transition = 'none';
       modalCaja.style.opacity = '0';
       modalCaja.style.transform = desliza ? 'translateX(' + desliza + 'px)' : '';
-      modalPanel.style.height = 'auto';
-      var h1 = modalPanel.offsetHeight;
-      if (h1 !== h0) {
-        modalPanel.style.height = h0 + 'px';
-        void modalPanel.offsetWidth;
-        modalPanel.classList.add('animando-alto');
-        modalPanel.style.height = h1 + 'px';
-      } else {
-        modalPanel.style.height = '';
-      }
+      animarAltoPanel(h0);
       void modalCaja.offsetWidth;
       modalCaja.style.transition = '';
       modalCaja.style.opacity = '';
@@ -629,9 +689,8 @@
       fantasma.style.transform = desliza ? 'translateX(' + (-desliza) + 'px)' : '';
       setTimeout(function () {
         if (fantasma.parentNode) { fantasma.parentNode.removeChild(fantasma); }
-        modalPanel.classList.remove('animando-alto');
-        modalPanel.style.height = '';
-      }, 480);
+        limpiarAltoPanel();
+      }, 580);
     };
 
     // Circular estricto en ambos extremos. Si la colección define
@@ -650,6 +709,7 @@
         if (coleccionModal !== col || marca !== contadorNavegacion) { return; }
         col.indice = destino;
         transicionarModal(col.render(destino), delta);
+        actualizarContador();
         if (col.alNavegar) { col.alNavegar(destino); }
       };
       if (!col.preparar) { aplicar(); return; }
@@ -701,9 +761,7 @@
       coleccionModal.iModulo = m;
       coleccionModal.items = MODULOS_SERV[m].plantillas;
       coleccionModal.indice = 0;
-      var sinNav = coleccionModal.items.length < 2;
-      modalNavPrev.hidden = sinNav;
-      modalNavNext.hidden = sinNav;
+      configurarNavegacion();
       transicionarModal(coleccionModal.render(0), delta);
     };
 
@@ -718,6 +776,7 @@
               items: MODULOS_SERV[m].plantillas,
               indice: si,
               amplio: false,
+              modo: 'texto',
               navAria: ['Servicio anterior', 'Servicio siguiente'],
               render: renderServicio
             }, boton);
@@ -856,10 +915,13 @@
       var nombre = FOTOS[i];
       var figura = document.createElement('figure');
       figura.className = 'modal-foto';
+      var escenario = document.createElement('div');
+      escenario.className = 'modal-escenario';
       var imagen = document.createElement('img');
       imagen.src = 'assets/img/' + nombre;
       imagen.alt = 'Fotograf\u00eda del departamento del caso real';
-      figura.appendChild(imagen);
+      escenario.appendChild(imagen);
+      figura.appendChild(escenario);
       var pie = document.createElement('figcaption');
       pie.textContent = PIES_FOTOS[nombre] || '';
       figura.appendChild(pie);
@@ -918,6 +980,7 @@
             items: RESENAS,
             indice: indiceResena,
             amplio: false,
+            modo: 'texto',
             navAria: ['Rese\u00f1a anterior', 'Rese\u00f1a siguiente'],
             render: renderResena
           }, botonResena);
