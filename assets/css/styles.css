@@ -820,13 +820,24 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   width: 100%;
   height: auto;
   margin-top: var(--s-1);
+  /* El lienzo escala su texto con el ancho: el tope evita que en cards
+     anchas (tablet) o en el modal las letras se inflen. */
+  max-width: 26rem;
+  margin-inline: auto;
 }
 
+/* Texto del gráfico en la voz del sistema: misma familia (declarada:
+   el SVG no siempre la hereda), peso 500 como los secundarios de las
+   tarjetas vecinas y 12.5 unidades de lienzo ≈ 14px efectivos en la
+   card de escritorio. Los valores, en 600 como los precios. */
 .grafico text {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 12.5px;
+  font-weight: 500;
   fill: var(--texto-2);
 }
+
+.grafico text.anim-fade { font-weight: 600; }
 
 .grafico .eje { stroke: var(--linea); stroke-width: 1; }
 
@@ -1424,6 +1435,10 @@ body.modal-abierta { overflow: hidden; }
    imagen completa y su pie caben sin scroll interno. */
 .modal-foto img {
   width: 100%;
+  /* Escenario de dimensiones fijas: las 8 fotos son 4:3, así que la caja
+     4:3 (capada por el alto disponible del viewport) mide lo mismo para
+     todas; contain ajusta la foto dentro sin redimensionar el panel. */
+  aspect-ratio: 4 / 3;
   max-height: calc(100svh - 21rem);
   object-fit: contain;
   border-radius: var(--radio-m);
@@ -1433,7 +1448,28 @@ body.modal-abierta { overflow: hidden; }
   margin-top: var(--s-3);
   font-size: 0.9375rem;
   color: var(--texto-2);
+  /* Reserva del pie más largo (la mide main.js al abrir): el panel no
+     cambia de alto entre pies de 1 y 3 líneas. */
+  min-height: var(--pie-alto, auto);
 }
+
+/* Indicador discreto si una imagen tarda más de ~300ms: anillo del
+   sistema girando al pie del panel; estático con reduced-motion. */
+.modal-panel.cargando::after {
+  content: "";
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border: 2px solid var(--acento-suave);
+  border-top-color: var(--gold-strong);
+  border-radius: 50%;
+  animation: giro-carga 0.8s linear infinite;
+}
+
+@keyframes giro-carga { to { transform: rotate(360deg); } }
 
 /* Ficha del caso en grande: pierde su piel de card dentro del panel y
    sube la escala de sus destacados */
@@ -1451,6 +1487,7 @@ body.modal-abierta { overflow: hidden; }
 
 /* Gráfico clonado en el modal: visible sin depender del rotador */
 .modal-cuerpo .grafico { opacity: 1; transition: none; }
+.modal-cuerpo .grafico svg { max-width: 30rem; }
 
 /* ---------- Navegación dentro de los modales ----------
    Chevrons laterales sin fondo (drop-shadow clara los separa de lo que
@@ -1459,9 +1496,18 @@ body.modal-abierta { overflow: hidden; }
    opacidad. El contenido cambia fundiendo solo .modal-caja y animando
    el alto del panel: nunca se reconstruye ni se reabre el modal. */
 
-.modal-caja { transition: opacity 150ms ease; }
+/* Fundido cruzado real: la caja entrante y una capa clonada de la
+   saliente se superponen 450ms (ease-in-out del sistema) con un
+   deslizamiento de 8px en el sentido de la navegación. */
+.modal-caja {
+  transition: opacity 450ms ease-in-out, transform 450ms ease-in-out;
+}
 
-.modal-caja.fundiendo { opacity: 0; }
+.modal-caja-saliente {
+  position: absolute;
+  pointer-events: none;
+  transition: opacity 450ms ease-in-out, transform 450ms ease-in-out;
+}
 
 .modal-panel.animando-alto {
   transition: height 250ms ease;
@@ -1485,8 +1531,27 @@ body.modal-abierta { overflow: hidden; }
   transition: opacity var(--transicion);
 }
 
-.modal-nav-prev { left: 2px; }
-.modal-nav-next { right: 2px; }
+/* Canal lateral: con navegación activa el panel abre un carril de 64px
+   por lado (el chevron y su área de 44px viven ahí, sin rozar el
+   contenido) y compensa su max-width para no encoger el ancho útil. */
+.modal-panel.con-nav { padding-inline: var(--s-6); }
+.modal-panel.con-nav { width: min(100%, 38rem); }
+.modal-panel.con-nav.amplio { width: min(100%, 50rem); }
+
+.modal-nav-prev { left: 10px; }
+.modal-nav-next { right: 10px; }
+
+/* En móvil no hay ancho que repartir: los chevrons bajan a una fila
+   propia bajo el contenido (anterior izquierda, siguiente derecha),
+   reservada con padding para que nunca pisen texto, foto ni pie. */
+@media (max-width: 44.9375em) {
+  .modal-panel.con-nav { padding-inline: var(--s-4); padding-bottom: calc(var(--s-4) + 48px); }
+  .modal-panel.con-nav { width: min(100%, 34rem); }
+  .modal-panel.con-nav.amplio { width: min(100%, 46rem); }
+  .modal-nav { top: auto; bottom: var(--s-2); transform: none; }
+  .modal-nav-prev { left: var(--s-4); }
+  .modal-nav-next { right: var(--s-4); }
+}
 
 .modal-nav svg {
   width: 24px;
@@ -1553,8 +1618,10 @@ body.modal-abierta { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .modal-caja,
+  .modal-caja-saliente,
   .modal-panel.animando-alto,
   .modal-nav { transition: none; }
+  .modal-panel.cargando::after { animation: none; }
 }
 
 /* ---------- 03 · Planes ---------- */
@@ -1839,6 +1906,16 @@ body.modal-abierta { overflow: hidden; }
 }
 
 .persona-bio { margin-top: 0.75rem; font-size: 0.9375rem; color: var(--texto-2); }
+
+/* Solo móvil: nombre y cargo como un mismo bloque (el gap base de 24px
+   los separaba demasiado) y la bio un paso más cerca del cargo; la
+   distancia foto→nombre se conserva con el margen del h3. */
+@media (max-width: 44.9375em) {
+  .persona { row-gap: var(--s-1); }
+  .persona h3 { margin-top: var(--s-2); }
+  .persona-rol { margin-top: 0; }
+  .persona-bio { margin-top: var(--s-1); }
+}
 
 @media (min-width: 45em) {
   .persona {

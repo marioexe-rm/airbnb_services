@@ -571,6 +571,7 @@
       coleccionModal = null;
       modalNavPrev.hidden = true;
       modalNavNext.hidden = true;
+      modalPanel.classList.remove('con-nav');
       pintarModal({ etiqueta: etiqueta, titulo: titulo, contenido: contenido });
       presentarModal(origen, amplio);
     };
@@ -581,46 +582,84 @@
       var sinNav = col.items.length < 2;
       modalNavPrev.hidden = sinNav;
       modalNavNext.hidden = sinNav;
+      modalPanel.classList.toggle('con-nav', !sinNav);
       modalNavPrev.setAttribute('aria-label', col.navAria[0]);
       modalNavNext.setAttribute('aria-label', col.navAria[1]);
       pintarModal(col.render(col.indice));
       presentarModal(origen, col.amplio);
     };
 
-    // Cambia SOLO el contenido: la caja funde (150ms fuera / 150ms
-    // dentro) y el alto del panel se anima entre medidas (nada de
-    // reconstruir el modal ni repetir la animación de apertura). El foco
-    // permanece en el control usado: los botones no se reconstruyen.
-    var transicionarModal = function (datos) {
+    // Cambia SOLO el contenido con un fundido cruzado real: una capa
+    // clonada de la caja saliente se superpone y desvanece (450ms,
+    // ease-in-out) mientras la entrante aparece con un deslizamiento de
+    // 8px en el sentido navegado; el alto del panel transiciona entre
+    // medidas. Nada se reconstruye ni se reabre, y el foco permanece en
+    // el control usado.
+    var transicionarModal = function (datos, direccion) {
       if (sinMovimiento) { pintarModal(datos); return; }
       var h0 = modalPanel.offsetHeight;
-      modalCaja.classList.add('fundiendo');
+      var desliza = direccion > 0 ? 8 : direccion < 0 ? -8 : 0;
+      var fantasma = modalCaja.cloneNode(true);
+      fantasma.classList.add('modal-caja-saliente');
+      fantasma.setAttribute('aria-hidden', 'true');
+      fantasma.setAttribute('inert', '');
+      fantasma.style.top = modalCaja.offsetTop + 'px';
+      fantasma.style.left = modalCaja.offsetLeft + 'px';
+      fantasma.style.width = modalCaja.offsetWidth + 'px';
+      modalCaja.parentNode.appendChild(fantasma);
+      pintarModal(datos);
+      modalCaja.style.transition = 'none';
+      modalCaja.style.opacity = '0';
+      modalCaja.style.transform = desliza ? 'translateX(' + desliza + 'px)' : '';
+      modalPanel.style.height = 'auto';
+      var h1 = modalPanel.offsetHeight;
+      if (h1 !== h0) {
+        modalPanel.style.height = h0 + 'px';
+        void modalPanel.offsetWidth;
+        modalPanel.classList.add('animando-alto');
+        modalPanel.style.height = h1 + 'px';
+      } else {
+        modalPanel.style.height = '';
+      }
+      void modalCaja.offsetWidth;
+      modalCaja.style.transition = '';
+      modalCaja.style.opacity = '';
+      modalCaja.style.transform = '';
+      fantasma.style.opacity = '0';
+      fantasma.style.transform = desliza ? 'translateX(' + (-desliza) + 'px)' : '';
       setTimeout(function () {
-        pintarModal(datos);
-        modalPanel.style.height = 'auto';
-        var h1 = modalPanel.offsetHeight;
-        if (h1 !== h0) {
-          modalPanel.style.height = h0 + 'px';
-          void modalPanel.offsetWidth;
-          modalPanel.classList.add('animando-alto');
-          modalPanel.style.height = h1 + 'px';
-        } else {
-          modalPanel.style.height = '';
-        }
-        modalCaja.classList.remove('fundiendo');
-        setTimeout(function () {
-          modalPanel.classList.remove('animando-alto');
-          modalPanel.style.height = '';
-        }, 270);
-      }, 150);
+        if (fantasma.parentNode) { fantasma.parentNode.removeChild(fantasma); }
+        modalPanel.classList.remove('animando-alto');
+        modalPanel.style.height = '';
+      }, 480);
     };
 
-    // Circular estricto en ambos extremos
+    // Circular estricto en ambos extremos. Si la colección define
+    // preparar(i) (fotos: decodificación previa), el fundido espera a
+    // que el contenido esté listo — la vista actual se mantiene, con un
+    // indicador discreto si la espera pasa de ~300ms; si falla, se
+    // conserva lo visible y el error queda en consola.
+    var contadorNavegacion = 0;
     var navegarModal = function (delta) {
       if (!coleccionModal || coleccionModal.items.length < 2) { return; }
-      var n = coleccionModal.items.length;
-      coleccionModal.indice = (coleccionModal.indice + delta + n) % n;
-      transicionarModal(coleccionModal.render(coleccionModal.indice));
+      var col = coleccionModal;
+      var n = col.items.length;
+      var destino = (col.indice + delta + n) % n;
+      var marca = ++contadorNavegacion;
+      var aplicar = function () {
+        if (coleccionModal !== col || marca !== contadorNavegacion) { return; }
+        col.indice = destino;
+        transicionarModal(col.render(destino), delta);
+        if (col.alNavegar) { col.alNavegar(destino); }
+      };
+      if (!col.preparar) { aplicar(); return; }
+      var indicador = setTimeout(function () { modalPanel.classList.add('cargando'); }, 300);
+      col.preparar(destino).then(function (ok) {
+        clearTimeout(indicador);
+        modalPanel.classList.remove('cargando');
+        if (ok === false) { return; }
+        aplicar();
+      });
     };
 
     var cerrarModal = function () {
@@ -665,7 +704,7 @@
       var sinNav = coleccionModal.items.length < 2;
       modalNavPrev.hidden = sinNav;
       modalNavNext.hidden = sinNav;
-      transicionarModal(coleccionModal.render(0));
+      transicionarModal(coleccionModal.render(0), delta);
     };
 
     Array.prototype.slice.call(document.querySelectorAll('.servicio-enlace')).forEach(function (boton) {
@@ -759,6 +798,60 @@
     // Fotos: las 8 en el orden de sus archivos
     var FOTOS = ['airbnb-1.jpg', 'airbnb-2.jpg', 'airbnb-3.jpg', 'airbnb-4.jpg', 'airbnb-5.jpg', 'airbnb-6.jpg', 'airbnb-7.jpg', 'airbnb-8.jpg'];
 
+    // Precarga bajo demanda: vecinas al abrir/navegar y, tras la primera
+    // apertura, el resto en un idle callback con prioridad baja. Nunca en
+    // el arranque del sitio.
+    var fotosPrecargadas = {};
+    var precargarFoto = function (nombre) {
+      if (fotosPrecargadas[nombre]) { return; }
+      fotosPrecargadas[nombre] = true;
+      var im = new Image();
+      if ('fetchPriority' in im) { im.fetchPriority = 'low'; }
+      im.src = 'assets/img/' + nombre;
+    };
+    var precargarVecinas = function (i) {
+      precargarFoto(FOTOS[(i + 1) % FOTOS.length]);
+      precargarFoto(FOTOS[(i - 1 + FOTOS.length) % FOTOS.length]);
+    };
+    var precargarResto = function () {
+      var lanzar = function () { FOTOS.forEach(precargarFoto); };
+      if ('requestIdleCallback' in window) { requestIdleCallback(lanzar, { timeout: 3000 }); }
+      else { setTimeout(lanzar, 1500); }
+    };
+
+    // Espera la decodificación antes de fundir hacia la nueva imagen
+    // (img.decode con fallback a load); en error conserva la actual.
+    var prepararFoto = function (i) {
+      var ruta = 'assets/img/' + FOTOS[i];
+      var im = new Image();
+      im.src = ruta;
+      var espera = im.decode ? im.decode() : new Promise(function (listo, fallo) {
+        im.onload = listo;
+        im.onerror = fallo;
+      });
+      return espera.then(function () { return true; }).catch(function (error) {
+        console.error('No se pudo cargar la foto del modal:', ruta, error);
+        return false;
+      });
+    };
+
+    // Reserva la altura del pie más largo al ancho actual del panel: el
+    // panel no cambia de alto entre pies de distinto largo.
+    var reservarPieFoto = function () {
+      var pie = modalCuerpo.querySelector('.modal-foto figcaption');
+      if (!pie) { return; }
+      var sonda = pie.cloneNode(false);
+      sonda.style.cssText = 'visibility:hidden;position:absolute;left:0;right:0;min-height:0;';
+      pie.parentNode.appendChild(sonda);
+      var maximo = 0;
+      FOTOS.forEach(function (nombre) {
+        sonda.textContent = PIES_FOTOS[nombre] || '';
+        maximo = Math.max(maximo, sonda.offsetHeight);
+      });
+      sonda.parentNode.removeChild(sonda);
+      modalPanel.style.setProperty('--pie-alto', maximo + 'px');
+    };
+
     var renderFoto = function (i) {
       var nombre = FOTOS[i];
       var figura = document.createElement('figure');
@@ -802,13 +895,19 @@
         botonFoto.addEventListener('click', function () {
           var nombre = (card.querySelector('img').getAttribute('src') || '').split('/').pop();
           var indice = FOTOS.indexOf(nombre);
+          if (indice === -1) { indice = 0; }
           abrirColeccion({
             items: FOTOS,
-            indice: indice === -1 ? 0 : indice,
+            indice: indice,
             amplio: true,
             navAria: ['Foto anterior', 'Siguiente foto'],
-            render: renderFoto
+            render: renderFoto,
+            preparar: prepararFoto,
+            alNavegar: precargarVecinas
           }, botonFoto);
+          requestAnimationFrame(function () { requestAnimationFrame(reservarPieFoto); });
+          precargarVecinas(indice);
+          precargarResto();
         });
       } else {
         var indiceResena = contadorResena;
