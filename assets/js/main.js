@@ -518,23 +518,43 @@
     var modalPanel = modal.querySelector('.modal-panel');
     var modalFondo = modal.querySelector('.modal-fondo');
     var modalCerrar = modal.querySelector('.modal-cerrar');
+    var modalCaja = modal.querySelector('.modal-caja');
     var modalEtiqueta = modal.querySelector('.modal-etiqueta');
     var modalTitulo = modal.querySelector('.modal-titulo');
     var modalCuerpo = modal.querySelector('.modal-cuerpo');
+    var modalNavPrev = modal.querySelector('.modal-nav-prev');
+    var modalNavNext = modal.querySelector('.modal-nav-next');
+    var modalModulos = modal.querySelector('.modal-modulos');
+    var modalModuloChip = modal.querySelector('.modal-modulo');
+    var modalModPrev = modal.querySelector('.modal-mod-prev');
+    var modalModNext = modal.querySelector('.modal-mod-next');
     var origenModal = null;
     var cierreProgramado = null;
+    // Colección navegable del modal abierto: {items, indice, render(i),
+    // navAria: [prev, next], amplio, y para servicios iModulo}.
+    var coleccionModal = null;
 
-    // Núcleo compartido: lo usan los templates de Servicios y las
-    // tarjetas del caso real (que arman su contenido al vuelo). El
-    // modificador `amplio` ensancha el panel para foto y gráfico.
-    var abrirModalCon = function (etiqueta, titulo, contenido, origen, amplio) {
+    var pintarModal = function (datos) {
+      modalEtiqueta.textContent = datos.etiqueta || '';
+      modalEtiqueta.hidden = !datos.etiqueta;
+      modalTitulo.textContent = datos.titulo || '';
+      modalCuerpo.innerHTML = '';
+      modalCuerpo.appendChild(datos.contenido);
+      if (datos.modulo) {
+        modalModuloChip.textContent = datos.modulo;
+        modalModulos.hidden = false;
+      } else {
+        modalModulos.hidden = true;
+      }
+      if (datos.alPintar) {
+        requestAnimationFrame(function () { requestAnimationFrame(datos.alPintar); });
+      }
+    };
+
+    var presentarModal = function (origen, amplio) {
       origenModal = origen || null;
       clearTimeout(cierreProgramado);
       modalPanel.classList.toggle('amplio', !!amplio);
-      modalEtiqueta.textContent = etiqueta || '';
-      modalTitulo.textContent = titulo || '';
-      modalCuerpo.innerHTML = '';
-      modalCuerpo.appendChild(contenido);
       modal.hidden = false;
       document.body.classList.add('modal-abierta');
       modalPanel.scrollTop = 0;
@@ -546,34 +566,129 @@
       modalPanel.focus();
     };
 
-    var abrirModal = function (plantilla, origen) {
-      abrirModalCon(
-        plantilla.getAttribute('data-etiqueta'),
-        plantilla.getAttribute('data-titulo'),
-        plantilla.content.cloneNode(true),
-        origen,
-        false
-      );
+    // Modal simple sin navegación (ficha del caso)
+    var abrirModalCon = function (etiqueta, titulo, contenido, origen, amplio) {
+      coleccionModal = null;
+      modalNavPrev.hidden = true;
+      modalNavNext.hidden = true;
+      pintarModal({ etiqueta: etiqueta, titulo: titulo, contenido: contenido });
+      presentarModal(origen, amplio);
+    };
+
+    // Modal con colección: chevrons laterales y flechas del teclado
+    var abrirColeccion = function (col, origen) {
+      coleccionModal = col;
+      var sinNav = col.items.length < 2;
+      modalNavPrev.hidden = sinNav;
+      modalNavNext.hidden = sinNav;
+      modalNavPrev.setAttribute('aria-label', col.navAria[0]);
+      modalNavNext.setAttribute('aria-label', col.navAria[1]);
+      pintarModal(col.render(col.indice));
+      presentarModal(origen, col.amplio);
+    };
+
+    // Cambia SOLO el contenido: la caja funde (150ms fuera / 150ms
+    // dentro) y el alto del panel se anima entre medidas (nada de
+    // reconstruir el modal ni repetir la animación de apertura). El foco
+    // permanece en el control usado: los botones no se reconstruyen.
+    var transicionarModal = function (datos) {
+      if (sinMovimiento) { pintarModal(datos); return; }
+      var h0 = modalPanel.offsetHeight;
+      modalCaja.classList.add('fundiendo');
+      setTimeout(function () {
+        pintarModal(datos);
+        modalPanel.style.height = 'auto';
+        var h1 = modalPanel.offsetHeight;
+        if (h1 !== h0) {
+          modalPanel.style.height = h0 + 'px';
+          void modalPanel.offsetWidth;
+          modalPanel.classList.add('animando-alto');
+          modalPanel.style.height = h1 + 'px';
+        } else {
+          modalPanel.style.height = '';
+        }
+        modalCaja.classList.remove('fundiendo');
+        setTimeout(function () {
+          modalPanel.classList.remove('animando-alto');
+          modalPanel.style.height = '';
+        }, 270);
+      }, 150);
+    };
+
+    // Circular estricto en ambos extremos
+    var navegarModal = function (delta) {
+      if (!coleccionModal || coleccionModal.items.length < 2) { return; }
+      var n = coleccionModal.items.length;
+      coleccionModal.indice = (coleccionModal.indice + delta + n) % n;
+      transicionarModal(coleccionModal.render(coleccionModal.indice));
     };
 
     var cerrarModal = function () {
       modal.classList.remove('visible');
       document.body.classList.remove('modal-abierta');
+      coleccionModal = null;
+      modalPanel.classList.remove('animando-alto');
+      modalPanel.style.height = '';
       var terminar = function () { modal.hidden = true; };
       if (sinMovimiento) { terminar(); } else { cierreProgramado = setTimeout(terminar, 300); }
       if (origenModal) { origenModal.focus(); origenModal = null; }
     };
 
+    // ---- Servicios: colección por módulo + cambio de módulo ----
+    var MODULOS_SERV = Array.prototype.slice.call(document.querySelectorAll('.servicios .modulo')).map(function (mod) {
+      var plantillas = Array.prototype.slice.call(mod.querySelectorAll('li.servicio template'));
+      if (!plantillas.length) { return null; }
+      return {
+        nombre: mod.querySelector('.modulo-num').textContent.split('\u00b7')[0].trim() + ' \u00b7 ' + mod.querySelector('.modulo-head h3').textContent,
+        plantillas: plantillas
+      };
+    }).filter(Boolean);
+
+    var renderServicio = function (i) {
+      var tpl = coleccionModal.items[i];
+      return {
+        titulo: tpl.getAttribute('data-titulo'),
+        contenido: tpl.content.cloneNode(true),
+        modulo: MODULOS_SERV[coleccionModal.iModulo].nombre
+      };
+    };
+
+    // Cambio de módulo circular (01 -> 02 -> 03 -> 01): muestra el primer
+    // servicio del módulo destino y la navegación lateral pasa a recorrer
+    // sus servicios. No toca el scroll de fondo ni el bloqueo existente.
+    var cambiarModulo = function (delta) {
+      if (!coleccionModal || coleccionModal.iModulo === undefined) { return; }
+      var m = (coleccionModal.iModulo + delta + MODULOS_SERV.length) % MODULOS_SERV.length;
+      coleccionModal.iModulo = m;
+      coleccionModal.items = MODULOS_SERV[m].plantillas;
+      coleccionModal.indice = 0;
+      var sinNav = coleccionModal.items.length < 2;
+      modalNavPrev.hidden = sinNav;
+      modalNavNext.hidden = sinNav;
+      transicionarModal(coleccionModal.render(0));
+    };
+
     Array.prototype.slice.call(document.querySelectorAll('.servicio-enlace')).forEach(function (boton) {
       boton.addEventListener('click', function () {
-        var plantilla = boton.closest('li').querySelector('template');
-        if (plantilla) { abrirModal(plantilla, boton); }
+        var tpl = boton.closest('li').querySelector('template');
+        for (var m = 0; m < MODULOS_SERV.length; m++) {
+          var si = MODULOS_SERV[m].plantillas.indexOf(tpl);
+          if (si !== -1) {
+            abrirColeccion({
+              iModulo: m,
+              items: MODULOS_SERV[m].plantillas,
+              indice: si,
+              amplio: false,
+              navAria: ['Servicio anterior', 'Servicio siguiente'],
+              render: renderServicio
+            }, boton);
+            return;
+          }
+        }
       });
     });
 
     // ---- Caso real: todas las tarjetas abren un modal de zoom ----
-    // Los botones-capa se inyectan por JS (sin JS no hay modal que abrir)
-    // y reutilizan la misma apertura, foco, cierres y pausa de rotadores.
     var crearEnlaceCaso = function (contenedor, etiquetaAria) {
       var boton = document.createElement('button');
       boton.type = 'button';
@@ -584,8 +699,7 @@
       return boton;
     };
 
-    // Ficha de datos: envuelta en un div presionable (un <button> no
-    // puede ser hijo directo de <dl>).
+    // Ficha de datos: modal simple, sin navegación (colección de 1).
     var fichaCaso = document.querySelector('.caso-ficha .ficha');
     if (fichaCaso) {
       var envolturaFicha = document.createElement('div');
@@ -598,83 +712,138 @@
       });
     }
 
-    // Ficha de gráficos: el gráfico activo en grande, redibujado al abrir
-    var cardGraficos = document.querySelector('.js .caso-graficos, .caso-graficos');
+    // Graficos: coleccion de 4 en el orden del ciclo
+    var renderGrafico = function (i) {
+      var figura = graficos[i];
+      var clon = figura.cloneNode(true);
+      clon.className = 'grafico activa';
+      var capDelClon = clon.querySelector('.grafico-titulo');
+      if (capDelClon) { capDelClon.parentNode.removeChild(capDelClon); }
+      return {
+        etiqueta: 'Caso real \u00b7 estad\u00edsticas',
+        titulo: figura.querySelector('.grafico-titulo').textContent,
+        contenido: clon,
+        // La animacion de dibujado escalonado corre en cada cambio
+        alPintar: function () {
+          var g = modalCuerpo.querySelector('.grafico');
+          if (g) { g.classList.add('dibujar'); }
+        }
+      };
+    };
+
+    var cardGraficos = document.querySelector('.caso-graficos');
     if (cardGraficos && graficos.length) {
-      var botonGrafico = crearEnlaceCaso(cardGraficos, 'Ver el gráfico en grande');
+      var botonGrafico = crearEnlaceCaso(cardGraficos, 'Ver el gr\u00e1fico en grande');
       botonGrafico.addEventListener('click', function () {
-        var activo = graficos[graficoActivo];
-        var titulo = activo.querySelector('.grafico-titulo').textContent;
-        var clon = activo.cloneNode(true);
-        clon.className = 'grafico activa';
-        var capDelClon = clon.querySelector('.grafico-titulo');
-        if (capDelClon) { capDelClon.parentNode.removeChild(capDelClon); }
-        abrirModalCon('Caso real · estadísticas', titulo, clon, botonGrafico, true);
-        // El zoom conserva la animación de entrada del gráfico
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () { clon.classList.add('dibujar'); });
-        });
+        abrirColeccion({
+          items: graficos,
+          indice: graficoActivo,
+          amplio: true,
+          navAria: ['Gr\u00e1fico anterior', 'Gr\u00e1fico siguiente'],
+          render: renderGrafico
+        }, botonGrafico);
       });
     }
 
-    // Reseñas y foto: cita completa o imagen sin recorte con su pie.
-    // Pies reales del anuncio de origen; el de la terraza de 12 m² se
-    // reescribió para omitir la referencia de ubicación, según la
-    // decisión vigente de no exponer dónde está la propiedad.
     var PIES_FOTOS = {
-      'airbnb-1.jpg': 'Terraza privada de noche, con sofá cómodo, lámpara cálida y conexión visual al dormitorio. Un rincón íntimo y tranquilo para relajarte al aire libre o cerrar el día con calma.',
-      'airbnb-2.jpg': 'Dormitorio acogedor y luminoso, con cama king y ropa de cama en tonos cálidos. Cuenta con clóset, aire acondicionado frío/calor, lámparas de lectura y luz natural, ideal para descansar cómodamente durante la estadía.',
-      'airbnb-3.jpg': 'Terraza privada de 12 m², cómoda y tranquila, pensada para descansar al aire libre, tomar algo de noche o disfrutar un momento de calma.',
-      'airbnb-4.jpg': 'Terraza privada ideal para tomar café, conversar o simplemente descansar al aire libre. Mobiliario de exterior cómodo y de diseño, con acceso directo desde el living del apartamento.',
-      'airbnb-5.jpg': 'Living comedor luminoso conectado a la terraza privada, con mesa redonda para 4, sofá, Smart TV y un ambiente cómodo para desayunar, trabajar o relajarse durante la estadía.',
-      'airbnb-6.jpg': 'Cocina equipada para preparar tanto comidas simples como complejas, y hacer la estadía más cómoda y práctica.',
-      'airbnb-7.jpg': 'Baño completo equipado con toallas incluidas, secador de pelo, ventilación y armario de almacenamiento. Diseño ordenado y funcional que garantiza comodidad y privacidad.',
-      'airbnb-8.jpg': 'Un ingreso cómodo con cerradura inteligente y una vista cálida hacia el comedor, pensado para que la llegada sea simple, ordenada y tranquila desde el primer momento.'
+      'airbnb-1.jpg': 'Terraza privada de noche, con sof\u00e1 c\u00f3modo, l\u00e1mpara c\u00e1lida y conexi\u00f3n visual al dormitorio. Un rinc\u00f3n \u00edntimo y tranquilo para relajarte al aire libre o cerrar el d\u00eda con calma.',
+      'airbnb-2.jpg': 'Dormitorio acogedor y luminoso, con cama king y ropa de cama en tonos c\u00e1lidos. Cuenta con cl\u00f3set, aire acondicionado fr\u00edo/calor, l\u00e1mparas de lectura y luz natural, ideal para descansar c\u00f3modamente durante la estad\u00eda.',
+      'airbnb-3.jpg': 'Terraza privada de 12 m\u00b2, c\u00f3moda y tranquila, pensada para descansar al aire libre, tomar algo de noche o disfrutar un momento de calma.',
+      'airbnb-4.jpg': 'Terraza privada ideal para tomar caf\u00e9, conversar o simplemente descansar al aire libre. Mobiliario de exterior c\u00f3modo y de dise\u00f1o, con acceso directo desde el living del apartamento.',
+      'airbnb-5.jpg': 'Living comedor luminoso conectado a la terraza privada, con mesa redonda para 4, sof\u00e1, Smart TV y un ambiente c\u00f3modo para desayunar, trabajar o relajarse durante la estad\u00eda.',
+      'airbnb-6.jpg': 'Cocina equipada para preparar tanto comidas simples como complejas, y hacer la estad\u00eda m\u00e1s c\u00f3moda y pr\u00e1ctica.',
+      'airbnb-7.jpg': 'Ba\u00f1o completo equipado con toallas incluidas, secador de pelo, ventilaci\u00f3n y armario de almacenamiento. Dise\u00f1o ordenado y funcional que garantiza comodidad y privacidad.',
+      'airbnb-8.jpg': 'Un ingreso c\u00f3modo con cerradura inteligente y una vista c\u00e1lida hacia el comedor, pensado para que la llegada sea simple, ordenada y tranquila desde el primer momento.'
     };
 
+    // Fotos: las 8 en el orden de sus archivos
+    var FOTOS = ['airbnb-1.jpg', 'airbnb-2.jpg', 'airbnb-3.jpg', 'airbnb-4.jpg', 'airbnb-5.jpg', 'airbnb-6.jpg', 'airbnb-7.jpg', 'airbnb-8.jpg'];
+
+    var renderFoto = function (i) {
+      var nombre = FOTOS[i];
+      var figura = document.createElement('figure');
+      figura.className = 'modal-foto';
+      var imagen = document.createElement('img');
+      imagen.src = 'assets/img/' + nombre;
+      imagen.alt = 'Fotograf\u00eda del departamento del caso real';
+      figura.appendChild(imagen);
+      var pie = document.createElement('figcaption');
+      pie.textContent = PIES_FOTOS[nombre] || '';
+      figura.appendChild(pie);
+      return { etiqueta: 'Caso real \u00b7 foto del anuncio', titulo: 'El departamento', contenido: figura };
+    };
+
+    // Rese\u00f1as: las 12 en orden estable (orden del documento, plano)
+    var RESENAS = Array.prototype.slice.call(document.querySelectorAll('.caso-reviews .review:not(.review-foto)')).map(function (card) {
+      return {
+        texto: card.querySelector('blockquote p').textContent,
+        autor: card.querySelector('figcaption').textContent
+      };
+    });
+
+    var renderResena = function (i) {
+      var datos = RESENAS[i];
+      var contenido = document.createDocumentFragment();
+      var estrellas = document.createElement('p');
+      estrellas.className = 'modal-estrellas';
+      estrellas.textContent = '\u2605\u2605\u2605\u2605\u2605';
+      contenido.appendChild(estrellas);
+      var cita = document.createElement('blockquote');
+      cita.className = 'modal-cita';
+      cita.textContent = datos.texto;
+      contenido.appendChild(cita);
+      return { etiqueta: 'Caso real \u00b7 rese\u00f1a de Airbnb', titulo: datos.autor, contenido: contenido };
+    };
+
+    var contadorResena = 0;
     Array.prototype.slice.call(document.querySelectorAll('.caso-reviews .review')).forEach(function (card) {
       if (card.classList.contains('review-foto')) {
         var botonFoto = crearEnlaceCaso(card, 'Ver la foto del departamento en grande');
         botonFoto.addEventListener('click', function () {
-          var miniatura = card.querySelector('img');
-          var nombre = (miniatura.getAttribute('src') || '').split('/').pop();
-          var figura = document.createElement('figure');
-          figura.className = 'modal-foto';
-          var grande = document.createElement('img');
-          grande.src = miniatura.src;
-          grande.alt = miniatura.alt;
-          figura.appendChild(grande);
-          var pie = document.createElement('figcaption');
-          pie.textContent = PIES_FOTOS[nombre] || '';
-          figura.appendChild(pie);
-          abrirModalCon('Caso real · foto del anuncio', 'El departamento', figura, botonFoto, true);
+          var nombre = (card.querySelector('img').getAttribute('src') || '').split('/').pop();
+          var indice = FOTOS.indexOf(nombre);
+          abrirColeccion({
+            items: FOTOS,
+            indice: indice === -1 ? 0 : indice,
+            amplio: true,
+            navAria: ['Foto anterior', 'Siguiente foto'],
+            render: renderFoto
+          }, botonFoto);
         });
       } else {
-        var autor = card.querySelector('figcaption').textContent;
-        var botonResena = crearEnlaceCaso(card, 'Leer completa la reseña de ' + autor);
+        var indiceResena = contadorResena;
+        contadorResena += 1;
+        var botonResena = crearEnlaceCaso(card, 'Leer completa la rese\u00f1a de ' + RESENAS[indiceResena].autor);
         botonResena.addEventListener('click', function () {
-          var contenido = document.createDocumentFragment();
-          var estrellas = document.createElement('p');
-          estrellas.className = 'modal-estrellas';
-          estrellas.textContent = '★★★★★';
-          contenido.appendChild(estrellas);
-          var cita = document.createElement('blockquote');
-          cita.className = 'modal-cita';
-          cita.textContent = card.querySelector('blockquote p').textContent;
-          contenido.appendChild(cita);
-          abrirModalCon('Caso real · reseña de Airbnb', autor, contenido, botonResena, false);
+          abrirColeccion({
+            items: RESENAS,
+            indice: indiceResena,
+            amplio: false,
+            navAria: ['Rese\u00f1a anterior', 'Rese\u00f1a siguiente'],
+            render: renderResena
+          }, botonResena);
         });
       }
     });
 
     modalFondo.addEventListener('click', cerrarModal);
     modalCerrar.addEventListener('click', cerrarModal);
+    modalNavPrev.addEventListener('click', function () { navegarModal(-1); });
+    modalNavNext.addEventListener('click', function () { navegarModal(1); });
+    modalModPrev.addEventListener('click', function () { cambiarModulo(-1); });
+    modalModNext.addEventListener('click', function () { cambiarModulo(1); });
 
     modal.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { e.preventDefault(); cerrarModal(); return; }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); navegarModal(-1); return; }
+      if (e.key === 'ArrowRight') { e.preventDefault(); navegarModal(1); return; }
       if (e.key !== 'Tab') { return; }
       // Trampa de foco: Tab circula solo entre los focalizables del panel
-      var focalizables = modalPanel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      // (incluye los chevrons y los botones de m\u00f3dulo visibles)
+      var focalizables = Array.prototype.filter.call(
+        modalPanel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+        function (el) { return !el.hidden && el.offsetParent !== null; }
+      );
       if (!focalizables.length) { return; }
       var primero = focalizables[0];
       var ultimo = focalizables[focalizables.length - 1];
