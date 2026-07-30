@@ -24,15 +24,19 @@
   --borde-btn: #ACACA4;      /* borde fino gris cálido de botones secundarios */
 
   /* Metales — capa de acentos premium, uso restringido.
-     Oro permanente: fondo de los CTA de contacto (hover/focus en verde
-       de identidad), badge Recomendado, estrellas, viñetas del plan
-       destacado, «hotel boutique» del h1, destacados de la ficha del caso
-       real (★5,0 · medalla y reloj rellenos), precios de módulo, íconos
-       de servicio de los ítems y cargos del equipo.
-     Oro de ciclo: sol del hero.
+     Oro de marca (--gold, 3,3:1 con blanco cálido): solo texto grande
+       (palabra dorada del h1, 3,5:1), gráficos ≥3:1 (estrellas 3,3:1,
+       íconos de ítems) y arte (sol del hero y del logo, viñetas del plan
+       destacado, filete de nota del modal).
+     Oro profundo (--gold-strong, AA con texto claro): fondos de los CTA
+       de contacto (4,9:1) y de los badges Recomendado/Anuncio (4,6:1), y
+       texto dorado pequeño: destacados de la ficha del caso real (4,9:1),
+       precios de módulo (4,0:1 grande sobre salvia) y etiquetas del modal
+       (4,6:1). Hover/focus de CTA en verde de identidad (8,0:1).
      Plata: hairline del footer.
-     Plata lunar: luna del hero — único uso permitido del token. */
-  --gold: #83702E;           /* oro viejo oliva (AA 4.9:1 con blanco) */
+     Plata lunar: luna del hero y aureola/R del logo del navbar. */
+  --gold: #9E8837;           /* oro de marca (grande/gráfico/arte) */
+  --gold-strong: #83702E;    /* oro profundo: fondos y texto dorado chico */
   --silver: var(--gris-bg);  /* plateado: alias del gris del hover del navbar */
   --silver-moon: #D9D7D2;    /* plata lunar: brilla sobre el verde nocturno
                                 sin leerse blanca (gris perceptible) */
@@ -246,11 +250,12 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
               transform var(--transicion);
 }
 
-/* CTA de contacto — esquema invertido: el oro es el color principal y
-   el hover/focus responde en el verde de identidad. Texto en blanco
-   puro (4.9:1 sobre oro, 8:1 sobre verde). */
+/* CTA de contacto — esquema invertido: el oro profundo es el color
+   principal (el oro de marca queda en 3,3:1 con blanco: solo texto
+   grande) y el hover/focus responde en el verde de identidad. Texto en
+   blanco puro (4,9:1 sobre oro profundo, 8:1 sobre verde). */
 .btn-primary {
-  background: var(--gold);
+  background: var(--gold-strong);
   color: var(--blanco);
 }
 
@@ -355,27 +360,37 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   gap: 0.625rem;
   text-decoration: none;
   font-family: var(--sans);
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
-/* Marca «door hanger»: puerta de arco de medio punto en el verde de
-   identidad con el astro del hero arriba — mitad sol en oro (arriba a
-   la derecha) y mitad luna en plata lunar (abajo a la izquierda),
-   divididas en el mismo ángulo de ~135° de la luna. La paleta vive en
-   variables del logo para poder invertirla en el footer. */
+/* Marca: puerta vertical de esquinas redondeadas en el verde de
+   identidad, con sol pleno en oro, aureola circular en plata lunar por
+   detrás (asoma arriba y a los lados, tocando la puerta) y una «R»
+   pequeña en la parte baja. La paleta vive en variables del logo para
+   poder invertirla en el footer. Ícono a 2.25rem: conserva la relación
+   óptica ~1.3× con el texto de marca de 1.75rem. */
 .brand-mark {
   width: auto;
-  height: 1.625rem;
+  height: 2.25rem;
   --logo-puerta: var(--acento);
   --logo-sol: var(--gold);
-  --logo-luna: var(--silver-moon);
+  --logo-aureola: var(--silver-moon);
+  --logo-r: var(--silver-moon);
 }
 
 .logo-puerta { fill: var(--logo-puerta); }
 .logo-sol { fill: var(--logo-sol); }
-.logo-luna { fill: var(--logo-luna); }
+.logo-aureola { fill: var(--logo-aureola); }
+
+.logo-r {
+  fill: none;
+  stroke: var(--logo-r);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 .nav-toggle {
   display: inline-flex;
@@ -502,30 +517,57 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
    335 disponibles; desde 48px el min-content del grid desborda. */
 .hero-copy { padding-top: 2.05rem; }
 
+/* El h1 corta en tres frases con <br> explícitos (Tu propiedad, /
+   optimizada para / más [palabra]): sin max-width, las líneas ya están
+   decididas y un tope solo podría quebrar el fantasma de la palabra. */
 .hero h1 {
   font-size: var(--t-hero);
   line-height: 1.08;
   letter-spacing: -0.02em;
   margin-top: var(--s-3);
-  max-width: 16ch;
 }
 
 /* (después de la base de .hero h1 para ganar el empate de cascada)
-   El ancho acotado fuerza el corte digno «optimizada» / «como un»
-   (ventana medida a 40px: cabe 289px, no caben 327px); min(…, 12vw)
-   protege incluso viewports de 320px sin quebrar «hotel boutique». */
+   La línea más ancha es el fantasma «más rendimiento.» (16ch): a 2.5rem
+   desbordaba los 335px del viewport de 375 — el techo móvil baja a
+   2.25rem para contenerla; min(…, 11vw) protege viewports de 320px. */
 @media (max-width: 30em) {
   .hero-copy { padding-top: 0; }
-  .hero h1 { font-size: min(2.5rem, 12vw); max-width: 19.25rem; }
+  .hero h1 { font-size: min(2.25rem, 11vw); }
 }
 
-/* «hotel boutique» en el dorado del sol, siempre en una sola línea
-   (AA 4.9:1 sobre el fondo del hero para este tamaño) */
+/* Palabra dorada rotativa (texto grande: 3,5:1 sobre el blanco del
+   hero). El em reserva el ancho de la palabra más larga con un fantasma
+   invisible y pinta la activa encima: cero layout shift. El punto viaja
+   dentro de cada palabra. */
 .hero h1 em {
   font-style: normal;
   font-weight: inherit;
   color: var(--gold);
   white-space: nowrap;
+}
+
+.rotador-palabra { position: relative; display: inline-block; }
+
+.palabra-fantasma { visibility: hidden; }
+
+.palabra-activa {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Salida: se desvanece subiendo; entrada: aparece desde abajo. Dos
+   tramos de 200ms (~400ms totales): un fundido largo en una sola
+   palabra se percibe lento junto al crossfade de 2s del hero. */
+.palabra-activa.sale { opacity: 0; transform: translateY(-0.12em); }
+.palabra-activa.entra { opacity: 0; transform: translateY(0.12em); transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .palabra-activa { transition: none; }
+  .palabra-activa.sale,
+  .palabra-activa.entra { opacity: 1; transform: none; }
 }
 
 .hero .lead { margin-top: var(--s-3); }
@@ -643,32 +685,10 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .equipo .eyebrow { background: var(--blanco-calido); }
 
 /* Título y bajada como un mismo bloque: un paso corto de la escala
-   en vez del margen genérico de sección (48/64px → 24px). */
+   en vez del margen genérico de sección (48/64px → 24px). El grid de
+   dos columnas que alineaba aquí el enlace al anuncio se retiró junto
+   con el enlace: el título ocupa la fila completa. */
 .caso .sec-head { margin-bottom: var(--s-3); }
-
-/* Enlace al anuncio: arriba a la derecha, sobre el bloque de reseñas
-   (bajo el título y a la izquierda en pantallas chicas). */
-.caso .sec-head .link-arrow { display: inline-block; margin-top: var(--s-2); }
-
-/* El eyebrow abre solo su fila; el enlace al anuncio comparte fila y
-   línea base con el título (cargado a la derecha), quedando pegado al
-   bloque de reseñas y fotos que anuncia. */
-@media (min-width: 48em) {
-  .caso .sec-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: var(--s-3);
-    align-items: baseline;
-  }
-  .caso .sec-head .eyebrow { grid-column: 1; grid-row: 1; }
-  .caso .sec-head h2 { grid-column: 1; grid-row: 2; }
-  .caso .sec-head .link-arrow {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: end;
-    margin: 0;
-  }
-}
 
 .caso-grid {
   display: grid;
@@ -714,7 +734,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
    en el mismo oro (fill sólido vía currentColor, sin trazo), pegados a
    su texto; solo el reloj lleva detalle interior: manecillas en blanco
    cálido sobre el disco dorado. */
-.dato-oro { color: var(--gold); font-weight: 700; }
+/* Texto pequeño (15px): oro profundo para conservar AA (4,9:1 s/blanco) */
+.dato-oro { color: var(--gold-strong); font-weight: 700; }
 .ficha-ico {
   width: 1.15em;
   height: 1.15em;
@@ -855,14 +876,15 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .modulo-head h3 { font-size: var(--t-h3); margin-top: 0.5rem; }
 
-/* Precio global del módulo en oro (mismo tamaño/peso); la descripción
-   del span sigue en secundario. Los precios de los ítems permanecen en
-   verde (--acento), token distinto. */
+/* Precio global del módulo en oro profundo (el oro de marca queda en
+   2,9:1 sobre la salvia del módulo, bajo el 3:1 de texto grande; el
+   profundo da 4,0:1). Los precios de los ítems permanecen en verde
+   (--acento), token distinto. */
 .modulo-precio {
   font-size: 1.375rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--gold);
+  color: var(--gold-strong);
   margin-top: var(--s-2);
   line-height: 1.25;
 }
@@ -1001,13 +1023,13 @@ li.partner {
 .partner .item-precio { color: var(--blanco-calido); }
 
 /* Badge «Anuncio»: pestaña a caballo del borde superior, en el lenguaje
-   del badge Recomendado de Planes (oro + texto claro, 4,6:1). */
+   del badge Recomendado de Planes (oro profundo + texto claro, 4,6:1). */
 .partner-badge {
   position: absolute;
   top: 0;
   left: var(--s-3);
   transform: translateY(-50%);
-  background: var(--gold);
+  background: var(--gold-strong);
   color: var(--blanco-calido);
   font-size: 0.625rem;
   font-weight: 700;
@@ -1234,11 +1256,11 @@ body.modal-abierta { overflow: hidden; }
   stroke-linecap: round;
 }
 
-/* Etiqueta del módulo en oro (acento premium), título en tinta */
+/* Etiqueta del módulo en oro profundo (13px: AA 4,6:1), título en tinta */
 .modal-etiqueta {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--gold);
+  color: var(--gold-strong);
 }
 
 .modal-titulo {
@@ -1255,13 +1277,13 @@ body.modal-abierta { overflow: hidden; }
   gap: var(--s-2);
 }
 
-/* Subtítulos «Incluye / No incluye / Qué obtienes» en oro, versalitas */
+/* Subtítulos «Incluye / No incluye» en oro profundo (13px: AA 4,6:1) */
 .modal-cuerpo .modal-sub {
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-strong);
   margin-top: 0.25rem;
 }
 
@@ -1334,7 +1356,7 @@ body.modal-abierta { overflow: hidden; }
   letter-spacing: 0.01em;
   text-transform: none;
   color: var(--blanco-calido);
-  background: var(--gold);
+  background: var(--gold-strong);
   padding: 0.375rem 0.875rem;
   border-radius: var(--radio-pill);
   margin-bottom: var(--s-2);
@@ -1721,12 +1743,15 @@ body.modal-abierta { overflow: hidden; }
 .footer-grid { display: grid; gap: var(--s-5); }
 
 .footer-brand .brand { color: var(--blanco-calido); }
-/* Logo en negativo: ventana blanca cálida sobre el verde del footer.
-   La mitad lunar usa una plata propia más oscura (#8A8478, 3.4:1 sobre
-   la ventana blanca): el plata lunar del hero (1.4:1) se perdería. */
+/* Logo en negativo: puerta blanca cálida sobre el verde del footer y
+   «R» en el verde de identidad. La aureola usa una plata propia más
+   oscura (#8A8478 — 3,5:1 contra la puerta blanca y 2,1:1 contra el
+   verde del footer): la plata lunar del navbar (1,4:1 sobre blanco) se
+   fundiría con la puerta. */
 .site-footer .brand-mark {
   --logo-puerta: var(--blanco-calido);
-  --logo-luna: #8A8478;
+  --logo-r: var(--acento);
+  --logo-aureola: #8A8478;
 }
 .footer-brand p { margin-top: var(--s-2); font-size: 0.9375rem; color: var(--panel-texto-2); max-width: 30ch; }
 

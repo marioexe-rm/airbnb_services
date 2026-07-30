@@ -72,11 +72,32 @@
     anio.textContent = String(new Date().getFullYear());
   }
 
-  // Carrusel del hero: 12s por pieza, crossfade de 2s, alternando
+  // Carrusel del hero: 8s por pieza, crossfade de 2s, alternando
   // siempre día y noche (barajado por grupo, sin repetir hasta agotar
   // el ciclo). La clase `noche` del contenedor anima la máscara del
   // astro (sol → media luna) en sincronía con el fundido. En pausa
   // con la pestaña oculta; estático con prefers-reduced-motion.
+  // La palabra dorada del h1 rota EN EL MISMO tick (un solo timer, sin
+  // segundo temporizador que se desfase): rédito → ganancia →
+  // rendimiento → utilidad → renta → beneficio, cíclico. Su transición
+  // corta (2 tramos de 200ms) vive en CSS; con prefers-reduced-motion
+  // este bloque no corre y queda «rédito.» fijo del markup.
+  var PALABRAS = ['rédito', 'ganancia', 'rendimiento', 'utilidad', 'renta', 'beneficio'];
+  var palabraActiva = document.querySelector('.palabra-activa');
+  var indicePalabra = 0;
+  var rotarPalabra = function () {
+    if (!palabraActiva) { return; }
+    indicePalabra = (indicePalabra + 1) % PALABRAS.length;
+    palabraActiva.classList.add('sale');
+    setTimeout(function () {
+      palabraActiva.textContent = PALABRAS[indicePalabra] + '.';
+      palabraActiva.classList.remove('sale');
+      palabraActiva.classList.add('entra');
+      void palabraActiva.offsetWidth; // pinta el estado de entrada antes de soltarlo
+      palabraActiva.classList.remove('entra');
+    }, 200);
+  };
+
   var arte = document.querySelector('.hero-art');
   if (arte && !sinMovimiento) {
     var escenas = Array.prototype.slice.call(arte.querySelectorAll('.escena'));
@@ -124,7 +145,8 @@
         arte.classList.toggle('noche', grupoSiguiente === 'noche');
         actual = siguiente;
         grupoActual = grupoSiguiente;
-      }, 12000);
+        rotarPalabra(); // mismo tick: escena y palabra viajan juntas
+      }, 8000);
     }
   }
 

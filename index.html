@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260729a">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260729b">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -61,8 +61,11 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <!-- TODO: reemplazar nombre de marca -->
+      <!-- Logo: aureola plateada al fondo, puerta verde de esquinas
+           redondeadas encima (se tocan sin aire), sol pleno en oro y
+           «R» pequeña abajo (alto 5 ≈ radio del sol 4.2, apenas mayor). -->
       <a class="brand" href="#top" aria-label="Reditu — inicio">
-        <svg class="brand-mark" viewBox="0 0 22 30" aria-hidden="true"><path class="logo-puerta" d="M1 29V11a10 10 0 0 1 20 0v18Z"/><path class="logo-sol" d="M7.11 7.11a5.5 5.5 0 0 1 7.78 7.78Z"/><path class="logo-luna" d="M7.11 7.11a5.5 5.5 0 0 0 7.78 7.78Z"/></svg>
+        <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="13"/><rect class="logo-puerta" x="6.5" y="6" width="17" height="28" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.2"/><path class="logo-r" d="M12.8 29.5v-5h2.7a1.75 1.75 0 0 1 0 3.5h-2.7m2.4 0 1.9 1.5"/></svg>
         <span>Reditu</span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">
@@ -91,8 +94,14 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <h1>Tu propiedad, optimizada para un <em>mayor rédito</em>.</h1>
-          <p class="lead">Somos anfitriones antes que administradores: nuestro propio Airbnb, a pasos del metro Santa Lucía, llegó a Superanfitrión con 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien armado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad, siempre a distancia.</p>
+          <!-- H1 en tres frases; la última palabra rota (rédito → ganancia →
+               rendimiento → utilidad → renta → beneficio) en el mismo tick
+               del hero-art. El fantasma «rendimiento.» reserva el ancho
+               máximo (cero layout shift), la activa se pinta encima con su
+               punto (viajan juntos) y el span visually-hidden deja el texto
+               base estable para lectores de pantalla y SEO. -->
+          <h1>Tu propiedad,<br>optimizada para<br>más <em class="rotador-palabra"><span class="palabra-fantasma" aria-hidden="true">rendimiento.</span><span class="palabra-activa" aria-hidden="true">rédito.</span><span class="visually-hidden">rédito.</span></em></h1>
+          <p class="lead">Somos anfitriones antes que administradores: nuestro propio Airbnb llegó a Superanfitrión con 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien armado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad, siempre a distancia.</p>
           <div class="hero-actions">
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20en%20Santiago%20y%20me%20gustar%C3%ADa%20una%20evaluaci%C3%B3n%20inicial%20de%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Conversemos por WhatsApp</a>
@@ -255,7 +264,6 @@
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">01</span>Caso real</p>
           <h2>Primero lo probamos en casa</h2>
-          <a class="link-arrow" href="https://airbnb.cl/h/terraza-privada-metro-santalucia" target="_blank" rel="noopener">Ver el anuncio en Airbnb</a>
         </header>
         <div class="caso-grid">
           <div class="caso-ficha reveal">
@@ -263,7 +271,7 @@
             <!-- Fotos reales del anuncio, descargadas de su galería el 20-07-2026.
                  Avanzan en el mismo tick del rotador de reseñas. -->
             <dl class="ficha">
-              <div><dt>Anuncio</dt><dd>«Terraza privada, cama king y Metro Sta. Lucía» — Santiago</dd></div>
+              <div><dt>Anuncio</dt><dd>Departamento con terraza privada y cama king — Santiago</dd></div>
               <div><dt>Calificación</dt><dd><strong class="dato-oro">★ 5,0</strong> — con 20 reseñas</dd></div>
               <div><dt>Reconocimiento</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13 6.9 21.4 12 18.4 17.1 21.4 15.4 13Z"/><circle cx="12" cy="8.5" r="5.5"/></svg>Superanfitrión</strong> de Airbnb en menos de 3 meses</dd></div>
               <div><dt>Atención</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path class="manecillas" d="M12 7.5V12l3.2 2"/></svg>Respuesta rápida</strong> dentro de un horario de cobertura definido</dd></div>
@@ -296,16 +304,16 @@
               </div>
               <div class="resenas-grupo">
                 <figure class="review">
-                  <blockquote><p>Acogedor departamento a pasos del metro Santa Lucía; indicaciones claras, buena comunicación y hasta snacks de cortesía que no esperábamos.</p></blockquote>
-                  <figcaption>Osvaldo · abril de 2026</figcaption>
+                  <blockquote><p>Excelente área al aire libre para relajarse y la cama tenía un colchón firme grande y encantador; ambos dormimos muy bien.</p></blockquote>
+                  <figcaption>Tony · mayo de 2026</figcaption>
                 </figure>
                 <figure class="review">
                   <blockquote><p>Mario fue súper preocupado y muy comprensivo con nuestra llegada tarde; nos recibió muy bien.</p></blockquote>
                   <figcaption>Pamela Alejandra · abril de 2026</figcaption>
                 </figure>
                 <figure class="review">
-                  <blockquote><p>Excelente ubicación céntrica, cerca de todos los servicios: ¡definitivamente me hospedaré aquí de nuevo!</p></blockquote>
-                  <figcaption>Arturo · mayo de 2026</figcaption>
+                  <blockquote><p>Súper buena estadía: el departamento muy limpio y acogedor.</p></blockquote>
+                  <figcaption>Emilia · junio de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
                   <img src="assets/img/airbnb-2.jpg" alt="Fotografía del departamento del caso real" width="1200" height="900" loading="lazy">
@@ -317,11 +325,11 @@
                   <figcaption>Suy · mayo de 2026</figcaption>
                 </figure>
                 <figure class="review">
-                  <blockquote><p>Más lindo de lo que se ve en las fotos: tiene de todo y más, y queda cerca de todo.</p></blockquote>
+                  <blockquote><p>Más lindo de lo que se ve en las fotos: tiene de todo y más.</p></blockquote>
                   <figcaption>Nicole · abril de 2026</figcaption>
                 </figure>
                 <figure class="review">
-                  <blockquote><p>Alojamiento cómodo, limpio, ordenado y muy bien ubicado. Cuando esté en Santiago, este será mi lugar de referencia.</p></blockquote>
+                  <blockquote><p>Alojamiento cómodo, limpio y ordenado. Cuando esté en Santiago, este será mi lugar de referencia.</p></blockquote>
                   <figcaption>Glauber · abril de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
@@ -330,7 +338,7 @@
               </div>
               <div class="resenas-grupo">
                 <figure class="review">
-                  <blockquote><p>Excelente alojamiento, apartamento limpio, equipado y muy cómodo. Cumplió con todas nuestras expectativas y la ubicación era excelente. Mário es un anfitrión muy servicial. ¡Lo recomiendo!</p></blockquote>
+                  <blockquote><p>Excelente alojamiento, apartamento limpio, equipado y muy cómodo. Cumplió con todas nuestras expectativas. Mário es un anfitrión muy servicial. ¡Lo recomiendo!</p></blockquote>
                   <figcaption>Catarina · junio de 2026</figcaption>
                 </figure>
                 <figure class="review">
@@ -338,7 +346,7 @@
                   <figcaption>Andrea Belen · mayo de 2026</figcaption>
                 </figure>
                 <figure class="review">
-                  <blockquote><p>Fácil acceso, buen entorno, cercano al metro. Depto hermoso, los detalles son un lujo; definitivamente volveré.</p></blockquote>
+                  <blockquote><p>Depto hermoso, los detalles son un lujo; definitivamente volveré.</p></blockquote>
                   <figcaption>Valentina · abril de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
@@ -914,7 +922,7 @@
       <div class="footer-brand">
         <!-- TODO: reemplazar nombre de marca -->
         <a class="brand" href="#top" aria-label="Reditu — volver arriba">
-          <svg class="brand-mark" viewBox="0 0 22 30" aria-hidden="true"><path class="logo-puerta" d="M1 29V11a10 10 0 0 1 20 0v18Z"/><path class="logo-sol" d="M7.11 7.11a5.5 5.5 0 0 1 7.78 7.78Z"/><path class="logo-luna" d="M7.11 7.11a5.5 5.5 0 0 0 7.78 7.78Z"/></svg>
+          <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="13"/><rect class="logo-puerta" x="6.5" y="6" width="17" height="28" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.2"/><path class="logo-r" d="M12.8 29.5v-5h2.7a1.75 1.75 0 0 1 0 3.5h-2.7m2.4 0 1.9 1.5"/></svg>
           <span>Reditu</span>
         </a>
         <p>Optimización digital de anuncios de Airbnb, para un mayor rédito. Santiago de Chile.</p>
@@ -962,6 +970,6 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260729a"></script>
+  <script src="assets/js/main.js?v=20260729b"></script>
 </body>
 </html>
