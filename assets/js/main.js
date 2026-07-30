@@ -279,6 +279,19 @@
     };
     var retrasar = function (el, ms) { el.style.transitionDelay = ms + 'ms'; };
 
+    // Estrella de 5 puntas centrada exactamente en la posición del dato:
+    // marca el último dato de cada gráfico (radio externo ~1.35× el del
+    // círculo que reemplaza, para igualar su tamaño óptico).
+    var estrella = function (cx, cy, r, svg, clase) {
+      var puntas = [];
+      for (var k = 0; k < 10; k++) {
+        var ang = -Math.PI / 2 + k * Math.PI / 5;
+        var rad = k % 2 === 0 ? r : r * 0.45;
+        puntas.push((cx + rad * Math.cos(ang)).toFixed(2) + ' ' + (cy + rad * Math.sin(ang)).toFixed(2));
+      }
+      return nodo('path', { 'class': clase, d: 'M' + puntas.join(' L') + ' Z', fill: 'var(--gold)' }, svg);
+    };
+
     // Geometría común: área de trazado x 24..316, base y=150, rango 108
     var X0 = 24, ANCHO = 292, BASE = 124, RANGO = 86;
     var centroDe = function (i, n) { return X0 + (i + 0.5) * (ANCHO / n); };
@@ -313,8 +326,11 @@
           fill: 'var(--acento)'
         }, svg);
         retrasar(barra, i * 150);
-        // Acento de datos: punto dorado que marca el extremo superior
-        var cap = nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 4, fill: 'var(--gold)' }, svg);
+        // Acento de datos: punto dorado en el extremo superior; el último
+        // dato va marcado con estrella.
+        var cap = i === datos.length - 1
+          ? estrella(cx, y, 5.5, svg, 'anim-fade')
+          : nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 4, fill: 'var(--gold)' }, svg);
         retrasar(cap, i * 150 + 200);
         retrasar(rotulo(cx, y - 8, '$' + fmtCL(v), svg, 'anim-fade'), i * 150 + 250);
         rotulo(cx, 142, meses[i], svg);
@@ -334,8 +350,10 @@
         retrasar(seg, i * 150 + 100);
       });
       puntos.forEach(function (p, i) {
-        // Acento de datos: vértices de la línea en oro
-        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--gold)' }, svg);
+        // Acento de datos: vértices en oro; el último dato, con estrella
+        var punto = i === puntos.length - 1
+          ? estrella(p.x, p.y, 5.5, svg, 'anim-fade')
+          : nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--gold)' }, svg);
         retrasar(punto, i * 150);
         retrasar(rotulo(p.x, p.y - 10, '+$' + fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, tramos[i], svg);
@@ -370,7 +388,9 @@
         retrasar(rotulo(p.x, p.y - 9, fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, meses[i], svg);
       });
-      var pAgo = nodo('circle', { 'class': 'anim-fade', cx: pa.x, cy: pa.y, r: 4.5, fill: 'var(--blanco)', stroke: 'var(--gold)', 'stroke-width': 2 }, svg);
+      // Último dato (agosto) con estrella; el estado «confirmadas» sigue
+      // codificado por el trazo punteado y su rótulo.
+      var pAgo = estrella(pa.x, pa.y, 6, svg, 'anim-fade');
       retrasar(pAgo, 3 * 150 + 300);
       retrasar(rotulo(pa.x, pa.y - 10, fmtCL(datos[4]), svg, 'anim-fade'), 3 * 150 + 300);
       rotulo(pa.x, 142, meses[4], svg);
@@ -386,7 +406,9 @@
         var cx = centroDe(i, 4), y = yDe(v, 27);
         var tallo = nodo('rect', { 'class': 'anim-barra', x: cx - 1, y: y, width: 2, height: BASE - y, fill: 'var(--acento)' }, svg);
         retrasar(tallo, i * 150);
-        var cabeza = nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 5, fill: 'var(--gold)' }, svg);
+        var cabeza = i === datos.length - 1
+          ? estrella(cx, y, 6.5, svg, 'anim-fade')
+          : nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 5, fill: 'var(--gold)' }, svg);
         retrasar(cabeza, i * 150 + 150);
         retrasar(rotulo(cx, y - 12, fmtCL(v), svg, 'anim-fade'), i * 150 + 300);
         rotulo(cx, 142, meses[i], svg);
