@@ -313,6 +313,9 @@
           fill: 'var(--acento)'
         }, svg);
         retrasar(barra, i * 150);
+        // Acento de datos: punto dorado que marca el extremo superior
+        var cap = nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 4, fill: 'var(--gold)' }, svg);
+        retrasar(cap, i * 150 + 200);
         retrasar(rotulo(cx, y - 8, '$' + fmtCL(v), svg, 'anim-fade'), i * 150 + 250);
         rotulo(cx, 142, meses[i], svg);
       });
@@ -331,7 +334,8 @@
         retrasar(seg, i * 150 + 100);
       });
       puntos.forEach(function (p, i) {
-        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--acento)' }, svg);
+        // Acento de datos: vértices de la línea en oro
+        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--gold)' }, svg);
         retrasar(punto, i * 150);
         retrasar(rotulo(p.x, p.y - 10, '+$' + fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, tramos[i], svg);
@@ -360,7 +364,8 @@
       var punteado = nodo('line', { 'class': 'anim-fade', x1: pj.x, y1: pj.y, x2: pa.x, y2: pa.y, stroke: 'var(--gold)', 'stroke-width': 2, 'stroke-dasharray': '4 4', 'stroke-linecap': 'round' }, svg);
       retrasar(punteado, 3 * 150 + 150);
       puntos.slice(0, 4).forEach(function (p, i) {
-        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 3.5, fill: 'var(--acento)' }, svg);
+        // Acento de datos: los puntos del área en oro
+        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 3.5, fill: 'var(--gold)' }, svg);
         retrasar(punto, i * 150);
         retrasar(rotulo(p.x, p.y - 9, fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, meses[i], svg);
@@ -497,13 +502,17 @@
     var origenModal = null;
     var cierreProgramado = null;
 
-    var abrirModal = function (plantilla, origen) {
+    // Núcleo compartido: lo usan los templates de Servicios y las
+    // tarjetas del caso real (que arman su contenido al vuelo). El
+    // modificador `amplio` ensancha el panel para foto y gráfico.
+    var abrirModalCon = function (etiqueta, titulo, contenido, origen, amplio) {
       origenModal = origen || null;
       clearTimeout(cierreProgramado);
-      modalEtiqueta.textContent = plantilla.getAttribute('data-etiqueta') || '';
-      modalTitulo.textContent = plantilla.getAttribute('data-titulo') || '';
+      modalPanel.classList.toggle('amplio', !!amplio);
+      modalEtiqueta.textContent = etiqueta || '';
+      modalTitulo.textContent = titulo || '';
       modalCuerpo.innerHTML = '';
-      modalCuerpo.appendChild(plantilla.content.cloneNode(true));
+      modalCuerpo.appendChild(contenido);
       modal.hidden = false;
       document.body.classList.add('modal-abierta');
       modalPanel.scrollTop = 0;
@@ -513,6 +522,16 @@
         requestAnimationFrame(function () { modal.classList.add('visible'); });
       });
       modalPanel.focus();
+    };
+
+    var abrirModal = function (plantilla, origen) {
+      abrirModalCon(
+        plantilla.getAttribute('data-etiqueta'),
+        plantilla.getAttribute('data-titulo'),
+        plantilla.content.cloneNode(true),
+        origen,
+        false
+      );
     };
 
     var cerrarModal = function () {
@@ -528,6 +547,102 @@
         var plantilla = boton.closest('li').querySelector('template');
         if (plantilla) { abrirModal(plantilla, boton); }
       });
+    });
+
+    // ---- Caso real: todas las tarjetas abren un modal de zoom ----
+    // Los botones-capa se inyectan por JS (sin JS no hay modal que abrir)
+    // y reutilizan la misma apertura, foco, cierres y pausa de rotadores.
+    var crearEnlaceCaso = function (contenedor, etiquetaAria) {
+      var boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'caso-enlace';
+      boton.setAttribute('aria-haspopup', 'dialog');
+      boton.setAttribute('aria-label', etiquetaAria);
+      contenedor.appendChild(boton);
+      return boton;
+    };
+
+    // Ficha de datos: envuelta en un div presionable (un <button> no
+    // puede ser hijo directo de <dl>).
+    var fichaCaso = document.querySelector('.caso-ficha .ficha');
+    if (fichaCaso) {
+      var envolturaFicha = document.createElement('div');
+      envolturaFicha.className = 'caso-presionable';
+      fichaCaso.parentNode.insertBefore(envolturaFicha, fichaCaso);
+      envolturaFicha.appendChild(fichaCaso);
+      var botonFicha = crearEnlaceCaso(envolturaFicha, 'Ver la ficha del caso en grande');
+      botonFicha.addEventListener('click', function () {
+        abrirModalCon('Caso real', 'Ficha del caso', fichaCaso.cloneNode(true), botonFicha, false);
+      });
+    }
+
+    // Ficha de gráficos: el gráfico activo en grande, redibujado al abrir
+    var cardGraficos = document.querySelector('.js .caso-graficos, .caso-graficos');
+    if (cardGraficos && graficos.length) {
+      var botonGrafico = crearEnlaceCaso(cardGraficos, 'Ver el gráfico en grande');
+      botonGrafico.addEventListener('click', function () {
+        var activo = graficos[graficoActivo];
+        var titulo = activo.querySelector('.grafico-titulo').textContent;
+        var clon = activo.cloneNode(true);
+        clon.className = 'grafico activa';
+        var capDelClon = clon.querySelector('.grafico-titulo');
+        if (capDelClon) { capDelClon.parentNode.removeChild(capDelClon); }
+        abrirModalCon('Caso real · estadísticas', titulo, clon, botonGrafico, true);
+        // El zoom conserva la animación de entrada del gráfico
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { clon.classList.add('dibujar'); });
+        });
+      });
+    }
+
+    // Reseñas y foto: cita completa o imagen sin recorte con su pie.
+    // Pies reales del anuncio de origen; el de la terraza de 12 m² se
+    // reescribió para omitir la referencia de ubicación, según la
+    // decisión vigente de no exponer dónde está la propiedad.
+    var PIES_FOTOS = {
+      'airbnb-1.jpg': 'Terraza privada de noche, con sofá cómodo, lámpara cálida y conexión visual al dormitorio. Un rincón íntimo y tranquilo para relajarte al aire libre o cerrar el día con calma.',
+      'airbnb-2.jpg': 'Dormitorio acogedor y luminoso, con cama king y ropa de cama en tonos cálidos. Cuenta con clóset, aire acondicionado frío/calor, lámparas de lectura y luz natural, ideal para descansar cómodamente durante la estadía.',
+      'airbnb-3.jpg': 'Terraza privada de 12 m², cómoda y tranquila, pensada para descansar al aire libre, tomar algo de noche o disfrutar un momento de calma.',
+      'airbnb-4.jpg': 'Terraza privada ideal para tomar café, conversar o simplemente descansar al aire libre. Mobiliario de exterior cómodo y de diseño, con acceso directo desde el living del apartamento.',
+      'airbnb-5.jpg': 'Living comedor luminoso conectado a la terraza privada, con mesa redonda para 4, sofá, Smart TV y un ambiente cómodo para desayunar, trabajar o relajarse durante la estadía.',
+      'airbnb-6.jpg': 'Cocina equipada para preparar tanto comidas simples como complejas, y hacer la estadía más cómoda y práctica.',
+      'airbnb-7.jpg': 'Baño completo equipado con toallas incluidas, secador de pelo, ventilación y armario de almacenamiento. Diseño ordenado y funcional que garantiza comodidad y privacidad.',
+      'airbnb-8.jpg': 'Un ingreso cómodo con cerradura inteligente y una vista cálida hacia el comedor, pensado para que la llegada sea simple, ordenada y tranquila desde el primer momento.'
+    };
+
+    Array.prototype.slice.call(document.querySelectorAll('.caso-reviews .review')).forEach(function (card) {
+      if (card.classList.contains('review-foto')) {
+        var botonFoto = crearEnlaceCaso(card, 'Ver la foto del departamento en grande');
+        botonFoto.addEventListener('click', function () {
+          var miniatura = card.querySelector('img');
+          var nombre = (miniatura.getAttribute('src') || '').split('/').pop();
+          var figura = document.createElement('figure');
+          figura.className = 'modal-foto';
+          var grande = document.createElement('img');
+          grande.src = miniatura.src;
+          grande.alt = miniatura.alt;
+          figura.appendChild(grande);
+          var pie = document.createElement('figcaption');
+          pie.textContent = PIES_FOTOS[nombre] || '';
+          figura.appendChild(pie);
+          abrirModalCon('Caso real · foto del anuncio', 'El departamento', figura, botonFoto, true);
+        });
+      } else {
+        var autor = card.querySelector('figcaption').textContent;
+        var botonResena = crearEnlaceCaso(card, 'Leer completa la reseña de ' + autor);
+        botonResena.addEventListener('click', function () {
+          var contenido = document.createDocumentFragment();
+          var estrellas = document.createElement('p');
+          estrellas.className = 'modal-estrellas';
+          estrellas.textContent = '★★★★★';
+          contenido.appendChild(estrellas);
+          var cita = document.createElement('blockquote');
+          cita.className = 'modal-cita';
+          cita.textContent = card.querySelector('blockquote p').textContent;
+          contenido.appendChild(cita);
+          abrirModalCon('Caso real · reseña de Airbnb', autor, contenido, botonResena, false);
+        });
+      }
     });
 
     modalFondo.addEventListener('click', cerrarModal);

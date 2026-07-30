@@ -29,7 +29,7 @@
        íconos de ítems) y arte (sol del hero y del logo, viñetas del plan
        destacado, filete de nota del modal).
      Oro profundo (--gold-strong, AA con texto claro): fondos de los CTA
-       de contacto (4,9:1) y de los badges Recomendado/Anuncio (4,6:1), y
+       de contacto (4,9:1) y del badge Recomendado (4,6:1), y
        texto dorado pequeño: destacados de la ficha del caso real (4,9:1),
        precios de módulo (4,0:1 grande sobre salvia) y etiquetas del modal
        (4,6:1). Hover/focus de CTA en verde de identidad (8,0:1).
@@ -226,6 +226,8 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 @media (min-width: 60em) {
   .sec-head { margin-bottom: var(--s-6); }
+  .como .sec-head h2 { max-width: 35ch; }
+  .contacto .contacto-copy h2 { max-width: 25ch; }
 }
 
 /* Botones tipo pill */
@@ -648,6 +650,15 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .hero-art .escena, .astro-oculto, .astro-giro { transition: none; }
 }
 
+/* En móvil el hero-art no se muestra (el scroll llega directo al caso
+   real). display:none no pinta ni anima nada, pero el contenedor y sus
+   clases siguen en el DOM: el timer del controlador y la palabra
+   rotativa del h1 —que deriva su dirección de este estado— siguen
+   funcionando igual. */
+@media (max-width: 59.9375em) {
+  .hero-art { display: none; }
+}
+
 @media (min-width: 60em) {
   .hero { padding-block: var(--s-7); }
   .hero-grid { grid-template-columns: 7fr 5fr; align-items: center; gap: var(--s-6); }
@@ -700,14 +711,20 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .caso-ficha > p { color: var(--texto-2); max-width: 52ch; }
 
+/* En desktop la columna izquierda se estira: la ficha de gráficos crece
+   (flex) hasta que su base coincide con la base del grid de reseñas —
+   sin alturas fijas, sigue funcionando si el contenido cambia. */
 @media (min-width: 60em) {
-  .caso-grid { grid-template-columns: 5fr 7fr; gap: var(--s-6); align-items: start; }
+  .caso-grid { grid-template-columns: 5fr 7fr; gap: var(--s-6); align-items: stretch; }
+  .caso-ficha { display: flex; flex-direction: column; }
+  .js .caso-graficos { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .graficos-rotador { flex: 1; align-items: center; }
 }
 
 /* Métricas del caso real: cards compactas bajo el carrusel */
 /* Ficha del caso real (restaurada del historial) */
 .ficha {
-  margin-block: var(--s-4);
+  margin-block: var(--s-4) 0;
   background: var(--blanco);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
@@ -772,7 +789,9 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .js .caso-graficos {
   display: block;
-  margin-top: var(--s-2);
+  /* La separación con la dl de arriba iguala el gap (--s-3) del grid
+     de reseñas; el margen inferior de la dl pasa a 0 para no sumarse. */
+  margin-top: var(--s-3);
   background: var(--blanco);
   border-radius: var(--radio-l);
   box-shadow: var(--sombra-1);
@@ -793,7 +812,7 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 .grafico-titulo {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--texto);
+  color: var(--texto-2);
 }
 
 .grafico svg {
@@ -1119,120 +1138,11 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .modulo { grid-template-columns: 20rem 1fr; gap: var(--s-6); }
 }
 
-/* ---------- 02 · Servicios · módulo 04 de terceros ----------
-   Dos anuncios de partners externos con la anatomía EXACTA de las tarjetas
-   de ítems (li de .modulo-items: mismo padding, grid, tipografía, ícono
-   30×30 y hover de elevación). Las únicas diferencias: el esquema cromático
-   de la card Full Estratégico de Planes (superficie --acento, cuerpo en
-   --panel-texto-2 y acentos en blanco cálido) y el badge «Anuncio». El borde
-   de 2px de esa card se omite a propósito: es del mismo color que su fondo
-   (invisible) y agregarlo sumaría 4px de alto, rompiendo la paridad exacta
-   con las tarjetas de ítems, que manda. */
-
-/* Las tarjetas arrancan al tope del cuerpo, alineadas con el encabezado
-   (en 01-03 ese espacio lo abre la bajada, que aquí vive en el head). */
-.partners { margin-top: 0; }
-
-/* La bajada del módulo de terceros va en el head, bajo el título, con el
-   mismo ritmo vertical que el precio de los módulos 01-03. */
-.modulo-head .modulo-lead { margin-top: var(--s-2); }
-
-/* li.partner: la clase sola (0,1,0) perdería contra .modulo-items li
-   (0,1,1); con el tipo delante empata en origen y gana en especificidad. */
-li.partner {
-  position: relative;
-  background: var(--acento);
-  color: var(--panel-texto-2);
-}
-
-/* Ícono y «Consulta inicial» en el rol de acento de la superficie verde
-   (blanco cálido, como el precio de Full Estratégico): el oro y el verde
-   de los ítems serían invisibles aquí. */
-.partner .item-ico { stroke: var(--blanco-calido); }
-.partner .item-precio { color: var(--blanco-calido); }
-
-/* Badge «Anuncio»: pestaña a caballo del borde superior, en el lenguaje
-   del badge Recomendado de Planes (oro profundo + texto claro, 4,6:1). */
-.partner-badge {
-  position: absolute;
-  top: 0;
-  left: var(--s-3);
-  transform: translateY(-50%);
-  background: var(--gold-strong);
-  color: var(--blanco-calido);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radio-pill);
-  box-shadow: var(--sombra-1);
-}
-
-/* El nombre del partner y su flecha ↗ nunca se separan de línea */
-.partner-nombre { white-space: nowrap; }
-
-/* Subrayado del sistema para enlaces: transparente en reposo, currentColor
-   al hover/focus (solo bajo el texto del nombre, no bajo la flecha). */
-.partner-nombre-texto {
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: text-decoration-color var(--transicion);
-}
-
-/* Flecha diagonal externa permanente: afordancia de enlace también en
-   táctil. Caja de 14px con el glifo inset (≈ altura de mayúscula del
-   nombre) y trazo 1.5 del sistema en viewBox nativo (no escala). */
-.partner-flecha {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform var(--transicion);
-}
-
-/* Hover y focus-visible por separado (un :has sin soporte no debe anular
-   la rama de hover de su misma regla). */
-.partner:hover .partner-nombre-texto { text-decoration-color: currentColor; }
-.partner:has(.partner-enlace:focus-visible) .partner-nombre-texto { text-decoration-color: currentColor; }
-
-.partner:hover .partner-flecha { transform: translate(2px, -2px); }
-.partner:has(.partner-enlace:focus-visible) .partner-flecha { transform: translate(2px, -2px); }
-
-/* Capa que hace enlace a la tarjeta completa (el destino lo declara su
-   aria-label); el anillo de foco global rodea la tarjeta redondeada. */
-.partner-enlace {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radio-l);
-  cursor: pointer;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .partner-flecha { transition: none; }
-  .partner:hover .partner-flecha { transform: none; }
-  .partner:has(.partner-enlace:focus-visible) .partner-flecha { transform: none; }
-}
-
-/* Línea aclaratoria bajo las dos tarjetas, sobre la salvia del módulo
-   (--texto-2 sobre --acento-suave: 5,47:1 medido). */
-.terceros-nota {
-  margin-top: var(--s-3);
-  font-size: 0.8125rem;
-  color: var(--texto-2);
-  max-width: 70ch;
-}
-
 /* ---------- 02 · Servicios · tarjetas con detalle en modal ----------
    Cada tarjeta de servicio es clicable completa (botón .servicio-enlace en
-   capa absoluta, como el enlace de los partners) y abre un modal con el
-   detalle que vive en su <template>. El pie reparte «Más info» (izquierda,
-   flecha horizontal del sistema — la diagonal ↗ queda reservada a los
-   enlaces externos de partners) y el precio (derecha). */
+   capa absoluta) y abre un modal con el detalle que vive en su <template>.
+   El pie reparte «Más info» con flecha horizontal (izquierda) y el precio
+   (derecha). */
 
 li.servicio { position: relative; }
 
@@ -1446,6 +1356,90 @@ body.modal-abierta { overflow: hidden; }
   .modal-fondo, .modal-panel { transition: none; }
 }
 
+/* ---------- Caso real · tarjetas presionables y modal de zoom ----------
+   Todas las tarjetas de la sección abren el modal del sistema con su
+   contenido en grande. Los botones-capa (.caso-enlace) los inyecta
+   main.js; la afordancia replica la de las tarjetas de servicios. */
+
+.caso-presionable {
+  position: relative;
+  margin-block: var(--s-4) 0;
+  border-radius: var(--radio-l);
+  transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.caso-presionable .ficha { margin-block: 0; }
+
+.caso-presionable:hover,
+.js .caso-graficos:hover {
+  box-shadow: var(--sombra-2);
+  transform: translateY(-2px);
+}
+
+.js .caso-graficos {
+  position: relative;
+  transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.review { position: relative; }
+
+.caso-enlace {
+  position: absolute;
+  inset: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-radius: var(--radio-l);
+  cursor: pointer;
+}
+
+/* Panel ensanchado para foto y gráfico */
+.modal-panel.amplio { width: min(100%, 46rem); }
+
+/* Reseña en grande */
+.modal-estrellas {
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  font-size: 0.9375rem;
+}
+
+.modal-cuerpo .modal-cita {
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: var(--texto);
+}
+
+/* Foto completa, sin recorte, con su pie del anuncio de origen */
+.modal-cuerpo .modal-foto { margin: 0; }
+
+.modal-foto img {
+  width: 100%;
+  max-height: 62vh;
+  object-fit: contain;
+  border-radius: var(--radio-m);
+  background: var(--gris-bg);
+}
+
+.modal-foto figcaption {
+  margin-top: var(--s-2);
+  font-size: 0.9375rem;
+  color: var(--texto-2);
+}
+
+/* Ficha del caso en grande: pierde su piel de card dentro del panel y
+   sube la escala de sus destacados */
+.modal-cuerpo .ficha {
+  margin: 0;
+  box-shadow: none;
+  padding: 0;
+  font-size: 1.0625rem;
+}
+
+.modal-cuerpo .ficha .dato-oro { font-size: 1.2em; }
+
+/* Gráfico clonado en el modal: visible sin depender del rotador */
+.modal-cuerpo .grafico { opacity: 1; transition: none; }
+
 /* ---------- 03 · Planes ---------- */
 
 .planes { background: var(--acento-suave); padding-block: var(--pad-seccion); }
@@ -1478,8 +1472,16 @@ body.modal-abierta { overflow: hidden; }
 
 .plan h3 { font-size: 1.375rem; }
 
+/* Cabecera del plan destacado: título a la izquierda, tag a la derecha */
+.plan-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+
 .plan-tag {
-  align-self: flex-start;
+  flex: 0 0 auto;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -1488,7 +1490,6 @@ body.modal-abierta { overflow: hidden; }
   background: var(--gold-strong);
   padding: 0.375rem 0.875rem;
   border-radius: var(--radio-pill);
-  margin-bottom: var(--s-2);
 }
 
 .plan-para {
@@ -1699,7 +1700,9 @@ body.modal-abierta { overflow: hidden; }
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--gold);
+  /* Texto dorado pequeño (15px): oro profundo para AA (el oro de marca
+     queda en 3,3:1 sobre la card blanca). */
+  color: var(--gold-strong);
 }
 
 .persona-bio { margin-top: 0.75rem; font-size: 0.9375rem; color: var(--texto-2); }
@@ -1710,6 +1713,11 @@ body.modal-abierta { overflow: hidden; }
     column-gap: var(--s-4);
     row-gap: 0;
     align-items: start;
+    /* Sin esto, las filas (h3/rol/bio) de la card con menos texto se
+       reparten el alto sobrante (align-content: stretch por defecto,
+       con las dos cards igualadas por el grid): ambos bloques quedan
+       ahora compactos y alineados desde arriba. */
+    align-content: start;
   }
   .persona img { grid-column: 1; grid-row: 1 / span 3; margin-top: 0.25rem; }
   .persona h3, .persona-rol, .persona-bio { grid-column: 2; }
