@@ -17,26 +17,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- TODO: reemplazar nombre de marca -->
   <title>Reditu — Optimización de anuncios de Airbnb en Santiago de Chile</title>
-  <meta name="description" content="Trabajamos tu anuncio de Airbnb a distancia para que genere mayor rédito: textos, fotos, precios al día y comunicación con tus huéspedes. Nuestro propio Airbnb llegó a Superanfitrión con 20 reseñas de 5 estrellas en 3 meses.">
+  <meta name="description" content="Trabajamos tu anuncio de Airbnb a distancia para que genere mayor rédito: textos, fotos, precios al día y comunicación con tus huéspedes. Nuestro propio Airbnb llegó a Superanfitrión con más de 20 reseñas de 5 estrellas en 3 meses.">
   <link rel="canonical" href="https://marioexe-rm.github.io/airbnb_services/">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
   <meta property="og:site_name" content="Reditu">
   <meta property="og:title" content="Reditu — Más rédito de tu Airbnb en Santiago">
-  <meta property="og:description" content="Puesta a punto del anuncio, comunicación con huéspedes y optimización continua, todo a distancia. Superanfitrión y 20 reseñas 5★ en 3 meses: ese sistema, aplicado a tu propiedad.">
+  <meta property="og:description" content="Puesta a punto del anuncio, comunicación con huéspedes y optimización continua, todo a distancia. Superanfitrión y más de 20 reseñas 5★ en 3 meses: ese sistema, aplicado a tu propiedad.">
   <meta property="og:url" content="https://marioexe-rm.github.io/airbnb_services/">
   <meta property="og:image" content="https://marioexe-rm.github.io/airbnb_services/assets/img/og-cover.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M14 58V30a18 18 0 0 1 36 0v28h-8V30a10 10 0 0 0-20 0v28z' fill='%2333593F'/%3E%3C/svg%3E">
+  <!-- Favicon del logo nuevo: el SVG y los PNG chicos usan la variante
+       simplificada (aureola + puerta + sol, sin R: a 16-32px la letra es
+       ilegible); el apple-touch de 180px lleva la versión completa. -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/img/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260729b">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260730a">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -61,11 +67,13 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <!-- TODO: reemplazar nombre de marca -->
-      <!-- Logo: aureola plateada al fondo, puerta verde de esquinas
-           redondeadas encima (se tocan sin aire), sol pleno en oro y
-           «R» pequeña abajo (alto 5 ≈ radio del sol 4.2, apenas mayor). -->
+      <!-- Logo (geometría entregada): aureola r11.2, puerta 15×26 de
+           esquinas redondeadas, sol pleno r4.5 y «R» de trazo. La R se
+           recentró al eje x=15 (el path original quedaba a la derecha:
+           extremos 13.4–17.95 → 12.7–17.25, centro 14.98) y subió su
+           baseline de 29.2 a 28.5 para dar holgura con el borde y=32. -->
       <a class="brand" href="#top" aria-label="Reditu — inicio">
-        <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="13"/><rect class="logo-puerta" x="6.5" y="6" width="17" height="28" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.2"/><path class="logo-r" d="M12.8 29.5v-5h2.7a1.75 1.75 0 0 1 0 3.5h-2.7m2.4 0 1.9 1.5"/></svg>
+        <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="11.2"/><rect class="logo-puerta" x="7.5" y="6" width="15" height="26" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.5"/><path class="logo-r" d="M12.7 28.5v-5h2.8a1.75 2 0 0 1 0 3h-2.7m2 0 1.7 2"/></svg>
         <span>Reditu</span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">
@@ -101,7 +109,7 @@
                punto (viajan juntos) y el span visually-hidden deja el texto
                base estable para lectores de pantalla y SEO. -->
           <h1>Tu propiedad,<br>optimizada para<br>más <em class="rotador-palabra"><span class="palabra-fantasma" aria-hidden="true">rendimiento.</span><span class="palabra-activa" aria-hidden="true">rédito.</span><span class="visually-hidden">rédito.</span></em></h1>
-          <p class="lead">Somos anfitriones antes que administradores: nuestro propio Airbnb llegó a Superanfitrión con 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien armado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad, siempre a distancia.</p>
+          <p class="lead">Somos anfitriones antes que administradores: nuestro propio Airbnb llegó a Superanfitrión con más de 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien optimizado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad a distancia.</p>
           <div class="hero-actions">
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20en%20Santiago%20y%20me%20gustar%C3%ADa%20una%20evaluaci%C3%B3n%20inicial%20de%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Conversemos por WhatsApp</a>
@@ -267,16 +275,23 @@
         </header>
         <div class="caso-grid">
           <div class="caso-ficha reveal">
-            <p>Publicamos nuestro propio departamento y lo operamos exactamente con el sistema que hoy ofrecemos: anuncio afinado para aparecer mejor en las búsquedas, precios revisados a diario y cada mensaje respondido a tiempo. El resultado no es una promesa: está publicado en Airbnb.</p>
+            <p>Publicamos nuestro propio departamento y lo operamos exactamente con el sistema que hoy ofrecemos.</p>
             <!-- Fotos reales del anuncio, descargadas de su galería el 20-07-2026.
                  Avanzan en el mismo tick del rotador de reseñas. -->
             <dl class="ficha">
-              <div><dt>Anuncio</dt><dd>Departamento con terraza privada y cama king — Santiago</dd></div>
-              <div><dt>Calificación</dt><dd><strong class="dato-oro">★ 5,0</strong> — con 20 reseñas</dd></div>
+              <div><dt>Calificación</dt><dd><strong class="dato-oro"><span class="ficha-glifo">★</span>5,0</strong> — con más de 20 reseñas</dd></div>
               <div><dt>Reconocimiento</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 13 6.9 21.4 12 18.4 17.1 21.4 15.4 13Z"/><circle cx="12" cy="8.5" r="5.5"/></svg>Superanfitrión</strong> de Airbnb en menos de 3 meses</dd></div>
-              <div><dt>Atención</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path class="manecillas" d="M12 7.5V12l3.2 2"/></svg>Respuesta rápida</strong> dentro de un horario de cobertura definido</dd></div>
-              <div><dt>Categorías</dt><dd>Destacados en limpieza, exactitud, hospitalidad, comunicación, comodidad y precios</dd></div>
+              <div><dt>Atención</dt><dd><strong class="dato-oro"><svg class="ficha-ico" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path class="manecillas" d="M12 7.5V12l3.2 2"/></svg>Respuesta rápida</strong> todos los días de 8:00 a 24:00</dd></div>
             </dl>
+            <!-- Ficha de gráficos: resultados reales del departamento propio.
+                 Los 4 SVG los construye main.js sin librerías y rotan en el
+                 MISMO tick de 15s del rotador de reseñas (crossfade 2s).
+                 Oculta sin JS (la construye main.js). -->
+            <div class="caso-graficos reveal">
+              <div class="graficos-rotador" aria-hidden="true"></div>
+              <div class="visually-hidden">Resultados de nuestro propio departamento. Ingresos mensuales: abril $456.441, mayo $648.527, junio $993.826, julio $1.341.597. Crecimiento mes a mes: de abril a mayo $192.086, de mayo a junio $345.299, de junio a julio $347.771. Promedio de noches por estadía: abril 2,25; mayo 2,5; junio 4,4; julio 5,6; agosto 12,5 (reservas ya confirmadas). Noches reservadas: abril 17, mayo 20, junio 23, julio 27.</div>
+              <p class="graficos-nota">Resultados de nuestro propio departamento: no constituyen una promesa de resultados.</p>
+            </div>
           </div>
           <div class="caso-reviews">
             <h3 class="visually-hidden">Lo que escriben nuestros huéspedes</h3>
@@ -922,7 +937,7 @@
       <div class="footer-brand">
         <!-- TODO: reemplazar nombre de marca -->
         <a class="brand" href="#top" aria-label="Reditu — volver arriba">
-          <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="13"/><rect class="logo-puerta" x="6.5" y="6" width="17" height="28" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.2"/><path class="logo-r" d="M12.8 29.5v-5h2.7a1.75 1.75 0 0 1 0 3.5h-2.7m2.4 0 1.9 1.5"/></svg>
+          <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="11.2"/><rect class="logo-puerta" x="7.5" y="6" width="15" height="26" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.5"/><path class="logo-r" d="M12.7 28.5v-5h2.8a1.75 2 0 0 1 0 3h-2.7m2 0 1.7 2"/></svg>
           <span>Reditu</span>
         </a>
         <p>Optimización digital de anuncios de Airbnb, para un mayor rédito. Santiago de Chile.</p>
@@ -970,6 +985,6 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260729b"></script>
+  <script src="assets/js/main.js?v=20260730a"></script>
 </body>
 </html>

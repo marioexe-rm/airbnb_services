@@ -85,17 +85,66 @@
   var PALABRAS = ['rédito', 'ganancia', 'rendimiento', 'utilidad', 'renta', 'beneficio'];
   var palabraActiva = document.querySelector('.palabra-activa');
   var indicePalabra = 0;
-  var rotarPalabra = function () {
+
+  // La palabra rota letra a letra durante los mismos 2s del crossfade,
+  // en la dirección en que se DESPLAZA el ocultador de la máscara del
+  // astro (ver CSS .astro-oculto): al entrar la noche viaja de
+  // translateX(72) a 0 —la sombra avanza de derecha a izquierda—, y al
+  // entrar el día se retira de 0 a 72 —de izquierda a derecha—. La
+  // dirección se deriva del mismo estado (grupo entrante) del
+  // controlador, nunca hardcodeada por palabra.
+  var CROSSFADE = 2000;   // == transition de .escena y .astro-oculto
+  var DURACION_LETRA = 800;
+
+  var armarLetras = function (contenedor, palabra, opacidadInicial) {
+    contenedor.textContent = '';
+    return (palabra + '.').split('').map(function (caracter) {
+      var letra = document.createElement('span');
+      letra.className = 'letra';
+      letra.textContent = caracter;
+      letra.style.opacity = String(opacidadInicial);
+      letra.style.transition = 'opacity ' + DURACION_LETRA + 'ms ease-in-out';
+      contenedor.appendChild(letra);
+      return letra;
+    });
+  };
+
+  // Escalonado en función del nº de letras: la primera parte en t=0 y la
+  // última termina exactamente en t=CROSSFADE, para todo largo de palabra.
+  var asignarDelays = function (letras, derechaAIzquierda) {
+    var n = letras.length;
+    var paso = n > 1 ? (CROSSFADE - DURACION_LETRA) / (n - 1) : 0;
+    letras.forEach(function (letra, i) {
+      var orden = derechaAIzquierda ? (n - 1 - i) : i;
+      letra.style.transitionDelay = Math.round(orden * paso) + 'ms';
+    });
+  };
+
+  var rotarPalabra = function (entraNoche) {
     if (!palabraActiva) { return; }
+    var saliente = PALABRAS[indicePalabra];
     indicePalabra = (indicePalabra + 1) % PALABRAS.length;
-    palabraActiva.classList.add('sale');
+    var entrante = PALABRAS[indicePalabra];
+
+    // Capa saliente superpuesta que se desvanece letra a letra mientras
+    // la entrante aparece: mismo crossfade que las escenas del hero.
+    var capaSaliente = document.createElement('span');
+    capaSaliente.className = 'palabra-saliente';
+    capaSaliente.setAttribute('aria-hidden', 'true');
+    palabraActiva.parentNode.appendChild(capaSaliente);
+
+    var letrasSalen = armarLetras(capaSaliente, saliente, 1);
+    var letrasEntran = armarLetras(palabraActiva, entrante, 0);
+    asignarDelays(letrasSalen, entraNoche);
+    asignarDelays(letrasEntran, entraNoche);
+
+    void capaSaliente.offsetWidth; // pinta los estados iniciales
+    letrasSalen.forEach(function (letra) { letra.style.opacity = '0'; });
+    letrasEntran.forEach(function (letra) { letra.style.opacity = '1'; });
+
     setTimeout(function () {
-      palabraActiva.textContent = PALABRAS[indicePalabra] + '.';
-      palabraActiva.classList.remove('sale');
-      palabraActiva.classList.add('entra');
-      void palabraActiva.offsetWidth; // pinta el estado de entrada antes de soltarlo
-      palabraActiva.classList.remove('entra');
-    }, 200);
+      if (capaSaliente.parentNode) { capaSaliente.parentNode.removeChild(capaSaliente); }
+    }, CROSSFADE + 100);
   };
 
   var arte = document.querySelector('.hero-art');
@@ -135,7 +184,7 @@
 
       var grupoActual = grupoDe(actual);
 
-      setInterval(function () {
+      var avanzarHero = function () {
         // En pausa con la pestaña oculta o con un modal de servicio abierto
         if (document.hidden || document.body.classList.contains('modal-abierta')) { return; }
         var grupoSiguiente = grupoActual === 'dia' ? 'noche' : 'dia';
@@ -145,8 +194,20 @@
         arte.classList.toggle('noche', grupoSiguiente === 'noche');
         actual = siguiente;
         grupoActual = grupoSiguiente;
-        rotarPalabra(); // mismo tick: escena y palabra viajan juntas
-      }, 8000);
+        // Mismo tick: la palabra viaja con la escena, y su dirección se
+        // deriva del mismo estado que mueve la máscara del astro.
+        rotarPalabra(grupoSiguiente === 'noche');
+      };
+
+      // Transición inicial ~1,5s tras el primer render (bien pasados los
+      // 300ms sin movimiento de la carga): el visitante alcanza a leer
+      // «rédito» y ve la primera transformación sin esperar el ciclo
+      // completo. Desde ahí, cadencia normal de 8s. Con
+      // prefers-reduced-motion este bloque entero no corre.
+      setTimeout(function () {
+        avanzarHero();
+        setInterval(avanzarHero, 8000);
+      }, 1500);
     }
   }
 
@@ -169,6 +230,179 @@
       clearTimeout(retrasoMedida);
       retrasoMedida = setTimeout(igualarResenas, 150);
     });
+  }
+
+  // ---------- Caso real · ficha de gráficos (SVG propio, sin librerías) ----------
+  // Cuatro minigráficos con datos reales del departamento: barras
+  // (ingresos), líneas (crecimiento), área (noches promedio, con agosto
+  // punteado en oro = reservas confirmadas) y lollipop (noches
+  // reservadas) — tipos intercalados para que dos consecutivos nunca se
+  // repitan, incluido el cierre del ciclo (lollipop → barras). Rotan en
+  // el MISMO tick de 15s del rotador de reseñas y se dibujan mes a mes
+  // (~150ms de desfase por mes) al entrar al viewport y en cada cambio;
+  // con prefers-reduced-motion el CSS los deja en su estado final.
+  var rotadorGraficos = document.querySelector('.graficos-rotador');
+  var graficos = [];
+  var graficoActivo = 0;
+
+  var redibujarGrafico = function (figura) {
+    figura.classList.remove('dibujar');
+    void figura.offsetWidth; // reinicia las transiciones escalonadas
+    figura.classList.add('dibujar');
+  };
+
+  var avanzarGrafico = function () {
+    if (graficos.length < 2) { return; }
+    graficos[graficoActivo].classList.remove('activa');
+    graficos[graficoActivo].classList.remove('dibujar');
+    graficoActivo = (graficoActivo + 1) % graficos.length;
+    graficos[graficoActivo].classList.add('activa');
+    redibujarGrafico(graficos[graficoActivo]);
+  };
+
+  if (rotadorGraficos) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var fmtCL = function (n) { return n.toLocaleString('es-CL'); };
+    var nodo = function (etiqueta, attrs, padre) {
+      var e = document.createElementNS(NS, etiqueta);
+      for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+      if (padre) { padre.appendChild(e); }
+      return e;
+    };
+    var rotulo = function (x, y, contenido, padre, clase) {
+      var t = nodo('text', clase ? { 'class': clase } : {}, padre);
+      t.setAttribute('x', x);
+      t.setAttribute('y', y);
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = contenido;
+      return t;
+    };
+    var retrasar = function (el, ms) { el.style.transitionDelay = ms + 'ms'; };
+
+    // Geometría común: área de trazado x 24..316, base y=150, rango 108
+    var X0 = 24, ANCHO = 292, BASE = 124, RANGO = 86;
+    var centroDe = function (i, n) { return X0 + (i + 0.5) * (ANCHO / n); };
+    var yDe = function (v, max) { return BASE - (v / max) * RANGO; };
+
+    var crearFigura = function (titulo) {
+      var figura = document.createElement('figure');
+      figura.className = 'grafico';
+      var cap = document.createElement('figcaption');
+      cap.className = 'grafico-titulo';
+      cap.textContent = titulo;
+      figura.appendChild(cap);
+      var svg = nodo('svg', { viewBox: '0 0 340 160', focusable: 'false' });
+      figura.appendChild(svg);
+      nodo('line', { 'class': 'eje', x1: X0, y1: BASE, x2: X0 + ANCHO, y2: BASE }, svg);
+      rotadorGraficos.appendChild(figura);
+      graficos.push(figura);
+      return svg;
+    };
+
+    // (a) Barras verticales · Ingresos mensuales (CLP)
+    (function () {
+      var datos = [456441, 648527, 993826, 1341597];
+      var meses = ['abr', 'may', 'jun', 'jul'];
+      var svg = crearFigura('Ingresos mensuales');
+      datos.forEach(function (v, i) {
+        var cx = centroDe(i, 4), w = 44, x = cx - w / 2, y = yDe(v, 1341597);
+        var barra = nodo('path', {
+          'class': 'anim-barra',
+          d: 'M' + x + ' ' + BASE + ' V' + (y + 4) + ' Q' + x + ' ' + y + ' ' + (x + 4) + ' ' + y +
+             ' H' + (x + w - 4) + ' Q' + (x + w) + ' ' + y + ' ' + (x + w) + ' ' + (y + 4) + ' V' + BASE + ' Z',
+          fill: 'var(--acento)'
+        }, svg);
+        retrasar(barra, i * 150);
+        retrasar(rotulo(cx, y - 8, '$' + fmtCL(v), svg, 'anim-fade'), i * 150 + 250);
+        rotulo(cx, 142, meses[i], svg);
+      });
+    })();
+
+    // (b) Líneas · Crecimiento mes a mes (CLP)
+    (function () {
+      var datos = [192086, 345299, 347771];
+      var tramos = ['abr→may', 'may→jun', 'jun→jul'];
+      var svg = crearFigura('Crecimiento mes a mes');
+      var puntos = datos.map(function (v, i) { return { x: centroDe(i, 3), y: yDe(v, 347771) }; });
+      puntos.slice(1).forEach(function (p, i) {
+        var a = puntos[i];
+        var seg = nodo('line', { 'class': 'anim-trazo', x1: a.x, y1: a.y, x2: p.x, y2: p.y, stroke: 'var(--acento)', 'stroke-width': 2, 'stroke-linecap': 'round' }, svg);
+        seg.style.setProperty('--largo', Math.hypot(p.x - a.x, p.y - a.y).toFixed(1));
+        retrasar(seg, i * 150 + 100);
+      });
+      puntos.forEach(function (p, i) {
+        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--acento)' }, svg);
+        retrasar(punto, i * 150);
+        retrasar(rotulo(p.x, p.y - 10, '+$' + fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
+        rotulo(p.x, 142, tramos[i], svg);
+      });
+    })();
+
+    // (c) Área · Promedio de noches por estadía (agosto = confirmadas)
+    (function () {
+      var datos = [2.25, 2.5, 4.4, 5.6, 12.5];
+      var meses = ['abr', 'may', 'jun', 'jul', 'ago'];
+      var svg = crearFigura('Promedio de noches por estadía');
+      var puntos = datos.map(function (v, i) { return { x: centroDe(i, 5), y: yDe(v, 12.5) }; });
+      var d = 'M' + puntos[0].x + ' ' + BASE;
+      puntos.slice(0, 4).forEach(function (p) { d += ' L' + p.x + ' ' + p.y; });
+      d += ' L' + puntos[3].x + ' ' + BASE + ' Z';
+      nodo('path', { 'class': 'anim-area', d: d, fill: 'var(--acento)', 'fill-opacity': '0.12' }, svg);
+      puntos.slice(1, 4).forEach(function (p, i) {
+        var a = puntos[i];
+        var seg = nodo('line', { 'class': 'anim-trazo', x1: a.x, y1: a.y, x2: p.x, y2: p.y, stroke: 'var(--acento)', 'stroke-width': 2, 'stroke-linecap': 'round' }, svg);
+        seg.style.setProperty('--largo', Math.hypot(p.x - a.x, p.y - a.y).toFixed(1));
+        retrasar(seg, i * 150 + 100);
+      });
+      // Tramo julio→agosto punteado en oro y punto hueco: reservas ya
+      // confirmadas, no un mes cerrado (codificación doble: trazo + texto).
+      var pj = puntos[3], pa = puntos[4];
+      var punteado = nodo('line', { 'class': 'anim-fade', x1: pj.x, y1: pj.y, x2: pa.x, y2: pa.y, stroke: 'var(--gold)', 'stroke-width': 2, 'stroke-dasharray': '4 4', 'stroke-linecap': 'round' }, svg);
+      retrasar(punteado, 3 * 150 + 150);
+      puntos.slice(0, 4).forEach(function (p, i) {
+        var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 3.5, fill: 'var(--acento)' }, svg);
+        retrasar(punto, i * 150);
+        retrasar(rotulo(p.x, p.y - 9, fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
+        rotulo(p.x, 142, meses[i], svg);
+      });
+      var pAgo = nodo('circle', { 'class': 'anim-fade', cx: pa.x, cy: pa.y, r: 4.5, fill: 'var(--blanco)', stroke: 'var(--gold)', 'stroke-width': 2 }, svg);
+      retrasar(pAgo, 3 * 150 + 300);
+      retrasar(rotulo(pa.x, pa.y - 10, fmtCL(datos[4]), svg, 'anim-fade'), 3 * 150 + 300);
+      rotulo(pa.x, 142, meses[4], svg);
+      retrasar(rotulo(pa.x, 155, 'confirmadas', svg, 'anim-fade grafico-marca'), 3 * 150 + 300);
+    })();
+
+    // (d) Lollipop · Noches reservadas (≠ área, ≠ barras verticales)
+    (function () {
+      var datos = [17, 20, 23, 27];
+      var meses = ['abr', 'may', 'jun', 'jul'];
+      var svg = crearFigura('Noches reservadas');
+      datos.forEach(function (v, i) {
+        var cx = centroDe(i, 4), y = yDe(v, 27);
+        var tallo = nodo('rect', { 'class': 'anim-barra', x: cx - 1, y: y, width: 2, height: BASE - y, fill: 'var(--acento)' }, svg);
+        retrasar(tallo, i * 150);
+        var cabeza = nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 5, fill: 'var(--gold)' }, svg);
+        retrasar(cabeza, i * 150 + 150);
+        retrasar(rotulo(cx, y - 12, fmtCL(v), svg, 'anim-fade'), i * 150 + 300);
+        rotulo(cx, 142, meses[i], svg);
+      });
+    })();
+
+    graficos[0].classList.add('activa');
+
+    // Se dibuja cada vez que la sección entra al viewport (y se rearma
+    // al salir); con reduced-motion el CSS ya muestra el estado final.
+    if ('IntersectionObserver' in window && !sinMovimiento) {
+      var observadorGraficos = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) { redibujarGrafico(graficos[graficoActivo]); }
+          else { graficos[graficoActivo].classList.remove('dibujar'); }
+        });
+      }, { threshold: 0.3 });
+      observadorGraficos.observe(rotadorGraficos);
+    } else {
+      graficos.forEach(function (figura) { figura.classList.add('dibujar'); });
+    }
   }
 
   // Rotador de reseñas: 4 grupos × 4 frases, misma familia de
@@ -242,6 +476,7 @@
         entrante.classList.add('activa');
         ultimoGrupo = proximo;
         grupoActivo = proximo;
+        avanzarGrafico(); // mismo tick: la ficha de gráficos rota con las reseñas
       }, 15000);
     }
   }

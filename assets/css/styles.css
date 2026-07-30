@@ -551,23 +551,26 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 
 .palabra-fantasma { visibility: hidden; }
 
-.palabra-activa {
+.palabra-activa,
+.palabra-saliente {
   position: absolute;
   left: 0;
   top: 0;
-  transition: opacity 200ms ease, transform 200ms ease;
+  white-space: nowrap;
 }
 
-/* Salida: se desvanece subiendo; entrada: aparece desde abajo. Dos
-   tramos de 200ms (~400ms totales): un fundido largo en una sola
-   palabra se percibe lento junto al crossfade de 2s del hero. */
-.palabra-activa.sale { opacity: 0; transform: translateY(-0.12em); }
-.palabra-activa.entra { opacity: 0; transform: translateY(0.12em); transition: none; }
+/* La transición viaja letra a letra durante los mismos 2s del crossfade
+   del hero (mismo ease-in-out): la capa saliente se desvanece y la
+   entrante aparece, ambas escalonadas en la dirección en que se
+   desplaza el ocultador de la máscara del astro. La duración por letra
+   y los delays los fija main.js según el número de letras, para que
+   toda palabra empiece y termine junto con el fundido de la escena. */
+.palabra-activa .letra,
+.palabra-saliente .letra { display: inline-block; }
 
 @media (prefers-reduced-motion: reduce) {
-  .palabra-activa { transition: none; }
-  .palabra-activa.sale,
-  .palabra-activa.entra { opacity: 1; transform: none; }
+  .palabra-activa .letra,
+  .palabra-saliente .letra { transition: none !important; opacity: 1 !important; }
 }
 
 .hero .lead { margin-top: var(--s-3); }
@@ -736,12 +739,138 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
    cálido sobre el disco dorado. */
 /* Texto pequeño (15px): oro profundo para conservar AA (4,9:1 s/blanco) */
 .dato-oro { color: var(--gold-strong); font-weight: 700; }
+/* Gap ícono→texto uniforme en las tres filas destacadas; el glifo de la
+   estrella ocupa la misma caja de 1.15em que los SVG para que los tres
+   textos arranquen alineados ópticamente. */
 .ficha-ico {
   width: 1.15em;
   height: 1.15em;
   vertical-align: -0.2em;
   fill: currentColor;
   stroke: none;
+  margin-right: 0.35em;
+}
+
+.ficha-glifo {
+  display: inline-block;
+  width: 1.15em;
+  text-align: center;
+  margin-right: 0.35em;
+}
+
+/* ---------- Caso real · ficha de gráficos ----------
+   Segunda tarjeta de la columna izquierda con el lenguaje de la ficha
+   (blanco, radio-l, sombra-1). Los 4 minigráficos SVG los construye
+   main.js sin librerías y rotan con crossfade de 2s en el mismo tick de
+   15s de las reseñas; se apilan en grid 1/1 con el mismo viewBox, así
+   la altura queda reservada y estable durante todo el ciclo. Paleta:
+   serie en verde de identidad, oro solo como acento de datos (cabezas
+   del lollipop y el punto de reservas confirmadas); los textos van en
+   tinta secundaria, nunca en el color de la serie. */
+
+.caso-graficos { display: none; }
+
+.js .caso-graficos {
+  display: block;
+  margin-top: var(--s-2);
+  background: var(--blanco);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-1);
+  padding: var(--s-3);
+}
+
+.graficos-rotador { display: grid; }
+
+.grafico {
+  grid-area: 1 / 1;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 2000ms ease-in-out;
+}
+
+.grafico.activa { opacity: 1; }
+
+.grafico-titulo {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.grafico svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: var(--s-1);
+}
+
+.grafico text {
+  font-family: var(--sans);
+  font-size: 11px;
+  fill: var(--texto-2);
+}
+
+.grafico .eje { stroke: var(--linea); stroke-width: 1; }
+
+/* Marca de estado de agosto: reservas confirmadas, no mes cerrado */
+.grafico .grafico-marca {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  fill: var(--gold-strong);
+}
+
+.graficos-nota {
+  margin-top: var(--s-1);
+  font-size: 0.75rem;
+  color: var(--texto-2);
+}
+
+/* Dibujo progresivo mes a mes: cada marca parte oculta y entra con su
+   transition-delay escalonado (~150ms por mes, fijado inline por JS)
+   cuando el gráfico recibe .dibujar — al entrar la sección al viewport
+   y en cada rotación. */
+.grafico .anim-barra {
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  transform-box: fill-box;
+  transition: transform 500ms ease;
+}
+
+.grafico.dibujar .anim-barra { transform: none; }
+
+.grafico .anim-fade {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.grafico.dibujar .anim-fade { opacity: 1; }
+
+/* Trazos que se dibujan: el largo vive en --largo (variable inline) */
+.grafico .anim-trazo {
+  stroke-dasharray: var(--largo);
+  stroke-dashoffset: var(--largo);
+  transition: stroke-dashoffset 350ms ease;
+}
+
+.grafico.dibujar .anim-trazo { stroke-dashoffset: 0; }
+
+/* El área se revela de izquierda a derecha (inset animable) */
+.grafico .anim-area {
+  clip-path: inset(-8px 100% 0 0);
+  transition: clip-path 900ms ease;
+}
+
+.grafico.dibujar .anim-area { clip-path: inset(-8px 0 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .grafico,
+  .grafico .anim-barra,
+  .grafico .anim-fade,
+  .grafico .anim-trazo,
+  .grafico .anim-area { transition: none; }
+  .grafico .anim-barra { transform: none; }
+  .grafico .anim-fade { opacity: 1; }
+  .grafico .anim-trazo { stroke-dashoffset: 0; }
+  .grafico .anim-area { clip-path: none; }
 }
 
 .ficha-ico .manecillas {
