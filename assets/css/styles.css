@@ -1117,7 +1117,28 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 /* En desktop, las tarjetas de ítems van a dos columnas (la última
    ocupa una sola columna si el módulo tiene número impar). */
 @media (min-width: 60em) {
-  .modulo-items { grid-template-columns: 1fr 1fr; }
+  /* Grid de 3 columnas del módulo: el encabezado ocupa la celda 1·1 y
+     las tarjetas fluyen en las celdas restantes (2 en la primera fila,
+     de a 3 después), alineadas entre filas; body y ul se aplanan con
+     display: contents. La última fila incompleta no se estira. */
+  .servicios .modulo {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-3);
+    align-items: start;
+  }
+  .servicios .modulo-head { grid-column: 1; grid-row: 1; }
+  .servicios .modulo-body, .servicios .modulo-items { display: contents; }
+  .servicios .modulo-ahorro, .servicios .modulo-nota { grid-column: 1 / -1; }
+  .servicios .modulo-ahorro { margin-top: 0; }
+
+  /* Tarjetas de exactamente 4 líneas: alto reservado y tope en el
+     line-height del sistema (4 × 24px). En móvil el texto fluye libre. */
+  li.servicio .item-cuerpo,
+  .modulo-items li .item-cuerpo {
+    min-height: 96px;
+    max-height: 96px;
+    overflow: hidden;
+  }
 }
 
 /* Precio individual del ítem: discreto, alineado a la derecha
@@ -1135,6 +1156,13 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   color: var(--acento);
 }
 
+/* Nota pequeña de cobertura de los servicios en terreno */
+.modulo-nota {
+  margin-top: var(--s-1);
+  font-size: 0.8125rem;
+  color: var(--texto-2);
+}
+
 /* Línea comparativa de ahorro del pack integral */
 .modulo-ahorro {
   margin-top: var(--s-3);
@@ -1142,6 +1170,9 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-weight: 600;
   color: var(--acento);
 }
+
+/* La bajada del módulo vive en el head, bajo el precio */
+.modulo-head .modulo-lead { margin-top: var(--s-2); }
 
 /* Ritmo bajada→contenido: en las secciones con párrafo introductorio
    (servicios, planes, equipo) el margen del header baja a --s-4 para
@@ -1212,14 +1243,10 @@ li.servicio:has(.servicio-enlace:focus-visible) .servicio-mas::after { transform
   cursor: pointer;
 }
 
-/* Complemento del módulo: tarjeta informativa, no equivalente a los
-   servicios — chip verde a caballo del borde, sin modal y sin la
-   elevación interactiva del hover. */
-li.complemento { position: relative; }
-
-li.complemento:hover { box-shadow: var(--sombra-1); transform: none; }
-
-.complemento-chip {
+/* Chip «En terreno»: marca discreta de los servicios con componente
+   presencial, con el patrón de chips del sistema (verde a caballo del
+   borde superior). */
+.chip-terreno {
   position: absolute;
   top: 0;
   left: var(--s-3);
@@ -1611,7 +1638,11 @@ body.modal-abierta { overflow: hidden; }
    separación respecto del botón de cierre (2.25rem + 8px). */
 .modal-modulos {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  /* Los tres elementos forman un grupo: la etiqueta toma su contenido
+     (max-content, con mínimo 0 para poder envolver) y el botón
+     siguiente queda pegado al grupo, no al extremo del panel. */
+  grid-template-columns: auto minmax(0, max-content) auto;
+  justify-content: start;
   align-items: center;
   gap: var(--s-1);
   margin-bottom: var(--s-2);
