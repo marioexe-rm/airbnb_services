@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260731d">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260731e">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -267,7 +267,11 @@
     </section>
 
     <!-- ============ 01 · CASO REAL ============ -->
-    <section class="caso" id="caso">
+    <!-- data-snap-aire="-72": el reposo del snap esconde 72 de los 120px
+         del padding superior, dejando 48px de aire entre el navbar y el
+         eyebrow (el ancla del navbar conserva su propio encuadre por
+         scroll-margin, uniforme con las demás secciones ancladas). -->
+    <section class="caso" id="caso" data-snap-aire="-72">
       <div class="container">
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">01</span>Caso real</p>
@@ -955,23 +959,23 @@
         </header>
         <div class="faq-list reveal">
           <details>
-            <summary>¿Tengo que contratar los tres módulos?</summary>
+            <summary><span class="faq-pregunta">¿Tengo que contratar los tres módulos?</span></summary>
             <p>No. Cada módulo se contrata por separado y los planes son combinaciones sugeridas. Dicho eso, el Full Estratégico es el que mejor rinde, porque la puesta a punto, la operación digital y la optimización continua se potencian entre sí.</p>
           </details>
           <details>
-            <summary>¿Quiénes hacen la limpieza y el mantenimiento?</summary>
+            <summary><span class="faq-pregunta">¿Quiénes hacen la limpieza y el mantenimiento?</span></summary>
             <p>Tu equipo de confianza. La operación diaria es digital y a distancia: no hacemos limpieza, mantenimiento ni recepción, y tampoco los coordinamos. Cuando un huésped reporta un incidente material, lo registramos y te lo informamos a ti o al contacto local que designes.</p>
           </details>
           <details>
-            <summary>¿Cómo se calcula la mensualidad?</summary>
+            <summary><span class="faq-pregunta">¿Cómo se calcula la mensualidad?</span></summary>
             <p>Depende del plan. En Operación Digital y Full Estratégico es un porcentaje de los pagos correspondientes al alojamiento, descontada solo la comisión de servicio de Airbnb: tus gastos no modifican esa base y, sin reservas, no hay cobro. Consultoría Estratégica tiene una mensualidad fija.</p>
           </details>
           <details>
-            <summary>¿Dónde trabajan?</summary>
+            <summary><span class="faq-pregunta">¿Dónde trabajan?</span></summary>
             <p>Con anfitriones de todo Chile: los servicios digitales se prestan a distancia, y la revisión de precios y competencia se hace específicamente para tu comuna y tu barrio, porque el precio correcto en una zona no es el correcto en la de al lado.</p>
           </details>
           <details>
-            <summary>¿Los servicios en terreno llegan a mi ciudad?</summary>
+            <summary><span class="faq-pregunta">¿Los servicios en terreno llegan a mi ciudad?</span></summary>
             <p>Los servicios en terreno de la puesta a punto —fotografía, evaluación del alojamiento y disposición— están incluidos en el Gran Santiago. En el resto de Chile los coordinamos según disponibilidad y pueden tener un costo adicional.</p>
           </details>
         </div>
@@ -993,27 +997,26 @@
           <p class="sec-lead">La primera conversación no compromete a nada.</p>
           <!-- TODO: reemplazar número de WhatsApp -->
           <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20y%20me%20gustar%C3%ADa%20conversar%20sobre%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Escribir por WhatsApp</a>
-          <p class="contacto-nota">Respondemos todos los días, de 8:00 a 24:00.</p>
         </div>
         <ul class="contacto-list reveal">
           <li>
             <!-- TODO: reemplazar correo -->
             <a href="mailto:hola@reditu.cl">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4.5 7 7.5 6 7.5-6"/></svg>
+              <span class="canal-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></span>
               <span><strong>Correo</strong><span class="canal-valor">hola@reditu.cl</span></span>
             </a>
           </li>
           <li>
             <!-- TODO: reemplazar teléfono -->
             <a href="tel:+56955551234">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3c0 1-1 2-2.2 1.9C10.5 19.6 4.4 13.5 3.6 5.7 3.5 4.5 4.5 3.5 5.5 3.5Z"/></svg>
+              <span class="canal-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3c0 1-1 2-2.2 1.9C10.5 19.6 4.4 13.5 3.6 5.7 3.5 4.5 4.5 3.5 5.5 3.5Z"/></svg></span>
               <span><strong>Teléfono</strong><span class="canal-valor">+56 9 5555 1234</span></span>
             </a>
           </li>
           <li>
             <!-- TODO: reemplazar Instagram -->
             <a href="https://www.instagram.com/reditu.stgo" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.7" cy="7.3" r="1" class="dot"/></svg>
+              <span class="canal-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.7" cy="7.3" r="1" class="dot"/></svg></span>
               <span><strong>Instagram</strong><span class="canal-valor">@reditu.stgo</span></span>
             </a>
           </li>
@@ -1090,6 +1093,6 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260731d"></script>
+  <script src="assets/js/main.js?v=20260731e"></script>
 </body>
 </html>

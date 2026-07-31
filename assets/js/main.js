@@ -292,8 +292,17 @@
       return nodo('path', { 'class': clase, d: 'M' + puntas.join(' L') + ' Z', fill: 'var(--gold)' }, svg);
     };
 
-    // Geometría común: área de trazado x 24..316, base y=150, rango 108
+    // Geometría común: área de trazado x 24..316, base y=124, rango 86
+    // (el dato máximo llega a y=38: quedan ~24px de headroom para los
+    // rótulos sin tocar la escala).
     var X0 = 24, ANCHO = 292, BASE = 124, RANGO = 86;
+    // Separación uniforme rótulo→dato en los CUATRO gráficos: la
+    // baseline de cada rótulo de valor queda SEP_ROTULO px (en unidades
+    // del viewBox) sobre su dato —tope de barra, vértice de línea,
+    // punto del área o cabeza del lollipop—. 16 despeja el peor caso
+    // (el tramo ascendente de «Crecimiento mes a mes» bajo el rótulo
+    // +$192.086) y deja aire sobre estrellas (r 5,5–6,5) y puntos.
+    var SEP_ROTULO = 16;
     var centroDe = function (i, n) { return X0 + (i + 0.5) * (ANCHO / n); };
     var yDe = function (v, max) { return BASE - (v / max) * RANGO; };
 
@@ -332,7 +341,7 @@
           ? estrella(cx, y, 5.5, svg, 'anim-fade')
           : nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 4, fill: 'var(--gold)' }, svg);
         retrasar(cap, i * 150 + 200);
-        retrasar(rotulo(cx, y - 8, '$' + fmtCL(v), svg, 'anim-fade'), i * 150 + 250);
+        retrasar(rotulo(cx, y - SEP_ROTULO, '$' + fmtCL(v), svg, 'anim-fade'), i * 150 + 250);
         rotulo(cx, 142, meses[i], svg);
       });
     })();
@@ -355,7 +364,7 @@
           ? estrella(p.x, p.y, 5.5, svg, 'anim-fade')
           : nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 4, fill: 'var(--gold)' }, svg);
         retrasar(punto, i * 150);
-        retrasar(rotulo(p.x, p.y - 10, '+$' + fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
+        retrasar(rotulo(p.x, p.y - SEP_ROTULO, '+$' + fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, tramos[i], svg);
       });
     })();
@@ -385,14 +394,14 @@
         // Acento de datos: los puntos del área en oro
         var punto = nodo('circle', { 'class': 'anim-fade', cx: p.x, cy: p.y, r: 3.5, fill: 'var(--gold)' }, svg);
         retrasar(punto, i * 150);
-        retrasar(rotulo(p.x, p.y - 9, fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
+        retrasar(rotulo(p.x, p.y - SEP_ROTULO, fmtCL(datos[i]), svg, 'anim-fade'), i * 150 + 250);
         rotulo(p.x, 142, meses[i], svg);
       });
       // Último dato (agosto) con estrella; el estado «confirmadas» sigue
       // codificado por el trazo punteado y su rótulo.
       var pAgo = estrella(pa.x, pa.y, 6, svg, 'anim-fade');
       retrasar(pAgo, 3 * 150 + 300);
-      retrasar(rotulo(pa.x, pa.y - 10, fmtCL(datos[4]), svg, 'anim-fade'), 3 * 150 + 300);
+      retrasar(rotulo(pa.x, pa.y - SEP_ROTULO, fmtCL(datos[4]), svg, 'anim-fade'), 3 * 150 + 300);
       rotulo(pa.x, 142, meses[4], svg);
       retrasar(rotulo(pa.x, 155, 'confirmadas', svg, 'anim-fade grafico-marca'), 3 * 150 + 300);
     })();
@@ -410,7 +419,7 @@
           ? estrella(cx, y, 6.5, svg, 'anim-fade')
           : nodo('circle', { 'class': 'anim-fade', cx: cx, cy: y, r: 5, fill: 'var(--gold)' }, svg);
         retrasar(cabeza, i * 150 + 150);
-        retrasar(rotulo(cx, y - 12, fmtCL(v), svg, 'anim-fade'), i * 150 + 300);
+        retrasar(rotulo(cx, y - SEP_ROTULO, fmtCL(v), svg, 'anim-fade'), i * 150 + 300);
         rotulo(cx, 142, meses[i], svg);
       });
     })();
