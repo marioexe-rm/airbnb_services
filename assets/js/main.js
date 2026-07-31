@@ -72,7 +72,7 @@
     anio.textContent = String(new Date().getFullYear());
   }
 
-  // Carrusel del hero: 8s por pieza, crossfade de 2s, alternando
+  // Carrusel del hero: 5s por pieza, crossfade de 2s, alternando
   // siempre día y noche (barajado por grupo, sin repetir hasta agotar
   // el ciclo). La clase `noche` del contenedor anima la máscara del
   // astro (sol → media luna) en sincronía con el fundido. En pausa
@@ -206,7 +206,7 @@
       // prefers-reduced-motion este bloque entero no corre.
       setTimeout(function () {
         avanzarHero();
-        setInterval(avanzarHero, 8000);
+        setInterval(avanzarHero, 5000);
       }, 1500);
     }
   }
@@ -433,7 +433,7 @@
   }
 
   // Rotador de reseñas: 4 grupos × 4 frases, misma familia de
-  // transición del hero (15s por grupo, crossfade de 2s). Se pausa al
+  // transición del hero (8s por grupo, crossfade de 2s). Se pausa al
   // leer (hover/focus) y con la pestaña oculta; con
   // prefers-reduced-motion queda un único grupo estático.
   var rotador = document.querySelector('.resenas-rotador');
@@ -504,7 +504,7 @@
         ultimoGrupo = proximo;
         grupoActivo = proximo;
         avanzarGrafico(); // mismo tick: la ficha de gráficos rota con las reseñas
-      }, 15000);
+      }, 8000);
     }
   }
 
@@ -1017,6 +1017,52 @@
     });
   }
 
+  // ---------- Encuadre de anclas del navbar ----------
+  // Una sola función decide el destino: si la sección cabe completa en
+  // la ventana (más un aire de 24px), se centra en el área visible bajo
+  // el navbar; si no cabe, se alinea arriba usando su scroll-margin-top
+  // computado (el mismo aire de las anclas que ya funcionaban). Todos
+  // los valores se leen en vivo en cada invocación (alto real del
+  // navbar sticky, viewport y sección), así el encuadre queda correcto
+  // ante cualquier cambio de tamaño de ventana. La ventana de supresión
+  // evita que el imán del snap reacomode la vista al terminar.
+  var topDoc = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+  var supresionSnap = 0;
+
+  var encuadrarSeccion = function (seccion) {
+    var headerAlto = header ? header.offsetHeight : 0;
+    var vh = window.innerHeight;
+    var alto = seccion.offsetHeight;
+    var top = topDoc(seccion);
+    var destino;
+    if (alto + headerAlto + 24 <= vh) {
+      destino = top - headerAlto - ((vh - headerAlto) - alto) / 2;
+    } else {
+      destino = top - (parseFloat(getComputedStyle(seccion).scrollMarginTop) || headerAlto + 16);
+    }
+    supresionSnap = Date.now() + 1600;
+    window.scrollTo({ top: Math.max(0, Math.round(destino)), behavior: sinMovimiento ? 'auto' : 'smooth' });
+  };
+
+  Array.prototype.slice.call(document.querySelectorAll('.site-nav a[href^="#"], .footer-nav a[href^="#"]')).forEach(function (enlace) {
+    enlace.addEventListener('click', function (e) {
+      var destino = document.querySelector(enlace.getAttribute('href'));
+      if (destino && destino.matches('section')) {
+        e.preventDefault();
+        encuadrarSeccion(destino);
+        if (history.pushState) { history.pushState(null, '', enlace.getAttribute('href')); }
+      }
+    });
+  });
+
+  // Los enlaces a los módulos (desde Planes) conservan el encuadre
+  // nativo por scroll-margin, pero también suprimen el imán del snap:
+  // era él quien reacomodaba la vista tras el salto y tapaba el título
+  // del módulo 01 con el navbar.
+  Array.prototype.slice.call(document.querySelectorAll('a[href^="#modulo"]')).forEach(function (enlace) {
+    enlace.addEventListener('click', function () { supresionSnap = Date.now() + 1600; });
+  });
+
   // Scroll asistido de escritorio (≥64em). Reemplaza al scroll-snap CSS
   // (velocidad no configurable, se percibía brusco) conservando su
   // lógica: al TERMINAR el scroll (scrollend, o debounce de 150ms como
@@ -1093,6 +1139,7 @@
     };
 
     var alSoltarScroll = function () {
+      if (Date.now() < supresionSnap) { return; }
       if (!snapDesktop.matches || animacionSnap !== null) { return; }
       var footer = document.querySelector('.site-footer');
       if (footer && footer.getBoundingClientRect().top < window.innerHeight) { return; }

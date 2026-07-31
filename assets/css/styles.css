@@ -1130,6 +1130,9 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   .servicios .modulo-body, .servicios .modulo-items { display: contents; }
   .servicios .modulo-ahorro, .servicios .modulo-nota { grid-column: 1 / -1; }
   .servicios .modulo-ahorro { margin-top: 0; }
+  /* Las dos notas del módulo 01 como un mismo bloque: el margen negativo
+     descuenta el gap de fila (24px) para dejar un paso de 8px. */
+  .servicios .modulo-nota { margin-top: calc(var(--s-1) - var(--s-3)); }
 
   /* Tarjetas de exactamente 4 líneas: alto reservado y tope en el
      line-height del sistema (4 × 24px). En móvil el texto fluye libre. */
@@ -1170,9 +1173,6 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   font-weight: 600;
   color: var(--acento);
 }
-
-/* La bajada del módulo vive en el head, bajo el precio */
-.modulo-head .modulo-lead { margin-top: var(--s-2); }
 
 /* Ritmo bajada→contenido: en las secciones con párrafo introductorio
    (servicios, planes, equipo) el margen del header baja a --s-4 para
