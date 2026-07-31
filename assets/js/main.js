@@ -524,16 +524,11 @@
     var modalCuerpo = modal.querySelector('.modal-cuerpo');
     var modalNavPrev = modal.querySelector('.modal-nav-prev');
     var modalNavNext = modal.querySelector('.modal-nav-next');
-    var modalModulos = modal.querySelector('.modal-modulos');
-    var modalModuloChip = modal.querySelector('.modal-modulo');
-    var modalModPrev = modal.querySelector('.modal-mod-prev');
-    var modalModNext = modal.querySelector('.modal-mod-next');
     var modalContador = modal.querySelector('.modal-contador');
     var origenModal = null;
     var cierreProgramado = null;
     // Colección navegable del modal abierto: {items, indice, render(i),
-    // navAria: [prev, next], amplio, modo ('texto'|'visual'), y para
-    // servicios iModulo}.
+    // navAria: [prev, next], amplio, modo ('texto'|'visual')}.
     var coleccionModal = null;
 
     var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
@@ -548,6 +543,29 @@
       modalContador.hidden = false;
     };
 
+    // Bordes reales de la colección: en el primer elemento se retira el
+    // chevron «anterior» y en el último el «siguiente». Se ocultan (no
+    // se deshabilitan): viven en el canal lateral reservado del panel,
+    // así su salida no desplaza ni redimensiona el contenido. Si el foco
+    // estaba en el chevron que se oculta, pasa al opuesto (siempre
+    // visible en colecciones de 2+) o, en su defecto, al panel: nunca
+    // queda en un elemento oculto.
+    var actualizarLimites = function () {
+      if (!coleccionModal || coleccionModal.items.length < 2) { return; }
+      var alInicio = coleccionModal.indice === 0;
+      var alFinal = coleccionModal.indice === coleccionModal.items.length - 1;
+      // El foco activo se captura ANTES de ocultar: al pasar a
+      // display:none el navegador ya lo habría movido a body y el
+      // rescate no sabría de dónde venía.
+      var activo = document.activeElement;
+      modalNavPrev.hidden = alInicio;
+      modalNavNext.hidden = alFinal;
+      if ((activo === modalNavPrev && alInicio) || (activo === modalNavNext && alFinal)) {
+        var refugio = activo === modalNavPrev ? modalNavNext : modalNavPrev;
+        (refugio.hidden ? modalPanel : refugio).focus();
+      }
+    };
+
     // REGLA GENERAL de conjunto unitario: cuando el modal no tiene una
     // colección de 2+ elementos, los chevrons se RETIRAN del DOM (no
     // solo se ocultan), la navegación por flechas queda inerte (los
@@ -560,10 +578,9 @@
           modalPanel.appendChild(modalNavPrev);
           modalPanel.appendChild(modalNavNext);
         }
-        modalNavPrev.hidden = false;
-        modalNavNext.hidden = false;
         modalNavPrev.setAttribute('aria-label', coleccionModal.navAria[0]);
         modalNavNext.setAttribute('aria-label', coleccionModal.navAria[1]);
+        actualizarLimites();
       } else if (modalNavPrev.parentNode) {
         modalNavPrev.parentNode.removeChild(modalNavPrev);
         modalNavNext.parentNode.removeChild(modalNavNext);
@@ -578,12 +595,6 @@
       modalTitulo.textContent = datos.titulo || '';
       modalCuerpo.innerHTML = '';
       modalCuerpo.appendChild(datos.contenido);
-      if (datos.modulo) {
-        modalModuloChip.textContent = datos.modulo;
-        modalModulos.hidden = false;
-      } else {
-        modalModulos.hidden = true;
-      }
       if (datos.alPintar) {
         requestAnimationFrame(function () { requestAnimationFrame(datos.alPintar); });
       }
@@ -693,23 +704,27 @@
       }, 580);
     };
 
-    // Circular estricto en ambos extremos. Si la colección define
-    // preparar(i) (fotos: decodificación previa), el fundido espera a
-    // que el contenido esté listo — la vista actual se mantiene, con un
-    // indicador discreto si la espera pasa de ~300ms; si falla, se
-    // conserva lo visible y el error queda en consola.
+    // Navegación con bordes: sin vuelta al inicio ni al final. En cada
+    // extremo el chevron correspondiente está oculto y las flechas del
+    // teclado quedan inertes (el guard corta antes de cualquier efecto).
+    // Si la colección define preparar(i) (fotos: decodificación previa),
+    // el fundido espera a que el contenido esté listo — la vista actual
+    // se mantiene, con un indicador discreto si la espera pasa de
+    // ~300ms; si falla, se conserva lo visible y el error queda en
+    // consola.
     var contadorNavegacion = 0;
     var navegarModal = function (delta) {
       if (!coleccionModal || coleccionModal.items.length < 2) { return; }
       var col = coleccionModal;
-      var n = col.items.length;
-      var destino = (col.indice + delta + n) % n;
+      var destino = col.indice + delta;
+      if (destino < 0 || destino >= col.items.length) { return; }
       var marca = ++contadorNavegacion;
       var aplicar = function () {
         if (coleccionModal !== col || marca !== contadorNavegacion) { return; }
         col.indice = destino;
         transicionarModal(col.render(destino), delta);
         actualizarContador();
+        actualizarLimites();
         if (col.alNavegar) { col.alNavegar(destino); }
       };
       if (!col.preparar) { aplicar(); return; }
@@ -733,47 +748,31 @@
       if (origenModal) { origenModal.focus(); origenModal = null; }
     };
 
-    // ---- Servicios: colección por módulo + cambio de módulo ----
+    // ---- Servicios: una colección por módulo (las plantillas de sus
+    // ítems); la etiqueta que indica el módulo sale del data-etiqueta
+    // de cada plantilla («Módulo 02 · Operación digital»). ----
     var MODULOS_SERV = Array.prototype.slice.call(document.querySelectorAll('.servicios .modulo')).map(function (mod) {
       var plantillas = Array.prototype.slice.call(mod.querySelectorAll('li.servicio template'));
-      if (!plantillas.length) { return null; }
-      return {
-        nombre: mod.querySelector('.modulo-num').textContent.split('\u00b7')[0].trim() + ' \u00b7 ' + mod.querySelector('.modulo-head h3').textContent,
-        plantillas: plantillas
-      };
+      return plantillas.length ? plantillas : null;
     }).filter(Boolean);
 
     var renderServicio = function (i) {
       var tpl = coleccionModal.items[i];
       return {
+        etiqueta: tpl.getAttribute('data-etiqueta'),
         titulo: tpl.getAttribute('data-titulo'),
-        contenido: tpl.content.cloneNode(true),
-        modulo: MODULOS_SERV[coleccionModal.iModulo].nombre
+        contenido: tpl.content.cloneNode(true)
       };
-    };
-
-    // Cambio de módulo circular (01 -> 02 -> 03 -> 01): muestra el primer
-    // servicio del módulo destino y la navegación lateral pasa a recorrer
-    // sus servicios. No toca el scroll de fondo ni el bloqueo existente.
-    var cambiarModulo = function (delta) {
-      if (!coleccionModal || coleccionModal.iModulo === undefined) { return; }
-      var m = (coleccionModal.iModulo + delta + MODULOS_SERV.length) % MODULOS_SERV.length;
-      coleccionModal.iModulo = m;
-      coleccionModal.items = MODULOS_SERV[m].plantillas;
-      coleccionModal.indice = 0;
-      configurarNavegacion();
-      transicionarModal(coleccionModal.render(0), delta);
     };
 
     Array.prototype.slice.call(document.querySelectorAll('.servicio-enlace')).forEach(function (boton) {
       boton.addEventListener('click', function () {
         var tpl = boton.closest('li').querySelector('template');
         for (var m = 0; m < MODULOS_SERV.length; m++) {
-          var si = MODULOS_SERV[m].plantillas.indexOf(tpl);
+          var si = MODULOS_SERV[m].indexOf(tpl);
           if (si !== -1) {
             abrirColeccion({
-              iModulo: m,
-              items: MODULOS_SERV[m].plantillas,
+              items: MODULOS_SERV[m],
               indice: si,
               amplio: false,
               modo: 'texto',
@@ -868,9 +867,10 @@
       if ('fetchPriority' in im) { im.fetchPriority = 'low'; }
       im.src = 'assets/img/' + nombre;
     };
+    // Vecinas sin vuelta circular: en los bordes solo existe una.
     var precargarVecinas = function (i) {
-      precargarFoto(FOTOS[(i + 1) % FOTOS.length]);
-      precargarFoto(FOTOS[(i - 1 + FOTOS.length) % FOTOS.length]);
+      if (i + 1 < FOTOS.length) { precargarFoto(FOTOS[i + 1]); }
+      if (i > 0) { precargarFoto(FOTOS[i - 1]); }
     };
     var precargarResto = function () {
       var lanzar = function () { FOTOS.forEach(precargarFoto); };
@@ -925,7 +925,7 @@
       var pie = document.createElement('figcaption');
       pie.textContent = PIES_FOTOS[nombre] || '';
       figura.appendChild(pie);
-      return { etiqueta: 'Caso real \u00b7 foto del anuncio', titulo: 'El departamento', contenido: figura };
+      return { etiqueta: 'Caso real \u00b7 foto del anuncio', titulo: 'Nuestro departamento', contenido: figura };
     };
 
     // Rese\u00f1as: las 12 en orden estable (orden del documento, plano)
@@ -992,8 +992,6 @@
     modalCerrar.addEventListener('click', cerrarModal);
     modalNavPrev.addEventListener('click', function () { navegarModal(-1); });
     modalNavNext.addEventListener('click', function () { navegarModal(1); });
-    modalModPrev.addEventListener('click', function () { cambiarModulo(-1); });
-    modalModNext.addEventListener('click', function () { cambiarModulo(1); });
 
     modal.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { e.preventDefault(); cerrarModal(); return; }
@@ -1001,7 +999,7 @@
       if (e.key === 'ArrowRight') { e.preventDefault(); navegarModal(1); return; }
       if (e.key !== 'Tab') { return; }
       // Trampa de foco: Tab circula solo entre los focalizables del panel
-      // (incluye los chevrons y los botones de m\u00f3dulo visibles)
+      // (incluye los chevrons visibles: el del borde alcanzado no cuenta)
       var focalizables = Array.prototype.filter.call(
         modalPanel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
         function (el) { return !el.hidden && el.offsetParent !== null; }
@@ -1069,10 +1067,12 @@
   // fallback), si el inicio de la sección más cercana —o el centro del
   // módulo más cercano de Servicios— queda a menos del umbral, desliza
   // hacia él en ~500ms con easeOutCubic. Nunca durante el gesto, nunca
-  // en cascada (en el objetivo no hace nada), nunca con el footer a la
-  // vista (el fondo de la página siempre se puede mirar), y sin snap
-  // con prefers-reduced-motion. Los scroll-margin del CSS siguen siendo
-  // la fuente de verdad del encuadre, igual que para las anclas.
+  // en cascada (en el objetivo no hace nada), nunca más allá del reposo
+  // de Contacto (el fondo de la página siempre se puede mirar), y sin
+  // snap con prefers-reduced-motion. El encuadre del snap se decide POR
+  // SECCIÓN en candidatoSnap (data-snap-aire / data-snap-cubrir, con
+  // scroll-margin-top como regla por defecto); las anclas del navbar
+  // conservan su propia función de encuadre, que no se toca desde aquí.
   var snapDesktop = window.matchMedia('(min-width: 64em)');
   if (!sinMovimiento) {
     var UMBRAL_SNAP = 160;   // px de cercanía que activan el imán
@@ -1101,6 +1101,30 @@
       return top;
     };
 
+    // Encuadre del snap POR SECCIÓN, declarado en el HTML y sin tocar el
+    // encuadre de las anclas:
+    // · data-snap-aire="N": en reposo quedan N px de aire entre el borde
+    //   inferior del navbar y el inicio de la sección (negativo: el
+    //   inicio se esconde esos px bajo el navbar).
+    // · data-snap-cubrir: la sección cubre por sí sola el área visible
+    //   bajo el navbar — arriba al ras; si es más alta que el área, el
+    //   excedente se reparte entre arriba y abajo; si es más baja, el
+    //   encuadre al ras minimiza la franja inferior inevitable.
+    // · sin atributo: rige su scroll-margin-top, como siempre.
+    // Cada sección declara su ajuste por separado: son independientes.
+    var candidatoSnap = function (seccion) {
+      var headerAlto = header ? header.offsetHeight : 0;
+      var top = topDocumento(seccion);
+      if (seccion.hasAttribute('data-snap-cubrir')) {
+        var sobra = seccion.offsetHeight - (window.innerHeight - headerAlto);
+        return top - headerAlto + Math.max(0, sobra / 2);
+      }
+      if (seccion.hasAttribute('data-snap-aire')) {
+        return top - headerAlto - (parseFloat(seccion.getAttribute('data-snap-aire')) || 0);
+      }
+      return top - (parseFloat(getComputedStyle(seccion).scrollMarginTop) || 0);
+    };
+
     var objetivoSnap = function () {
       var y = window.scrollY;
       var maxY = document.documentElement.scrollHeight - window.innerHeight;
@@ -1112,8 +1136,7 @@
         }
       };
       document.querySelectorAll('section').forEach(function (seccion) {
-        var margen = parseFloat(getComputedStyle(seccion).scrollMarginTop) || 0;
-        considerar(topDocumento(seccion) - margen);
+        considerar(candidatoSnap(seccion));
       });
       document.querySelectorAll('.modulo').forEach(function (modulo) {
         considerar(topDocumento(modulo) + modulo.offsetHeight / 2 - window.innerHeight / 2);
@@ -1138,11 +1161,39 @@
       animacionSnap = requestAnimationFrame(paso);
     };
 
+    var seccionContacto = document.getElementById('contacto');
+    var footerEl = document.querySelector('.site-footer');
+
+    // Reserva de recorrido final: el reposo de Contacto tiene que existir
+    // como posición real de scroll. Si el tramo bajo su inicio (sección +
+    // footer) no alcanza para encuadrarla, el footer extiende su padding
+    // inferior en el déficit exacto: el final de la página sigue siendo
+    // superficie del footer, nunca un vacío blanco. Cuando el tramo
+    // alcanza por sí solo, no se agrega nada.
+    var ajustarRecorridoFinal = function () {
+      if (!seccionContacto || !footerEl) { return; }
+      footerEl.style.paddingBottom = '';
+      if (!snapDesktop.matches) { return; }
+      var maxY = document.documentElement.scrollHeight - window.innerHeight;
+      var deficit = Math.ceil(candidatoSnap(seccionContacto) - maxY);
+      if (deficit > 0) { footerEl.style.paddingBottom = deficit + 'px'; }
+    };
+
+    ajustarRecorridoFinal();
+    window.addEventListener('load', ajustarRecorridoFinal);
+    var esperaRecorrido;
+    window.addEventListener('resize', function () {
+      clearTimeout(esperaRecorrido);
+      esperaRecorrido = setTimeout(ajustarRecorridoFinal, 150);
+    });
+
     var alSoltarScroll = function () {
       if (Date.now() < supresionSnap) { return; }
       if (!snapDesktop.matches || animacionSnap !== null) { return; }
-      var footer = document.querySelector('.site-footer');
-      if (footer && footer.getBoundingClientRect().top < window.innerHeight) { return; }
+      // La última parada del recorrido es el reposo de Contacto: más
+      // abajo (zona del footer) el imán no interviene, así el fondo de
+      // la página se puede mirar sin tirones.
+      if (seccionContacto && window.scrollY > candidatoSnap(seccionContacto) + 2) { return; }
       var destino = objetivoSnap();
       if (destino === null) { return; }
       var distancia = Math.abs(destino - window.scrollY);

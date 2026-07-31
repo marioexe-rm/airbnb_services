@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260731c">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260731d">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -876,7 +876,12 @@
     </section>
 
     <!-- ============ 04 · CÓMO FUNCIONA ============ -->
-    <section class="como" id="como-funciona">
+    <!-- data-snap-aire: aire (px) entre el navbar y el inicio de la
+         sección cuando el snap la deja en reposo; -2 esconde un par de
+         píxeles del propio fondo blanco bajo el navbar para que nunca
+         asome la franja verde de la sección anterior. Solo afecta al
+         snap: las anclas siguen usando scroll-margin-top. -->
+    <section class="como" id="como-funciona" data-snap-aire="-2">
       <div class="container">
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">04</span>Cómo funciona</p>
@@ -908,7 +913,11 @@
     </section>
 
     <!-- ============ 05 · EQUIPO ============ -->
-    <section class="equipo" id="equipo">
+    <!-- data-snap-cubrir: en reposo la sección cubre por sí sola el área
+         visible bajo el navbar (arriba al ras; si es más alta que el
+         área, el excedente se reparte entre arriba y abajo). Solo afecta
+         al snap: las anclas siguen usando scroll-margin-top. -->
+    <section class="equipo" id="equipo" data-snap-cubrir>
       <div class="container">
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">05</span>Equipo</p>
@@ -935,7 +944,10 @@
     </section>
 
     <!-- ============ 06 · FAQ ============ -->
-    <section class="faq" id="faq">
+    <!-- Mismo criterio que Cómo funciona, calibrado por separado: -2px
+         de aire para que bajo el navbar quede el blanco propio y no la
+         franja verde de Equipo. -->
+    <section class="faq" id="faq" data-snap-aire="-2">
       <div class="container faq-wrap">
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">06</span>Preguntas frecuentes</p>
@@ -967,42 +979,42 @@
     </section>
 
     <!-- ============ 07 · CONTACTO ============ -->
-    <section class="contacto" id="contacto">
+    <!-- Un único llamado a WhatsApp dentro de la sección (el CTA de la
+         izquierda); correo, teléfono e Instagram se presentan como
+         canales equivalentes entre sí, sin llamado propio.
+         data-snap-aire="16": reposo del snap con el aire que ya daba la
+         regla base de scroll-margin (la sección no tiene padding
+         superior y el panel agradece la separación del navbar). -->
+    <section class="contacto" id="contacto" data-snap-aire="16">
       <div class="container contacto-grid panel-suave">
         <div class="contacto-copy reveal">
           <p class="eyebrow">Contacto</p>
           <h2>Conversemos sobre tu propiedad</h2>
-          <p class="sec-lead">Escribirnos no te compromete a nada.</p>
+          <p class="sec-lead">La primera conversación no compromete a nada.</p>
           <!-- TODO: reemplazar número de WhatsApp -->
           <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20y%20me%20gustar%C3%ADa%20conversar%20sobre%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Escribir por WhatsApp</a>
+          <p class="contacto-nota">Respondemos todos los días, de 8:00 a 24:00.</p>
         </div>
         <ul class="contacto-list reveal">
           <li>
-            <!-- TODO: reemplazar número de WhatsApp -->
-            <a href="https://wa.me/56955551234" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.4 12.7L3.5 20.5l4.4-1.1A8.5 8.5 0 1 0 12 3.5Z"/><path d="M9.5 8.8v1a5.2 5.2 0 0 0 4.7 4.7h1"/></svg>
-              <span><strong>WhatsApp</strong>+56 9 5555 1234</span>
+            <!-- TODO: reemplazar correo -->
+            <a href="mailto:hola@reditu.cl">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4.5 7 7.5 6 7.5-6"/></svg>
+              <span><strong>Correo</strong><span class="canal-valor">hola@reditu.cl</span></span>
             </a>
           </li>
           <li>
             <!-- TODO: reemplazar teléfono -->
             <a href="tel:+56955551234">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3c0 1-1 2-2.2 1.9C10.5 19.6 4.4 13.5 3.6 5.7 3.5 4.5 4.5 3.5 5.5 3.5Z"/></svg>
-              <span><strong>Llámanos</strong>+56 9 5555 1234</span>
-            </a>
-          </li>
-          <li>
-            <!-- TODO: reemplazar correo -->
-            <a href="mailto:hola@reditu.cl">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4.5 7 7.5 6 7.5-6"/></svg>
-              <span><strong>Correo</strong>hola@reditu.cl</span>
+              <span><strong>Teléfono</strong><span class="canal-valor">+56 9 5555 1234</span></span>
             </a>
           </li>
           <li>
             <!-- TODO: reemplazar Instagram -->
             <a href="https://www.instagram.com/reditu.stgo" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.7" cy="7.3" r="1" class="dot"/></svg>
-              <span><strong>Instagram</strong>@reditu.stgo</span>
+              <span><strong>Instagram</strong><span class="canal-valor">@reditu.stgo</span></span>
             </a>
           </li>
         </ul>
@@ -1059,15 +1071,11 @@
       </button>
       <!-- Chevrons laterales: navegan la colección del modal (gráficos,
            fotos, reseñas o servicios del módulo); JS los muestra solo
-           cuando hay más de un elemento. -->
+           cuando hay más de un elemento y retira el del borde alcanzado:
+           la navegación no es circular. -->
       <div class="modal-caja">
-        <!-- Encabezado del modal de servicios: módulo actual (eyebrow) y
-             navegación de módulos, distinta de los chevrons laterales. -->
-        <div class="modal-modulos" hidden>
-          <button class="modal-mod-btn modal-mod-prev" type="button" aria-label="Módulo anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg></button>
-          <p class="modal-modulo eyebrow"></p>
-          <button class="modal-mod-btn modal-mod-next" type="button" aria-label="Módulo siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button>
-        </div>
+        <!-- La etiqueta contextualiza la colección: módulo del servicio
+             («Módulo 02 · Operación digital») o serie del caso real. -->
         <p class="modal-etiqueta"></p>
         <h3 class="modal-titulo" id="modal-titulo"></h3>
         <div class="modal-cuerpo"></div>
@@ -1082,6 +1090,6 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260731c"></script>
+  <script src="assets/js/main.js?v=20260731d"></script>
 </body>
 </html>

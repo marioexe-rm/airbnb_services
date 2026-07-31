@@ -1338,11 +1338,14 @@ body.modal-abierta { overflow: hidden; }
   stroke-linecap: round;
 }
 
-/* Etiqueta del módulo en oro profundo (13px: AA 4,6:1), título en tinta */
+/* Etiqueta de contexto en oro profundo (13px: AA 4,6:1), título en
+   tinta. El mismo resguardo derecho del título: ninguna etiqueta larga
+   se desliza bajo el botón de cierre. */
 .modal-etiqueta {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--gold-strong);
+  padding-right: var(--s-4);
 }
 
 .modal-titulo {
@@ -1578,6 +1581,12 @@ body.modal-abierta { overflow: hidden; }
   transition: opacity var(--transicion);
 }
 
+/* El display propio no debe pisar el atributo hidden: en el borde de la
+   colección el chevron correspondiente se retira por completo. Como vive
+   en el canal lateral reservado (absoluto), su salida no desplaza ni
+   redimensiona el contenido del panel. */
+.modal-nav[hidden] { display: none; }
+
 /* Canal lateral: con navegación activa el panel abre un carril de 64px
    por lado (el chevron y su área de 44px viven ahí, sin rozar el
    contenido) y compensa su max-width para no encoger el ancho útil. */
@@ -1626,65 +1635,6 @@ body.modal-abierta { overflow: hidden; }
   letter-spacing: 0.04em;
   color: var(--texto-2);
   font-variant-numeric: tabular-nums;
-}
-
-/* Encabezado del modal de servicios: módulo actual como eyebrow del
-   sistema, flanqueado por botones de módulo — con contenedor pill, a
-   propósito distintos de los chevrons laterales sin fondo. */
-.modal-modulos[hidden] { display: none; } /* el display propio no debe pisar el atributo hidden */
-
-/* Grilla con celdas propias: la etiqueta puede bajar a dos líneas sin
-   empujar los botones, y el padding derecho reserva siempre un paso de
-   separación respecto del botón de cierre (2.25rem + 8px). */
-.modal-modulos {
-  display: grid;
-  /* Los tres elementos forman un grupo: la etiqueta toma su contenido
-     (max-content, con mínimo 0 para poder envolver) y el botón
-     siguiente queda pegado al grupo, no al extremo del panel. */
-  grid-template-columns: auto minmax(0, max-content) auto;
-  justify-content: start;
-  align-items: center;
-  gap: var(--s-1);
-  margin-bottom: var(--s-2);
-  padding-right: calc(2.25rem + var(--s-1));
-}
-
-.modal-modulo { justify-self: start; }
-
-@media (max-width: 44.9375em) {
-  .modal-modulo { font-size: 0.75rem; }
-}
-
-.modal-mod-btn {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  background: var(--acento-suave);
-  border: 0;
-  border-radius: var(--radio-pill);
-  padding: 0;
-  cursor: pointer;
-  transition: background-color var(--transicion);
-}
-
-.modal-mod-btn:hover,
-.modal-mod-btn:focus-visible {
-  background: color-mix(in srgb, var(--acento-suave) 82%, var(--acento));
-}
-
-/* Área de toque de 44px sin crecer el círculo visible */
-.modal-mod-btn::after { content: ""; position: absolute; inset: -8px; }
-
-.modal-mod-btn svg {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: var(--acento);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2018,23 +1968,40 @@ body.modal-abierta { overflow: hidden; }
 
 .faq-list details { border-top: 1px solid var(--linea); }
 
+/* La pregunta se ensancha 1rem por lado con margen negativo: la píldora
+   del hover sobresale del bloque de texto sin mover la alineación de la
+   pregunta ni de su respuesta con el resto de la sección. */
 .faq-list summary {
   list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-3);
-  padding: var(--s-3) 0;
+  padding: var(--s-3) 1rem;
+  margin-inline: -1rem;
+  border-radius: var(--radio-m);
   font-family: var(--sans);
   font-size: 1.0625rem;
   font-weight: 600;
   cursor: pointer;
-  transition: color var(--transicion);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: background-color var(--transicion), text-decoration-color var(--transicion);
 }
 
 .faq-list summary::-webkit-details-marker { display: none; }
 
-.faq-list summary:hover { color: var(--texto-2); }
+/* Hover y focus perceptibles por doble señal sin depender solo del
+   color del texto: fondo en salvia (salto real de la paleta sobre el
+   blanco) + subrayado de la pregunta en el verde de identidad. La tinta
+   del texto no cambia: conserva su contraste máximo. Quien navega con
+   teclado ve exactamente lo mismo, más el contorno de foco global. */
+.faq-list summary:hover,
+.faq-list summary:focus-visible {
+  background: var(--acento-suave);
+  text-decoration-color: var(--acento);
+}
 
 .faq-list summary::after {
   content: "";
@@ -2106,16 +2073,29 @@ body.modal-abierta { overflow: hidden; }
 
 .contacto .btn-primary { margin-top: var(--s-4); }
 
-.contacto-list li { border-top: 1px solid var(--linea); }
-.contacto-list li:last-child { border-bottom: 1px solid var(--linea); }
+/* Línea que baja la fricción bajo el CTA: informa, no urge. */
+.contacto-nota {
+  margin-top: var(--s-2);
+  font-size: 0.875rem;
+  color: var(--texto-2);
+}
 
+/* Canales equivalentes (correo, teléfono, Instagram): tres filas
+   gemelas —ícono, etiqueta y valor— separadas por aire, sin llamado
+   propio; el único CTA de la sección es el de WhatsApp. */
+.contacto-list { display: grid; gap: var(--s-1); }
+
+/* Cada fila es una píldora que se ensancha con margen negativo: el
+   fondo del hover sobresale sin mover la alineación del contenido. */
 .contacto-list a {
   display: flex;
   align-items: center;
   gap: var(--s-2);
-  padding: 1rem 0;
+  padding: 1rem 0.875rem;
+  margin-inline: -0.875rem;
+  border-radius: var(--radio-m);
   text-decoration: none;
-  transition: color var(--transicion);
+  transition: background-color var(--transicion), color var(--transicion);
 }
 
 /* Iconos de contacto: caja uniforme de 20px, trazo lineal fino 1.5,
@@ -2129,6 +2109,7 @@ body.modal-abierta { overflow: hidden; }
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform var(--transicion);
 }
 
 .contacto-list svg .dot { fill: currentColor; stroke: none; }
@@ -2142,7 +2123,37 @@ body.modal-abierta { overflow: hidden; }
   color: var(--texto-2);
 }
 
-.contacto-list a:hover { color: var(--acento); }
+/* El valor reserva su subrayado (transparente en reposo): al hover se
+   enciende sin mover nada. */
+.contacto-list .canal-valor {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transicion);
+}
+
+/* Hover y focus perceptibles por triple señal: fondo en salvia (salto
+   real de la paleta sobre el gris del panel), valor e ícono al verde de
+   identidad y subrayado del valor; el ícono además avanza 2px (única
+   señal de movimiento, apagada con prefers-reduced-motion). El teclado
+   ve lo mismo, más el contorno de foco global. */
+.contacto-list a:hover,
+.contacto-list a:focus-visible {
+  background: var(--acento-suave);
+  color: var(--acento);
+}
+
+.contacto-list a:hover .canal-valor,
+.contacto-list a:focus-visible .canal-valor { text-decoration-color: currentColor; }
+
+.contacto-list a:hover svg,
+.contacto-list a:focus-visible svg { transform: translateX(2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .contacto-list svg { transition: none; }
+  .contacto-list a:hover svg,
+  .contacto-list a:focus-visible svg { transform: none; }
+}
 
 @media (min-width: 60em) {
   .contacto-grid { grid-template-columns: 1.1fr 1fr; gap: var(--s-7); align-items: center; }
