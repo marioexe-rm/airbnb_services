@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260731e">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260731f">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -267,11 +267,13 @@
     </section>
 
     <!-- ============ 01 · CASO REAL ============ -->
-    <!-- data-snap-aire="-72": el reposo del snap esconde 72 de los 120px
-         del padding superior, dejando 48px de aire entre el navbar y el
-         eyebrow (el ancla del navbar conserva su propio encuadre por
-         scroll-margin, uniforme con las demás secciones ancladas). -->
-    <section class="caso" id="caso" data-snap-aire="-72">
+    <!-- data-snap-centrar: el reposo del snap deja el contenido de la
+         sección con el mismo aire arriba y abajo del área visible bajo
+         el navbar, a cualquier alto de ventana (un aire fijo no puede:
+         el ideal medido va de -116px a +24px entre 800 y 1080 de alto).
+         El ancla del navbar conserva su propio encuadre por
+         scroll-margin, uniforme con las demás secciones ancladas. -->
+    <section class="caso" id="caso" data-snap-centrar>
       <div class="container">
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">01</span>Caso real</p>
@@ -1093,6 +1095,6 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260731e"></script>
+  <script src="assets/js/main.js?v=20260731f"></script>
 </body>
 </html>

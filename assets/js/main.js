@@ -1119,6 +1119,10 @@
     //   bajo el navbar — arriba al ras; si es más alta que el área, el
     //   excedente se reparte entre arriba y abajo; si es más baja, el
     //   encuadre al ras minimiza la franja inferior inevitable.
+    // · data-snap-centrar: el CONTENIDO de la sección (su .container)
+    //   queda con el mismo aire arriba y abajo dentro del área visible
+    //   bajo el navbar, a cualquier alto de ventana; si no cupiera, el
+    //   recorte también se reparte en partes iguales.
     // · sin atributo: rige su scroll-margin-top, como siempre.
     // Cada sección declara su ajuste por separado: son independientes.
     var candidatoSnap = function (seccion) {
@@ -1127,6 +1131,11 @@
       if (seccion.hasAttribute('data-snap-cubrir')) {
         var sobra = seccion.offsetHeight - (window.innerHeight - headerAlto);
         return top - headerAlto + Math.max(0, sobra / 2);
+      }
+      if (seccion.hasAttribute('data-snap-centrar')) {
+        var contenido = seccion.querySelector('.container') || seccion;
+        return topDocumento(contenido) - headerAlto -
+          (window.innerHeight - headerAlto - contenido.offsetHeight) / 2;
       }
       if (seccion.hasAttribute('data-snap-aire')) {
         return top - headerAlto - (parseFloat(seccion.getAttribute('data-snap-aire')) || 0);

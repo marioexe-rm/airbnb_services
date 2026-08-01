@@ -75,6 +75,12 @@
 
   --transicion: 160ms ease;
   --alto-header: 4.5rem;
+
+  /* Subrayado de enlace homologado (tarjetas de servicios, medios de
+     contacto y footer): de los grosores previos —auto ≈1px en servicios
+     y footer, 1px en contacto— ninguno alcanzaba el mínimo exigible de
+     2px, que pasa a ser el valor único. */
+  --grosor-subrayado: 2px;
 }
 
 /* ---------- Base ---------- */
@@ -317,6 +323,24 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
 /* El subrayado hover retoma el verde de identidad (ya no es oro de interacción) */
 .link-arrow:hover { text-decoration-color: var(--acento); }
 .link-arrow:hover::after { transform: translateX(4px); }
+
+/* Subrayado de enlace unificado — una sola definición gobierna el
+   «Más info» de las tarjetas de servicios, los medios de contacto y
+   los enlaces del footer: línea reservada transparente que se enciende
+   al hover/focus con la transición del sistema (el fade de color
+   original de «Más info»), grosor único en --grosor-subrayado y offset
+   de 3px. La transición declara también color: el footer lo anima en
+   el mismo gesto; en los demás no interviene. */
+.servicio-mas,
+.contacto-list .canal-valor,
+.footer-nav a,
+.footer-contacto a {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: var(--grosor-subrayado);
+  text-underline-offset: 3px;
+  transition: color var(--transicion), text-decoration-color var(--transicion);
+}
 
 /* Aparición sutil al hacer scroll (solo con JS activo) */
 
@@ -1204,15 +1228,13 @@ li.servicio { position: relative; }
 /* Dentro del pie, el precio ya no ancla él mismo el fondo de la card */
 .servicio-pie .item-precio { margin-top: 0; align-self: auto; }
 
+/* Su subrayado (reserva, grosor y fade) vive en la regla compartida
+   del sistema, junto a contacto y footer. */
 .servicio-mas {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--acento);
   white-space: nowrap;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: text-decoration-color var(--transicion);
 }
 
 /* Flecha horizontal como inline-block: la decoración del padre no la
@@ -2016,13 +2038,19 @@ body.modal-abierta { overflow: hidden; }
 .faq-list summary:hover .faq-pregunta,
 .faq-list summary:focus-visible .faq-pregunta { transform: translateX(3px); }
 
+/* El glifo del token pasa a máscara y su tinta a currentColor: en
+   hover/focus el símbolo acompaña al verde del summary con la MISMA
+   transición de color, simultáneo con la barra y el avance de la
+   pregunta (todas las señales comparten --transicion). */
 .faq-list summary::after {
   content: "";
   width: 1.25rem;
   height: 1.25rem;
   flex-shrink: 0;
-  background: var(--icono-chevron) no-repeat center / contain;
-  transition: transform var(--transicion);
+  background: currentColor;
+  -webkit-mask: var(--icono-chevron) no-repeat center / contain;
+  mask: var(--icono-chevron) no-repeat center / contain;
+  transition: transform var(--transicion), background-color var(--transicion);
 }
 
 .faq-list details[open] summary::after { transform: rotate(180deg); }
@@ -2175,20 +2203,11 @@ body.modal-abierta { overflow: hidden; }
   color: var(--texto-2);
 }
 
-/* El valor dibuja su subrayado con un gradiente de fondo de 1px: nace
-   con ancho 0 y crece desde la izquierda al hover. */
-.contacto-list .canal-valor {
-  background-image: linear-gradient(var(--acento), var(--acento));
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0 1px;
-  transition: background-size var(--transicion);
-}
-
 /* Hover y focus por señales simultáneas sin fondo de fila: disco
    salvia que aparece tras el ícono, trazo del ícono al verde de
-   identidad, subrayado fino del valor creciendo desde la izquierda y
-   la fila avanzando 3px. Con teclado, lo mismo más el contorno global. */
+   identidad, subrayado del valor encendiéndose en verde (el mismo fade
+   del «Más info» de servicios, definido en la regla compartida) y la
+   fila avanzando 3px. Con teclado, lo mismo más el contorno global. */
 .contacto-list a:hover,
 .contacto-list a:focus-visible { transform: translateX(3px); }
 
@@ -2202,15 +2221,16 @@ body.modal-abierta { overflow: hidden; }
 }
 
 .contacto-list a:hover .canal-valor,
-.contacto-list a:focus-visible .canal-valor { background-size: 100% 1px; }
+.contacto-list a:focus-visible .canal-valor { text-decoration-color: var(--acento); }
 
-/* Sin movimiento: la fila no avanza y el disco y el subrayado aparecen
-   completos, sin crecer — las señales quedan, la animación no. */
+/* Sin movimiento: la fila no avanza y el disco aparece sin escalar —
+   las señales quedan, la animación no. El fade del subrayado es un
+   cambio de color, no de posición: se conserva, igual que en «Más
+   info» de servicios. */
 @media (prefers-reduced-motion: reduce) {
   .contacto-list a,
   .canal-ico,
-  .canal-ico::before,
-  .contacto-list .canal-valor { transition: none; }
+  .canal-ico::before { transition: none; }
   .contacto-list a:hover,
   .contacto-list a:focus-visible { transform: none; }
   .canal-ico::before { transform: scale(1); }
@@ -2256,17 +2276,16 @@ body.modal-abierta { overflow: hidden; }
 
 .footer-nav ul, .footer-contacto ul { display: grid; gap: 0.5rem; }
 
+/* Reserva de subrayado, grosor y transición: en la regla compartida
+   del sistema (con «Más info» de servicios y los medios de contacto). */
 .footer-nav a, .footer-contacto a {
   font-size: 0.9375rem;
   color: var(--panel-texto-2);
-  text-decoration: none;
-  transition: color var(--transicion);
 }
 
 .footer-nav a:hover, .footer-contacto a:hover {
   color: var(--blanco-calido);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
 }
 
 .site-footer :focus-visible { outline-color: var(--blanco-calido); }
