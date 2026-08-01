@@ -533,6 +533,7 @@
     var modalCuerpo = modal.querySelector('.modal-cuerpo');
     var modalNavPrev = modal.querySelector('.modal-nav-prev');
     var modalNavNext = modal.querySelector('.modal-nav-next');
+    var modalPie = modal.querySelector('.modal-pie');
     var modalContador = modal.querySelector('.modal-contador');
     var origenModal = null;
     var cierreProgramado = null;
@@ -577,15 +578,15 @@
 
     // REGLA GENERAL de conjunto unitario: cuando el modal no tiene una
     // colección de 2+ elementos, los chevrons se RETIRAN del DOM (no
-    // solo se ocultan), la navegación por flechas queda inerte (los
-    // guards de navegarModal) y no hay contador. Un único punto decide
-    // para todos los modales, sin casos especiales.
+    // solo se ocultan), el pie completo se oculta, la navegación por
+    // flechas queda inerte (los guards de navegarModal) y no hay
+    // contador. Un único punto decide para todos los modales.
     var configurarNavegacion = function () {
       var activa = !!(coleccionModal && coleccionModal.items.length > 1);
       if (activa) {
         if (!modalNavPrev.parentNode) {
-          modalPanel.appendChild(modalNavPrev);
-          modalPanel.appendChild(modalNavNext);
+          modalPie.insertBefore(modalNavPrev, modalContador);
+          modalPie.appendChild(modalNavNext);
         }
         modalNavPrev.setAttribute('aria-label', coleccionModal.navAria[0]);
         modalNavNext.setAttribute('aria-label', coleccionModal.navAria[1]);
@@ -594,6 +595,7 @@
         modalNavPrev.parentNode.removeChild(modalNavPrev);
         modalNavNext.parentNode.removeChild(modalNavNext);
       }
+      modalPie.hidden = !activa;
       modalPanel.classList.toggle('con-nav', activa);
       actualizarContador();
     };

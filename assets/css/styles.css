@@ -339,6 +339,10 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
   text-decoration-color: transparent;
   text-decoration-thickness: var(--grosor-subrayado);
   text-underline-offset: 3px;
+  /* Línea continua: sin skip-ink, el subrayado no se corta en la
+     arroba ni en los trazos descendentes (p, g, j) — con el offset de
+     3px el salto automático partía la línea en @reditu.stgo. */
+  text-decoration-skip-ink: none;
   transition: color var(--transicion), text-decoration-color var(--transicion);
 }
 
@@ -1619,17 +1623,41 @@ body.modal-abierta { overflow: hidden; }
 .modal-nav-prev { left: 10px; }
 .modal-nav-next { right: 10px; }
 
-/* En móvil no hay ancho que repartir: los chevrons bajan a una fila
-   propia bajo el contenido (anterior izquierda, siguiente derecha),
-   reservada con padding para que nunca pisen texto, foto ni pie. */
+/* El pie agrupa chevrons y contador. En escritorio se disuelve
+   (display: contents): el contador fluye bajo la caja y los chevrons
+   quedan absolutos en el canal lateral del panel. */
+.modal-pie { display: contents; }
+
+/* En móvil no hay ancho que repartir: el pie es una fila REAL en el
+   flujo del panel, bajo el contenido (anterior · contador ·
+   siguiente). Como viaja con el scroll, nunca queda sobre el texto, la
+   imagen ni el pie de foto — el anclaje absoluto anterior se medía
+   contra la primera pantalla del panel (que es un scroller) y en
+   tarjetas largas caía sobre el texto. Columnas fijas de 44px: si un
+   chevron se retira en el borde, su celda queda vacía y el contador no
+   salta; el área de toque de 44×44 se conserva. */
 @media (max-width: 44.9375em) {
-  .modal-panel.con-nav { padding-inline: var(--s-4); padding-bottom: calc(var(--s-4) + 48px); }
+  .modal-panel.con-nav { padding-inline: var(--s-4); }
   .modal-panel.con-nav { width: min(100%, 34rem); }
   .modal-panel.con-nav.amplio { width: min(100%, 46rem); }
-  .modal-nav { top: auto; bottom: var(--s-2); transform: none; }
-  .modal-nav-prev { left: var(--s-4); }
-  .modal-nav-next { right: var(--s-4); }
+
+  .modal-pie {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    margin-top: var(--s-2);
+  }
+
+  .modal-pie .modal-contador { grid-column: 2; margin-top: 0; }
+
+  .modal-nav { position: static; transform: none; }
+  .modal-nav-prev { justify-self: start; }
+  .modal-nav-next { justify-self: end; }
 }
+
+/* Tras ambas variantes: el display propio del pie (contents/grid) no
+   debe pisar el atributo hidden de los modales de elemento único. */
+.modal-pie[hidden] { display: none; }
 
 .modal-nav svg {
   width: 24px;

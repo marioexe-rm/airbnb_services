@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260731f">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260731g">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
@@ -1074,10 +1074,6 @@
       <button class="modal-cerrar" type="button" aria-label="Cerrar detalle">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
-      <!-- Chevrons laterales: navegan la colección del modal (gráficos,
-           fotos, reseñas o servicios del módulo); JS los muestra solo
-           cuando hay más de un elemento y retira el del borde alcanzado:
-           la navegación no es circular. -->
       <div class="modal-caja">
         <!-- La etiqueta contextualiza la colección: módulo del servicio
              («Módulo 02 · Operación digital») o serie del caso real. -->
@@ -1085,16 +1081,25 @@
         <h3 class="modal-titulo" id="modal-titulo"></h3>
         <div class="modal-cuerpo"></div>
       </div>
-      <p class="modal-contador" hidden></p>
-      <button class="modal-nav modal-nav-prev" type="button" aria-label="Anterior" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg>
-      </button>
-      <button class="modal-nav modal-nav-next" type="button" aria-label="Siguiente" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg>
-      </button>
+      <!-- Pie de navegación: chevrons y contador de la colección. JS
+           muestra los chevrons solo con más de un elemento y retira el
+           del borde alcanzado (la navegación no es circular). En
+           escritorio la fila se disuelve (display: contents) y los
+           chevrons viven absolutos en el canal lateral; en móvil es una
+           fila real EN EL FLUJO, bajo el contenido: viaja con el scroll
+           del panel y nunca queda sobre el texto. -->
+      <div class="modal-pie" hidden>
+        <button class="modal-nav modal-nav-prev" type="button" aria-label="Anterior" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg>
+        </button>
+        <p class="modal-contador" hidden></p>
+        <button class="modal-nav modal-nav-next" type="button" aria-label="Siguiente" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260731f"></script>
+  <script src="assets/js/main.js?v=20260731g"></script>
 </body>
 </html>
