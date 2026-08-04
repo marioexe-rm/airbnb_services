@@ -15,20 +15,28 @@
        ============================================================ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FFFFFF">
   <!-- TODO: reemplazar nombre de marca -->
-  <title>Reditu — Optimización de anuncios de Airbnb en todo Chile</title>
-  <meta name="description" content="Trabajamos con anfitriones de todo Chile: textos, fotos, precios al día y comunicación con tus huéspedes para que tu anuncio genere mayor rédito. Nuestro Airbnb llegó a Superanfitrión con más de 20 reseñas de 5 estrellas en 3 meses.">
+  <!-- Título y descripción en el vocabulario con que los propietarios
+       chilenos buscan este servicio («administración + Airbnb +
+       Santiago», hilos reales de anfitriones), con el matiz honesto de
+       que la administración es digital. «Optimización de anuncios» solo
+       aparecía en contenido tipo guía, no en búsquedas de contratación. -->
+  <title>Administración digital de tu Airbnb en Santiago y todo Chile — Reditu</title>
+  <meta name="description" content="Publicamos, optimizamos y administramos digitalmente tu anuncio de Airbnb. Nuestro Airbnb llegó a Superanfitrión en sus primeros 3 meses.">
   <link rel="canonical" href="https://marioexe-rm.github.io/airbnb_services/">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
   <meta property="og:site_name" content="Reditu">
-  <meta property="og:title" content="Reditu — Más rédito de tu Airbnb, en todo Chile">
-  <meta property="og:description" content="Puesta a punto del anuncio, comunicación con huéspedes y optimización continua. Superanfitrión y más de 20 reseñas 5★ en 3 meses: ese sistema, aplicado a tu propiedad.">
+  <meta property="og:title" content="Reditu — Más rédito de tu Airbnb, en Santiago y todo Chile">
+  <meta property="og:description" content="Puesta a punto del anuncio, operación digital de reservas y huéspedes, y optimización continua. Superanfitrión y más de 20 reseñas 5★ en 3 meses: ese sistema, aplicado a tu propiedad.">
   <meta property="og:url" content="https://marioexe-rm.github.io/airbnb_services/">
-  <meta property="og:image" content="https://marioexe-rm.github.io/airbnb_services/assets/img/og-cover.jpg">
+  <!-- El ?v= renueva la caché de los scrapers sociales al cambiar la imagen -->
+  <meta property="og:image" content="https://marioexe-rm.github.io/airbnb_services/assets/img/og-cover.jpg?v=20260801">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Reditu, administración digital de Airbnb en Santiago y todo Chile. Tu propiedad, optimizada para más rédito: calificación 5,0, más de 20 reseñas y Superanfitrión en menos de 3 meses.">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Favicon del logo nuevo: el SVG y los PNG chicos usan la variante
@@ -39,23 +47,141 @@
   <link rel="icon" href="assets/img/favicon-16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260731g">
+  <!-- Tipografía autoalojada (antes Google Fonts): quita la cadena
+       render-blocking de dos orígenes externos —el LCP es el texto del
+       hero— sin cambiar de fuente. El woff2 latin se precarga porque
+       pinta todo el texto visible; crossorigin es obligatorio en los
+       preload de fuentes aunque sean del mismo origen. -->
+  <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260801a">
   <script>document.documentElement.classList.add('js');</script>
 
   <!-- TODO: reemplazar teléfono, correo y marca en los datos estructurados -->
+  <!-- Sin precios (son provisionales) y sin aggregateRating: las reseñas
+       visibles son del departamento del caso real, no de Reditu. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
+    "@id": "https://marioexe-rm.github.io/airbnb_services/#reditu",
     "name": "Reditu",
-    "description": "Optimización digital de anuncios de Airbnb en todo Chile: puesta a punto del anuncio, operación digital y optimización continua.",
-    "areaServed": "Chile",
+    "description": "Administración digital de anuncios de Airbnb en Santiago y todo Chile: puesta a punto del anuncio, operación digital de reservas y huéspedes, y optimización continua. Servicios en terreno incluidos en el Gran Santiago.",
     "url": "https://marioexe-rm.github.io/airbnb_services/",
+    "image": "https://marioexe-rm.github.io/airbnb_services/assets/img/og-cover.jpg",
+    "logo": "https://marioexe-rm.github.io/airbnb_services/assets/img/apple-touch-icon.png",
     "telephone": "+56955551234",
-    "email": "hola@reditu.cl"
+    "email": "hola@reditu.cl",
+    "sameAs": ["https://www.instagram.com/reditu.stgo"],
+    "knowsLanguage": ["es-CL", "en"],
+    "areaServed": [
+      { "@type": "Country", "name": "Chile" },
+      { "@type": "Place", "name": "Gran Santiago" }
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Carta de servicios de Reditu",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Puesta a punto del anuncio",
+            "description": "Diagnóstico y estrategia, textos en español e inglés, fotos, precios de partida y configuración completa, para publicar o relanzar un anuncio de Airbnb."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Operación digital",
+            "description": "Consultas y solicitudes de reserva, coordinación de llegada y salida por mensajería, atención al huésped durante la estadía y gestión de reseñas."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Optimización continua",
+            "description": "Revisión periódica de precios y disponibilidad, informes de desempeño, mejoras al anuncio y plan de mejoras priorizado."
+          }
+        }
+      ]
+    }
+  }
+  </script>
+  <!-- FAQPage: espejo exacto de las preguntas visibles de la sección
+       #faq — si esa sección cambia, este bloque debe cambiar con ella
+       (lo vigila tests/seo-check.mjs). -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Tengo que contratar los tres módulos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Cada módulo se contrata por separado y los planes son combinaciones sugeridas. Dicho eso, el Full Estratégico es el que mejor rinde, porque la puesta a punto, la operación digital y la optimización continua se potencian entre sí."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Sirve si mi propiedad aún no está publicada en Airbnb?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí: la puesta a punto está pensada también para partir de cero. Definimos la estrategia, escribimos el anuncio —en español e inglés—, preparamos fotos y precios de partida, y lo dejamos publicado y listo para recibir huéspedes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Mi anuncio recibe visitas pero pocas reservas, ¿pueden ayudar?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí: para eso está el diagnóstico con que parte la puesta a punto. Revisamos tu anuncio, tu competencia y tus precios para encontrar dónde se pierden las reservas —fotos, textos, tarifas o configuración— y lo corregimos por prioridad."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Quiénes hacen la limpieza y el mantenimiento?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tu equipo de confianza. La operación diaria es digital y a distancia: no hacemos limpieza, mantenimiento ni recepción, y tampoco los coordinamos. Cuando un huésped reporta un incidente material, lo registramos y te lo informamos a ti o al contacto local que designes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Trabajan como coanfitrión de Airbnb?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hacemos el trabajo que suele hacer un coanfitrión, en su versión digital: respondemos a tus huéspedes, cuidamos el anuncio y mantenemos precios y calendario al día. La limpieza y todo lo presencial quedan contigo o con tu equipo local."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo se calcula la mensualidad?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Depende del plan. En Operación Digital y Full Estratégico es un porcentaje de los pagos correspondientes al alojamiento, descontada solo la comisión de servicio de Airbnb: tus gastos no modifican esa base y, sin reservas, no hay cobro. Consultoría Estratégica tiene una mensualidad fija."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Dónde trabajan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Con anfitriones de todo Chile: los servicios digitales se prestan a distancia, y la revisión de precios y competencia se hace específicamente para tu comuna y tu barrio, porque el precio correcto en una zona no es el correcto en la de al lado."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Los servicios en terreno llegan a mi ciudad?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Los servicios en terreno de la puesta a punto —fotografía, evaluación del alojamiento y disposición— están incluidos en el Gran Santiago. En el resto de Chile los coordinamos según disponibilidad y pueden tener un costo adicional."
+        }
+      }
+    ]
   }
   </script>
 </head>
@@ -109,7 +235,7 @@
                punto (viajan juntos) y el span visually-hidden deja el texto
                base estable para lectores de pantalla y SEO. -->
           <h1>Tu propiedad,<br>optimizada para<br>más <em class="rotador-palabra"><span class="palabra-fantasma" aria-hidden="true">rendimiento.</span><span class="palabra-activa" aria-hidden="true">rédito.</span><span class="visually-hidden">rédito.</span></em></h1>
-          <p class="lead">Somos anfitriones antes que administradores: nuestro Airbnb llegó a Superanfitrión con más de 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien optimizado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad.</p>
+          <p class="lead">Somos anfitriones antes que administradores: nuestro Airbnb llegó a Superanfitrión con más de 20 reseñas de 5 estrellas en sus primeros 3 meses. Ese mismo sistema —un anuncio bien optimizado, precios al día y respuesta rápida a cada huésped— lo ponemos a trabajar en tu propiedad, esté en Santiago o en cualquier parte de Chile.</p>
           <div class="hero-actions">
             <!-- TODO: reemplazar número de WhatsApp -->
             <a class="btn btn-primary" href="https://wa.me/56955551234?text=Hola%2C%20tengo%20una%20propiedad%20y%20me%20gustar%C3%ADa%20una%20evaluaci%C3%B3n%20inicial%20de%20su%20servicio%20de%20gesti%C3%B3n%20de%20Airbnb." target="_blank" rel="noopener">Conversemos por WhatsApp</a>
@@ -320,7 +446,7 @@
                   <figcaption>Daisy Angelica · junio de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
-                  <img src="assets/img/airbnb-1.jpg" alt="Fotografía del departamento del caso real" width="1200" height="900" loading="lazy">
+                  <img src="assets/img/airbnb-1.jpg" alt="Terraza de noche del departamento del caso real, con sofá y lámpara cálida" width="1200" height="900" loading="lazy">
                 </figure>
               </div>
               <div class="resenas-grupo">
@@ -337,7 +463,7 @@
                   <figcaption>Emilia · junio de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
-                  <img src="assets/img/airbnb-2.jpg" alt="Fotografía del departamento del caso real" width="1200" height="900" loading="lazy">
+                  <img src="assets/img/airbnb-2.jpg" alt="Dormitorio con cama king del departamento del caso real" width="1200" height="900" loading="lazy">
                 </figure>
               </div>
               <div class="resenas-grupo">
@@ -354,7 +480,7 @@
                   <figcaption>Glauber · abril de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
-                  <img src="assets/img/airbnb-3.jpg" alt="Fotografía del departamento del caso real" width="1200" height="900" loading="lazy">
+                  <img src="assets/img/airbnb-3.jpg" alt="Terraza privada del departamento del caso real" width="1200" height="900" loading="lazy">
                 </figure>
               </div>
               <div class="resenas-grupo">
@@ -371,7 +497,7 @@
                   <figcaption>Valentina · abril de 2026</figcaption>
                 </figure>
                 <figure class="review review-foto">
-                  <img src="assets/img/airbnb-4.jpg" alt="Fotografía del departamento del caso real" width="1200" height="900" loading="lazy">
+                  <img src="assets/img/airbnb-4.jpg" alt="Mobiliario de exterior en la terraza del departamento del caso real" width="1200" height="900" loading="lazy">
                 </figure>
               </div>
             </div>
@@ -386,7 +512,7 @@
         <header class="sec-head reveal">
           <p class="eyebrow"><span class="sec-num">02</span>Servicios</p>
           <h2>La carta de servicios</h2>
-          <p class="sec-lead">Tres módulos sobre tu anuncio y la comunicación con tus huéspedes. Sin letra chica: cada tarjeta dice qué hacemos y qué no.</p>
+          <p class="sec-lead">Tres módulos para publicar y optimizar tu anuncio, y administrar la comunicación con tus huéspedes. Sin letra chica: cada tarjeta dice qué hacemos y qué no.</p>
         </header>
 
         <article class="modulo reveal" id="modulo-1">
@@ -965,8 +1091,20 @@
             <p>No. Cada módulo se contrata por separado y los planes son combinaciones sugeridas. Dicho eso, el Full Estratégico es el que mejor rinde, porque la puesta a punto, la operación digital y la optimización continua se potencian entre sí.</p>
           </details>
           <details>
+            <summary><span class="faq-pregunta">¿Sirve si mi propiedad aún no está publicada en Airbnb?</span></summary>
+            <p>Sí: la puesta a punto está pensada también para partir de cero. Definimos la estrategia, escribimos el anuncio —en español e inglés—, preparamos fotos y precios de partida, y lo dejamos publicado y listo para recibir huéspedes.</p>
+          </details>
+          <details>
+            <summary><span class="faq-pregunta">Mi anuncio recibe visitas pero pocas reservas, ¿pueden ayudar?</span></summary>
+            <p>Sí: para eso está el diagnóstico con que parte la puesta a punto. Revisamos tu anuncio, tu competencia y tus precios para encontrar dónde se pierden las reservas —fotos, textos, tarifas o configuración— y lo corregimos por prioridad.</p>
+          </details>
+          <details>
             <summary><span class="faq-pregunta">¿Quiénes hacen la limpieza y el mantenimiento?</span></summary>
             <p>Tu equipo de confianza. La operación diaria es digital y a distancia: no hacemos limpieza, mantenimiento ni recepción, y tampoco los coordinamos. Cuando un huésped reporta un incidente material, lo registramos y te lo informamos a ti o al contacto local que designes.</p>
+          </details>
+          <details>
+            <summary><span class="faq-pregunta">¿Trabajan como coanfitrión de Airbnb?</span></summary>
+            <p>Hacemos el trabajo que suele hacer un coanfitrión, en su versión digital: respondemos a tus huéspedes, cuidamos el anuncio y mantenemos precios y calendario al día. La limpieza y todo lo presencial quedan contigo o con tu equipo local.</p>
           </details>
           <details>
             <summary><span class="faq-pregunta">¿Cómo se calcula la mensualidad?</span></summary>
@@ -1035,7 +1173,7 @@
           <svg class="brand-mark" viewBox="0 0 30 34" aria-hidden="true"><circle class="logo-aureola" cx="15" cy="13" r="11.2"/><rect class="logo-puerta" x="7.5" y="6" width="15" height="26" rx="3.5"/><circle class="logo-sol" cx="15" cy="13" r="4.5"/><path class="logo-r" d="M13.1 28.5v-5h2.8a1.75 2 0 0 1 0 3h-2.7m2 0 1.7 2"/></svg>
           <span>Reditu</span>
         </a>
-        <p>Optimización digital de anuncios de Airbnb, para más rédito. Con anfitriones de todo Chile.</p>
+        <p>Administración y optimización digital de anuncios de Airbnb, para más rédito. Con anfitriones de Santiago y de todo Chile.</p>
       </div>
       <nav class="footer-nav" aria-label="Secciones (pie de página)">
         <p class="footer-title">Secciones</p>
@@ -1045,6 +1183,8 @@
           <li><a href="#planes">Planes</a></li>
           <li><a href="#como-funciona">Cómo funciona</a></li>
           <li><a href="#equipo">Equipo</a></li>
+          <li><a href="#faq">Preguntas frecuentes</a></li>
+          <li><a href="#contacto">Contacto</a></li>
         </ul>
       </nav>
       <div class="footer-contacto">
@@ -1100,6 +1240,9 @@
     </div>
   </div>
 
-  <script src="assets/js/main.js?v=20260731g"></script>
+  <!-- defer saca al script del camino del parser; si el archivo no
+       llega (red, bloqueo), onerror retira la clase js y la página
+       completa queda visible por la vía sin JavaScript. -->
+  <script src="assets/js/main.js?v=20260801a" defer onerror="document.documentElement.classList.remove('js')"></script>
 </body>
 </html>

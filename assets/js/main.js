@@ -472,6 +472,19 @@
         'assets/img/airbnb-5.jpg', 'assets/img/airbnb-6.jpg',
         'assets/img/airbnb-7.jpg', 'assets/img/airbnb-8.jpg'
       ];
+      // Alt por foto, en el mismo orden: el rotador lo actualiza junto
+      // al src para que la imagen no quede descrita por el alt de la
+      // anterior. Los cuatro primeros coinciden con los alt del HTML.
+      var altFotos = [
+        'Terraza de noche del departamento del caso real, con sofá y lámpara cálida',
+        'Dormitorio con cama king del departamento del caso real',
+        'Terraza privada del departamento del caso real',
+        'Mobiliario de exterior en la terraza del departamento del caso real',
+        'Living comedor con mesa para cuatro del departamento del caso real',
+        'Cocina equipada del departamento del caso real',
+        'Baño completo del departamento del caso real',
+        'Ingreso con cerradura inteligente del departamento del caso real'
+      ];
       var bolsaFotos = [], ultimaFoto = 0;
       var bolsaCeldas = [], ultimaCelda = 3;
       var sacarIndice = function (bolsa, total, ultimo) {
@@ -482,6 +495,16 @@
         }
         return bolsa.shift();
       };
+      // La próxima foto se sortea un tick antes y se precarga con
+      // prioridad baja: el crossfade de 2s no parte con la imagen a
+      // medio descargar (mismo criterio que la precarga del modal).
+      var precargarFotoGrid = function (indice) {
+        var im = new Image();
+        if ('fetchPriority' in im) { im.fetchPriority = 'low'; }
+        im.src = pozaFotos[indice];
+      };
+      var fotoProxima = sacarIndice(bolsaFotos, pozaFotos.length, ultimaFoto);
+      precargarFotoGrid(fotoProxima);
 
       // El grupo inicial no se repite dentro de su primer ciclo.
       var bolsaResenas = barajar(gruposResenas.map(function (_, i) { return i; })
@@ -499,8 +522,12 @@
         var entrante = gruposResenas[proximo];
         var cardFoto = entrante.querySelector('.review-foto');
         if (cardFoto && pozaFotos.length > 1) {
-          ultimaFoto = sacarIndice(bolsaFotos, pozaFotos.length, ultimaFoto);
-          cardFoto.querySelector('img').src = pozaFotos[ultimaFoto];
+          ultimaFoto = fotoProxima;
+          var imgFoto = cardFoto.querySelector('img');
+          imgFoto.src = pozaFotos[ultimaFoto];
+          imgFoto.alt = altFotos[ultimaFoto];
+          fotoProxima = sacarIndice(bolsaFotos, pozaFotos.length, ultimaFoto);
+          precargarFotoGrid(fotoProxima);
           ultimaCelda = sacarIndice(bolsaCeldas, 4, ultimaCelda);
           cardFoto.style.order = ultimaCelda;
           var celdasLibres = [0, 1, 2, 3].filter(function (celda) { return celda !== ultimaCelda; });
@@ -1036,7 +1063,10 @@
   // ante cualquier cambio de tamaño de ventana. La ventana de supresión
   // evita que el imán del snap reacomode la vista al terminar.
   var topDoc = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
-  var supresionSnap = 0;
+  // Si la página carga ya con #fragmento, el salto nativo del navegador
+  // dejó la vista donde corresponde: la misma ventana de supresión de
+  // las anclas evita que el imán del snap la reacomode al aterrizar.
+  var supresionSnap = location.hash ? Date.now() + 1600 : 0;
 
   var encuadrarSeccion = function (seccion) {
     var headerAlto = header ? header.offsetHeight : 0;

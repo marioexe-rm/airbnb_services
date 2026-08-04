@@ -6,6 +6,29 @@
    Todos los valores visuales salen de los design tokens.
    ============================================================ */
 
+/* Plus Jakarta Sans (variable 400–700), autoalojada. Mismos woff2 por
+   subconjunto que servía Google Fonts (v12, licencia SIL OFL 1.1): el
+   navegador solo descarga el rango que la página usa (latin cubre todo
+   el español; latin-ext queda declarado por si aparece un carácter
+   fuera de él). Autoalojar elimina la hoja render-blocking de
+   fonts.googleapis.com y su segunda conexión a fonts.gstatic.com. */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/plus-jakarta-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   /* Color — base cálida (60) + una sola familia de acento verde (30/10) */
   --blanco: #FFFFFF;         /* fondo único de la página */
@@ -971,6 +994,17 @@ section[id], section { scroll-margin-top: calc(var(--alto-header) + 1rem); }
               visibility 0s;
 }
 
+/* Sin JavaScript (o si main.js no llegó y su onerror retiró la clase
+   js) no hay rotador: los 4 grupos abandonan la celda compartida y se
+   apilan en flujo, con las 12 reseñas visibles. */
+html:not(.js) .resenas-rotador { row-gap: var(--s-3); }
+html:not(.js) .resenas-grupo {
+  grid-area: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
 @media (min-width: 45em) {
   .resenas-grupo { grid-template-columns: 1fr 1fr; }
 }
@@ -1602,8 +1636,10 @@ body.modal-abierta { overflow: hidden; }
   padding: 0;
   cursor: pointer;
   z-index: 2;
-  /* Siempre visibles, atenuados; a plena opacidad al usarlos */
-  opacity: 0.45;
+  /* Siempre visibles, atenuados; a plena opacidad al usarlos. El reposo
+     no baja de 0.66: es el mínimo con que el trazo --texto-2 sobre el
+     panel blanco conserva 3:1 de contraste no textual (WCAG 1.4.11). */
+  opacity: 0.66;
   transition: opacity var(--transicion);
 }
 
